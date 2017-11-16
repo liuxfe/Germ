@@ -24,4 +24,6 @@ typedef char bool;
 #define false 0;
 #define null  NULL;
 
+#include "buffer.h"
+
 #endif

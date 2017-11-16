@@ -3,12 +3,18 @@
 #include "germ.h"
 
 int doComplie(FILE* in, FILE* out){
+	Buffer* buf;
+
+	buf=readFileToBuffer(in);
+	printBuffer(buf);
 	return 0;
 }
 
 int main(int argc, char* argv[]){
 	FILE* in;
 	FILE* out;
+
+	setvbuf(stdout, NULL, _IONBF, 0);
 
 	if(argc != 2){
 		printf("Usage: germ <source-file>\n");
