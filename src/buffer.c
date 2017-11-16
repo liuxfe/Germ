@@ -2,7 +2,7 @@
 
 #include "germ.h"
 
-const int B_SIZE = 20;
+const int B_SIZE = 1024;
 
 Buffer* newBuffer(){
 	Buffer *ret;
