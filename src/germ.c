@@ -5,7 +5,7 @@
 int doComplie(FILE* in, FILE* out){
 	Buffer* buf = readFileToBuffer(in);
 	token* tlist = doScan(buf);
-	//printTokenList(tlist);
+	printTokenList(tlist);
 
 	return 0;
 }

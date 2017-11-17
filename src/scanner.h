@@ -10,10 +10,8 @@ struct _tokenStr{
 typedef struct _tokenStr tokenStr;
 
 union _tokenValue{
-	int      i;
-	uint     u;
-	float    f;
-	double   d;
+	uint     i;
+	double   f;
 	tokenStr s;
 };
 typedef union _tokenValue tokenValue;
@@ -33,7 +31,8 @@ typedef struct _token token;
  * TOp_ for Operate.
  */
 enum {
-	TKw_package = 257,
+	TokenStart =257,
+	TKw_package,
 	TKw_import,
 	TKw_as,
 	TKw_bool,
@@ -73,17 +72,44 @@ enum {
 	TKw_throw,
 	TKw_return,
 	TKw_goto,
-	TOp_add,
-	TOp_sub,
-	TOp_mul,
-	TOp_div,
-	TOp_assign,
-	TOp_addAssign,
-	TOp_sub,
+	TOp_add,		// +
+	TOp_sub,		// -
+	TOp_div,		// /
+	TOp_inc,		// ++
+	TOp_dec,		// -
+	TOp_rem,		// %
+	TOp_assign,		// =
+	TOp_addAssign,		// +=
+	TOp_subAssign,		// -=
+	TOp_mulAssign,		// *=
+	TOp_divAssign,		// /=
+	TOp_remAssign,		// %=
+	TOp_andAssign,		// &=
+	TOp_and,		// &
+	TOp_not,		// !
+	TOp_notEq,		// !=
+	TOp_eq,			// ==
+	TOp_andAnd,		// &&
+	TOp_or,			// |
+	TOp_orOr,		// ||
+	TOp_orAssign,		// |=
+	TOp_neg,		// ~
+	TOp_negAssign,		// ~=
+	TOp_gt,			// >
+	TOp_gtEq,		// >=
+	TOp_shr,		// >>
+	TOp_shrAssign,		// >>=
+	TOp_ra,			// ->
+	TOp_lt,			// <
+	TOp_ltEq,		// <=
+	TOp_shl,		// <<
+	TOp_shlAssign,		// <<=
+	TokenThreeDot,		// ...
+	TokenStar,		// *
+	TokenDot,		// .
 	TokenId,
 	TokenNumber,
 	TokenInteger,
-	TokenStart,
 	TokenEnd
 };
 
