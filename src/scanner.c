@@ -135,15 +135,15 @@ token* lexical(Buffer* buf, char** cur){
 	}
 	// deal with id and keywords.
 	if(isId(*p)){
-		p++;
 		ret = newToken(TokenId);
+		ds = newDynstr();
 		while(isId2(*p)){
+			ds = appendChar(ds, *p);
 			p++;
 		}
-		ret->tValue.s.start = *cur;
-		ret->tValue.s.len = p - *cur;
+		ds = appendChar(ds,'\0');
 		*cur = p;
-		//printf("TokenId\t");
+		ret->tValue.ds = ds;
 		return ret;
 	}
 	// deal with number.
@@ -156,7 +156,6 @@ token* lexical(Buffer* buf, char** cur){
 			p++;
 		}
 		*cur = p;
-		//printf("TokenNumber\t");
 		return ret;
 	}
 	// deal with other chars.
@@ -399,12 +398,16 @@ token* doScan(Buffer* buf){
 }
 
 static void printToken(token* t){
+	if(t->tCode == TokenId){
+		printf("Id:%s\n", t->tValue.ds->data);
+		return;
+	}
 	if(t->tCode == TokenChar){
-		printf("Char token value:%d(%c)\n", t->tValue.i,t->tValue.i);
+		printf("Char:%d(%c)\n", t->tValue.i,t->tValue.i);
 		return;
 	}
 	if(t->tCode == TokenString){
-		printf("String token value:%s\n", t->tValue.ds->data);
+		printf("String:%s\n", t->tValue.ds->data);
 		return;
 	}
 	printf("token code:%d\n", t->tCode);
