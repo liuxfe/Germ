@@ -3,17 +3,10 @@
 #ifndef _SCANNER_H
 #define _SCANNER_H
 
-struct _tokenStr{
-	char* start;
-	int   len;
-};
-typedef struct _tokenStr tokenStr;
-
 union _tokenValue{
 	uint     i;
 	double   f;
-	tokenStr s;
-	dynstr*  ds;
+	dynstr*  s;
 };
 typedef union _tokenValue tokenValue;
 

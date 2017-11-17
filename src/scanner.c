@@ -31,7 +31,7 @@ static bool isNumber(char ch){
 }
 
 static bool isNumber2(char ch){
-	return (ch >='1' && ch <= '9');
+	return (ch >='0' && ch <= '9');
 }
 
 static uint char_escape(char **str){
@@ -143,7 +143,7 @@ token* lexical(Buffer* buf, char** cur){
 		}
 		ds = appendChar(ds,'\0');
 		*cur = p;
-		ret->tValue.ds = ds;
+		ret->tValue.s = ds;
 		return ret;
 	}
 	// deal with number.
@@ -364,7 +364,7 @@ token* lexical(Buffer* buf, char** cur){
 			}
 		}
 		ds = appendChar(ds, '\0');
-		ret->tValue.ds = ds;
+		ret->tValue.s = ds;
 		
 		if( *p =='"'){
 			*cur = ++p; // skip the close ".
@@ -399,7 +399,7 @@ token* doScan(Buffer* buf){
 
 static void printToken(token* t){
 	if(t->tCode == TokenId){
-		printf("Id:%s\n", t->tValue.ds->data);
+		printf("Id:%s\n", t->tValue.s->data);
 		return;
 	}
 	if(t->tCode == TokenChar){
@@ -407,7 +407,11 @@ static void printToken(token* t){
 		return;
 	}
 	if(t->tCode == TokenString){
-		printf("String:%s\n", t->tValue.ds->data);
+		printf("String:%s\n", t->tValue.s->data);
+		return;
+	}
+	if(t->tCode == TokenInteger){
+		printf("Number:%d\n", t->tValue.i);
 		return;
 	}
 	printf("token code:%d\n", t->tCode);
