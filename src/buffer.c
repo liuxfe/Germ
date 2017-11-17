@@ -25,7 +25,7 @@ Buffer* growBuffer(Buffer* buf){
 		printf("Error: grow buffer return null");
 		exit(-1);
 	}
-	
+
 	ret->nalloc = buf->nalloc + B_SIZE;
 	ret->nchars = buf->nchars;
 	memcpy(ret->data, buf->data, buf->nalloc);
@@ -45,7 +45,7 @@ Buffer* wrireCharToBuffer(Buffer* buf, char ch){
 Buffer* readFileToBuffer(FILE* file){
 	Buffer *ret = newBuffer();
 	int ch;
-	
+
 	for(ch=fgetc(file); ch != EOF; ch=fgetc(file)){
 		ret = wrireCharToBuffer(ret,(char)ch);
 	}
@@ -53,7 +53,7 @@ Buffer* readFileToBuffer(FILE* file){
 	// Append '\n','\0' to the file end, make lexcier easier.
 	ret = wrireCharToBuffer(ret,'\n');
 	ret = wrireCharToBuffer(ret,'\0');
-	
+
 	return ret;
 }
 

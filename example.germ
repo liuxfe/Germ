@@ -1,0 +1,8 @@
+
+package Germ.exam;
+
+import Germ.io.File as Fi;
+
+int main(){
+	
+}
