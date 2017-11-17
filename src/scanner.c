@@ -34,6 +34,95 @@ static bool isNumber2(char ch){
 	return (ch >='1' && ch <= '9');
 }
 
+static uint char_escape(char **str){
+	uint tmp;
+	char *p =*str;
+	switch(*p){
+	    case 'a':
+		*str = ++p;
+		return '\a';
+	    case 'b':
+		*str = ++p;
+		return '\b';
+	    case 'f':
+		*str = ++p;
+		return '\f';
+	    case 'n':
+		*str = ++p;
+		return '\n';
+	    case 'r':
+		*str = ++p;
+		return '\r';
+	    case 't':
+		*str = ++p;
+		return '\t';
+	    case 'v':
+		*str = p++;
+		return '\v';
+	    case '\\':
+		*str = p++;
+		return '\\';
+	    case '\'':
+		*str = p++;
+		return '\'';
+	    case '"':
+		*str = p++;
+		return '"';
+	    case '?':
+		*str = p++;
+		return '\?';
+	    case '0':
+		if( !(*(p+1)>='1' && *(p+1)<='9') ){
+			*str= p;
+			return '\0';
+		}
+	    case '1': case '2': case '3': case '4':
+	    case '5': case '6': case '7':
+		tmp = *p - '0';
+		p++;
+		if( *p >='0' && *p<='7'){
+			tmp= tmp * 8 + *p - '0';
+			p++;
+		}
+		if( *p >='0' && *p<='7'){
+			tmp= tmp * 8 + *p - '0';
+			p++;
+		}
+		*str = p;
+		return tmp;
+	    case 'x':
+		p++;
+		// 处理第一个字符.
+		if( *p >='0' && *p <='9'){
+			tmp = *p - '9';
+		} else if( *p >= 'A' && *p <='F'){
+			tmp = *p - 'A' +10;
+		}else if( *p >= 'a' && *p <='f'){
+			tmp = *p - 'a' +10;
+		} else {
+			*str =p;
+			return 'x';
+		}
+		p++;
+		// 处理第二个字符.
+		if( *p >='0' && *p <='9'){
+			tmp = tmp * 16 + *p - '9';
+		} else if( *p >= 'A' && *p <='F'){
+			tmp = tmp * 16 + *p - 'A' +10;
+		}else if( *p >= 'a' && *p <='f'){
+			tmp = tmp * 16 + *p - 'a' +10;
+		} else {
+			*str =++p;
+			return tmp;
+		}
+		*str = ++p;
+		return tmp;
+	    default:
+		*str = ++p;
+		return *(p-1);
+	}
+}
+
 token* lexical(Buffer* buf, char** cur){
 	token* ret;
 	char *p = *cur;
@@ -229,6 +318,34 @@ token* lexical(Buffer* buf, char** cur){
 			*cur = p+1;
 			return newToken(TOp_lt);
 		}
+	    case '\'':
+		ret =newToken(TokenChar);
+		p++;
+		if(*p == '\\'){
+			p++;
+			ret->tValue.i=char_escape(&p);
+		} else if( *p == '\''){
+			printf("Error: Not have availbe char");
+			ret->tValue.i= 0 ; // 空字符就设置成0.
+			*cur = ++p;
+			return ret;
+		} else{
+			ret->tValue.i=*p;
+			p++;
+		}
+		// 处理关闭.
+		if(*p == '\''){
+			*cur = ++p;
+			return ret;
+		}else{
+			printf("Error: have more chars in char:%c\n", *p);
+			// skip the more chars.
+			while(*p != '\''){
+				p++;
+			}
+			*cur = ++p;
+			return ret;
+		}
 	    case '\0':
 		*cur = ++p; 
 		return newToken(TokenEnd);
@@ -254,7 +371,12 @@ token* doScan(Buffer* buf){
 }
 
 static void printToken(token* t){
+	if(t->tCode == TokenChar){
+		printf("Char token value:%d(%c)\n", t->tValue.i,t->tValue.i);
+		return;
+	}
 	printf("token code:%d\n", t->tCode);
+	
 }
 
 void printTokenList(token* t){

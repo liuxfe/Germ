@@ -110,6 +110,7 @@ enum {
 	TokenId,
 	TokenNumber,
 	TokenInteger,
+	TokenChar,
 	TokenEnd
 };
 
