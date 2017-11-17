@@ -13,6 +13,7 @@ union _tokenValue{
 	uint     i;
 	double   f;
 	tokenStr s;
+	dynstr*  ds;
 };
 typedef union _tokenValue tokenValue;
 
@@ -110,6 +111,7 @@ enum {
 	TokenId,
 	TokenNumber,
 	TokenInteger,
+	TokenString,
 	TokenChar,
 	TokenEnd
 };

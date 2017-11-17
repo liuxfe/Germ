@@ -124,6 +124,7 @@ static uint char_escape(char **str){
 }
 
 token* lexical(Buffer* buf, char** cur){
+	dynstr *ds;
 	token* ret;
 	char *p = *cur;
 
@@ -346,6 +347,29 @@ token* lexical(Buffer* buf, char** cur){
 			*cur = ++p;
 			return ret;
 		}
+	    case '"' :
+		ret = newToken(TokenString);
+		ds  = newDynstr();
+		++p;
+		while(*p && (*p !='"')){
+			if(*p == '\\'){
+				++p;
+				ds = appendChar(ds, (char)char_escape(&p));
+			} else{
+				ds = appendChar(ds, *p);
+				++p;
+			}
+		}
+		ds = appendChar(ds, '\0');
+		ret->tValue.ds = ds;
+		
+		if( *p =='"'){
+			*cur = ++p; // skip the close ".
+			return ret;
+		}
+		printf("Error: lexical sting not close");
+		*cur = p; // skip the close ".
+		return ret;
 	    case '\0':
 		*cur = ++p; 
 		return newToken(TokenEnd);
@@ -375,8 +399,11 @@ static void printToken(token* t){
 		printf("Char token value:%d(%c)\n", t->tValue.i,t->tValue.i);
 		return;
 	}
+	if(t->tCode == TokenString){
+		printf("String token value:%s\n", t->tValue.ds->data);
+		return;
+	}
 	printf("token code:%d\n", t->tCode);
-	
 }
 
 void printTokenList(token* t){
