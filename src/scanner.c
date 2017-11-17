@@ -223,6 +223,10 @@ token* lexical(Buffer* buf, char** cur){
 			p++;
 			do{
 				p++;
+				if(!*p){
+					printf("Error: lexical multline comment not close");
+					return newToken(TokenEnd);
+				}
 			}while(!(*p == '*' && *(p+1) == '/'));
 			p++;p++;
 			goto repeat;
