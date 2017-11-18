@@ -13,7 +13,7 @@ typedef struct _dynstr dynstr;
 
 dynstr* newDynstr();
 dynstr* appendChar(dynstr* , char);
-dynstr* createDynstr(char* , char *);
+void deleteDynstr(dynstr*);
 void printDynstr(dynstr*);
 
 #endif

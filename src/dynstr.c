@@ -40,16 +40,8 @@ dynstr* appendChar(dynstr* ds, char ch){
 	return ds;
 }
 
-// Note: *end 指向的字符不包含在字符串中.
-dynstr* createDynstr(char* start, char *end){
-	dynstr* ret = newDynstr();
-
-	while( start < end ){
-		ret = appendChar(ret, *start);
-		start++;
-	}
-	ret = appendChar(ret, '\0');
-	return ret;
+void deleteDynstr(dynstr* ds){
+	free(ds);
 }
 
 void printDynstr(dynstr* ds){

@@ -66,6 +66,7 @@ enum {
 	TKw_throw,
 	TKw_return,
 	TKw_goto,
+	TKw_const,
 	TOp_add,		// +
 	TOp_sub,		// -
 	TOp_div,		// /

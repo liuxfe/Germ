@@ -123,6 +123,68 @@ static uint char_escape(char **str){
 	}
 }
 
+struct kwCodeWithString{
+	uint  code;
+	char* str;
+};
+static struct kwCodeWithString kwStrMap[]={
+	{ TKw_package,  "package" },
+	{ TKw_import,   "import"  },
+	{ TKw_as,       "as"      },
+	{ TKw_bool,     "bool"    },
+	{ TKw_int,      "int"     },
+	{ TKw_uint,     "uint"    },
+	{ TKw_int8,     "int8"    },
+	{ TKw_uint8,    "uint8"   },
+	{ TKw_int16,    "int16"   },
+	{ TKw_uint16,   "uint16"  },
+	{ TKw_int32,    "int32"   },
+	{ TKw_uint32,   "uint32"  },
+	{ TKw_int64,    "int64"   },
+	{ TKw_uint64,   "uint64"  },
+	{ TKw_float,    "float"   },
+	{ TKw_float32,  "float32" },
+	{ TKw_float64,  "float64" },
+	{ TKw_double,   "double"  },
+	{ TKw_char,     "char"    },
+	{ TKw_void,     "void"    },
+	{ TKw_func,     "func"    },
+	{ TKw_typedef,  "typedef" },
+	{ TKw_struct,   "struct"  },
+	{ TKw_union,    "union"   },
+	{ Tkw_true,     "true"    },
+	{ TKw_false,    "false"   },
+	{ TKw_null,     "null"    },
+	{ TKw_if,       "if"      },
+	{ IKw_else,     "else"    },
+	{ TKw_switch,   "switch"  },
+	{ TKw_case,     "case"    },
+	{ TKw_default,  "default" },
+	{ TKw_for,      "for"     },
+	{ TKw_while,    "while"   },
+	{ TKw_do,       "do"      },
+	{ TKw_continue, "continue"},
+	{ TKw_break,    "break"   },
+	{ TKw_throw,    "throw"   },
+	{ TKw_return,   "return"  },
+	{ TKw_goto,     "goto"    },
+	{ TKw_const,    "const"   },
+	{ 0, NULL}
+};
+
+static token* recognizeKeyWord(token* t){
+	struct kwCodeWithString *map = kwStrMap;
+	while( map->code){
+		if(strcmp(t->tValue.s->data, map->str) == 0){
+			t->tCode = map->code;
+			deleteDynstr(t->tValue.s);
+			return t;
+		}
+		map++;
+	}
+	return t;
+}
+
 token* lexical(Buffer* buf, char** cur){
 	dynstr *ds;
 	token* ret;
@@ -144,7 +206,7 @@ token* lexical(Buffer* buf, char** cur){
 		ds = appendChar(ds,'\0');
 		*cur = p;
 		ret->tValue.s = ds;
-		return ret;
+		return recognizeKeyWord(ret);
 	}
 	// deal with number.
 	if(isNumber(*p)){
@@ -398,6 +460,10 @@ token* doScan(Buffer* buf){
 }
 
 static void printToken(token* t){
+	if(t->tCode >= TKw_package && t->tCode <= TKw_const){
+		printf("KeyWord:%s\n", kwStrMap[t->tCode -TKw_package].str);
+		return;
+	}
 	if(t->tCode == TokenId){
 		printf("Id:%s\n", t->tValue.s->data);
 		return;
