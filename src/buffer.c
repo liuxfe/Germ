@@ -4,7 +4,7 @@
 
 const int B_SIZE = 1024;
 
-Buffer* newBuffer(){
+Buffer* newBuffer(char* name){
 	Buffer *ret;
 
 	ret = malloc(sizeof(Buffer) + B_SIZE);
@@ -12,6 +12,7 @@ Buffer* newBuffer(){
 		printf("Error: alloc buffer return null");
 		exit(-1);
 	}
+	ret->filename = name;
 	ret->nalloc = B_SIZE;
 	ret->nchars = 0;
 	return ret;
@@ -25,7 +26,7 @@ Buffer* growBuffer(Buffer* buf){
 		printf("Error: grow buffer return null");
 		exit(-1);
 	}
-
+	ret->filename = buf->filename;
 	ret->nalloc = buf->nalloc + B_SIZE;
 	ret->nchars = buf->nchars;
 	memcpy(ret->data, buf->data, buf->nalloc);
@@ -42,14 +43,22 @@ Buffer* wrireCharToBuffer(Buffer* buf, char ch){
 	return buf;
 }
 
-Buffer* readFileToBuffer(FILE* file){
-	Buffer *ret = newBuffer();
+// Note: 如果文件打开失败，返回NULL
+Buffer* readFileToBuffer(char *name){
+	Buffer *ret;
+	FILE* file;
 	int ch;
+
+	file = fopen(name, "r");
+	if( !file){
+		return NULL;
+	}
+
+	ret = newBuffer(name);
 
 	for(ch=fgetc(file); ch != EOF; ch=fgetc(file)){
 		ret = wrireCharToBuffer(ret,(char)ch);
 	}
-
 	// Append '\n','\0' to the file end, make lexcier easier.
 	ret = wrireCharToBuffer(ret,'\n');
 	ret = wrireCharToBuffer(ret,'\0');
@@ -57,9 +66,13 @@ Buffer* readFileToBuffer(FILE* file){
 	return ret;
 }
 
-// use for dubug, dump the buffer.
+void deleteBuffer(Buffer *buf){
+	free(buf);
+}
+
 void printBuffer(Buffer* buf){
 	printf("--- Debug: print Buffer ---\n");
+	printf("Buffer filename: %s\n", buf->filename);
 	printf("Buffer nalloc: %d\n", buf->nalloc);
 	printf("Buffer nchars: %d\n", buf->nchars);
 	printf("Buffer data:\n%s",buf->data);
