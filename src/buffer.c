@@ -63,6 +63,8 @@ Buffer* readFileToBuffer(char *name){
 	ret = wrireCharToBuffer(ret,'\n');
 	ret = wrireCharToBuffer(ret,'\0');
 
+	fclose(file);
+
 	return ret;
 }
 
