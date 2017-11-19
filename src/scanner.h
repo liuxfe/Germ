@@ -12,6 +12,7 @@ typedef union _tokenValue tokenValue;
 
 struct _token{
 	struct _token* tNext;
+	char*          tFilename;
 	int            tCode;
 	tokenValue     tValue;
 	int            tPosLine;
@@ -110,7 +111,7 @@ enum {
 	TokenEnd
 };
 
-token* doScan(Buffer*);
+token* scanFile(char*);
 void printTokenList(token*);
 
 #endif

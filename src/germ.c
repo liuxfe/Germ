@@ -3,8 +3,7 @@
 #include "germ.h"
 
 int doComplie(char* file){
-	Buffer* buf = readFileToBuffer(file);
-	token* tlist = doScan(buf);
+	token* tlist = scanFile(file);
 	printTokenList(tlist);
 
 	return 0;

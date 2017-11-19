@@ -451,15 +451,31 @@ token* doScan(Buffer* buf){
 	token* tail = head;
 	char* p = buf->data;
 
+	tail->tFilename = buf->filename;
+
 	do{
 		tail->tNext = lexical(buf, &p);
+		tail->tNext->tFilename = buf->filename;
 		tail = tail->tNext;
 	}while(tail->tCode != TokenEnd);
 
 	return head;
 }
 
+token* scanFile(char* filename){
+	Buffer* buf;
+	token* tokenlist;
+
+	buf = readFileToBuffer(filename);
+	tokenlist = doScan(buf);
+
+	deleteBuffer(buf);
+
+	return tokenlist;
+}
+
 static void printToken(token* t){
+	printf("Token Filename: %s\t", t->tFilename);
 	if(t->tCode >= TKw_package && t->tCode <= TKw_const){
 		printf("KeyWord:%s\n", kwStrMap[t->tCode -TKw_package].str);
 		return;
