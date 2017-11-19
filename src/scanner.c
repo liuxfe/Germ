@@ -192,7 +192,7 @@ token* lexical(Buffer* buf, char** cur){
 
     repeat:
 	// skip white chars first.
-	while( *p == ' ' || *p== '\t' || *p== '\n'){
+	while( *p == ' ' || *p== '\t' || *p== '\r' || *p== '\n'){
 		p++;
 	}
 	// deal with id and keywords.
@@ -439,7 +439,7 @@ token* lexical(Buffer* buf, char** cur){
 		*cur = ++p; 
 		return newToken(TokenEnd);
 	    default:
-		printf("Error: lexical can't recognize char '%c'\n", *p);
+		printf("Error: lexical can't recognize char:%d(%c)\n", *p, *p);
 		++p;
 		goto repeat;
 	}
