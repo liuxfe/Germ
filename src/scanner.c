@@ -445,11 +445,11 @@ token* doScan(Buffer* buf){
 	token* tail = head;
 	char* p = buf->data;
 
-	tail->tFilename = buf->filename;
+	tail->tPosFile = buf->filename;
 
 	do{
 		tail->tNext = lexical(buf, &p);
-		tail->tNext->tFilename = buf->filename;
+		tail->tNext->tPosFile = buf->filename;
 		tail = tail->tNext;
 	}while(tail->tCode != TokenEnd);
 
@@ -469,7 +469,7 @@ token* scanFile(char* filename){
 }
 
 static void printToken(token* t){
-	printf("Token Filename: %s\t", t->tFilename);
+	printf("TPosFile: %s\t", t->tPosFile);
 	if(t->tCode >= TKw_package && t->tCode <= TKw_const){
 		printf("KeyWord:%s\n", kwStrMap[t->tCode -TKw_package].str);
 		return;
@@ -490,7 +490,7 @@ static void printToken(token* t){
 		printf("Number:%d\n", t->tValue.i);
 		return;
 	}
-	printf("token code:%d\n", t->tCode);
+	printf("TCode:%d\n", t->tCode);
 }
 
 void printTokenList(token* t){
