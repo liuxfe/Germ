@@ -185,15 +185,20 @@ static token* recognizeKeyWord(token* t){
 	return t;
 }
 
-token* lexical(Buffer* buf, char** cur){
+token* lexical(Buffer* buf, char** cur, int* line){
 	dynstr *ds;
 	token* ret;
 	char *p = *cur;
 
     repeat:
 	// skip white chars first.
-	while( *p == ' ' || *p== '\t' || *p== '\r' || *p== '\n'){
+	while( *p == ' ' || *p== '\t' || *p== '\r'){
 		p++;
+	}
+	if( *p == '\n' ){
+		p++;
+		(*line)++;
+		goto repeat;
 	}
 	// deal with id and keywords.
 	if(isId(*p)){
@@ -278,6 +283,9 @@ token* lexical(Buffer* buf, char** cur){
 			p++;
 			do{
 				p++;
+				if( *p == '\n'){
+					(*line)++;
+				}
 				if(!*p){
 					printf("Error: lexical multline comment not close");
 					return newToken(TokenEnd);
@@ -444,12 +452,12 @@ token* doScan(Buffer* buf){
 	token* head = newToken(TokenStart);
 	token* tail = head;
 	char* p = buf->data;
-
-	tail->tPosFile = buf->filename;
+	int line = 1;
 
 	do{
-		tail->tNext = lexical(buf, &p);
-		tail->tNext->tPosFile = buf->filename;
+		tail->tPosFile = buf->filename;
+		tail->tPosLine = line;
+		tail->tNext = lexical(buf, &p, &line);
 		tail = tail->tNext;
 	}while(tail->tCode != TokenEnd);
 
@@ -469,7 +477,7 @@ token* scanFile(char* filename){
 }
 
 static void printToken(token* t){
-	printf("TPosFile: %s\t", t->tPosFile);
+	printf("(File: %s Line:%d)\t", t->tPosFile, t->tPosLine);
 	if(t->tCode >= TKw_package && t->tCode <= TKw_const){
 		printf("KeyWord:%s\n", kwStrMap[t->tCode -TKw_package].str);
 		return;
