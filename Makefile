@@ -6,6 +6,7 @@
 OBJS =	src/buffer.o	\
 	src/dynstr.o	\
 	src/scanner.o	\
+	src/declare.o	\
 	src/germ.o
 
 germ: $(OBJS)

@@ -27,5 +27,6 @@ typedef char bool;
 #include "buffer.h"
 #include "dynstr.h"
 #include "scanner.h"
+#include "declare.h"
 
 #endif
