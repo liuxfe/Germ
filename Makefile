@@ -1,10 +1,19 @@
 # Copyright (c) 2017 Tohack<tohack@foxmail.com>. All Rights Reserved.
 
-SRCS = src/buffer.c src/dynstr.c src/scanner.c src/germ.c
+.c.o:
+	cc -c -o $@  $<
 
-target:
-	cc  $(SRCS) -o germ.exe
-	./germ.exe example.germ
+OBJS =	src/buffer.o	\
+	src/dynstr.o	\
+	src/scanner.o	\
+	src/germ.o
+
+germ: $(OBJS)
+	cc -o germ $(OBJS)
+
+test: germ
+	./germ example.germ
 
 clean:
-	rm germ.exe
+	-rm $(OBJS)
+	-rm germ
