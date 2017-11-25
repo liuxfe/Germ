@@ -222,14 +222,8 @@ token* lexical(Buffer* buf, char** cur){
 	}
 	// deal with other chars.
 	switch(*p){
-	    case '{':
-	    case '}' :
-	    case '[' :
-	    case ']' :
-	    case '(' :
-	    case ')' :
-	    case ';' :
-	    case ':' :
+	    case '{' : case '}' : case '[' : case ']' :
+	    case '(' : case ')' : case ';' : case ':' :
 	    case ',' :
 		*cur =p +1;
 		return newToken(*p);
