@@ -24,9 +24,11 @@ typedef char bool;
 #define false 0;
 #define null  NULL;
 
+#include "routine.h"
 #include "buffer.h"
 #include "dynstr.h"
 #include "scanner.h"
 #include "declare.h"
+
 
 #endif

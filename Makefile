@@ -3,7 +3,8 @@
 .c.o:
 	cc -c -o $@  $<
 
-OBJS =	src/buffer.o	\
+OBJS =	src/routine.o	\
+	src/buffer.o	\
 	src/dynstr.o	\
 	src/scanner.o	\
 	src/declare.o	\

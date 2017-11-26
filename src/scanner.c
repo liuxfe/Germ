@@ -3,13 +3,7 @@
 #include "germ.h"
 
 static token* newToken(int tokencode){
-	token* ret;
-
-	ret = malloc(sizeof(token));
-	if ( !ret ){
-		printf("Error: alloc token return null");
-		exit(-1);
-	}
+	token* ret = xmalloc(sizeof(token));
 	ret->tCode = tokencode;
 	ret->tNext = null;
 	return ret;

@@ -5,13 +5,8 @@
 const int B_SIZE = 1024;
 
 Buffer* newBuffer(char* name){
-	Buffer *ret;
+	Buffer *ret = xmalloc(sizeof(Buffer) + B_SIZE);
 
-	ret = malloc(sizeof(Buffer) + B_SIZE);
-	if( !ret ){
-		printf("Error: alloc buffer return null");
-		exit(-1);
-	}
 	ret->filename = name;
 	ret->nalloc = B_SIZE;
 	ret->nchars = 0;
@@ -19,18 +14,13 @@ Buffer* newBuffer(char* name){
 }
 
 Buffer* growBuffer(Buffer* buf){
-	Buffer *ret;
+	Buffer *ret = malloc(sizeof(Buffer) + buf->nalloc + B_SIZE);
 
-	ret = malloc(sizeof(Buffer) + buf->nalloc + B_SIZE);
-	if( !ret ){
-		printf("Error: grow buffer return null");
-		exit(-1);
-	}
 	ret->filename = buf->filename;
 	ret->nalloc = buf->nalloc + B_SIZE;
 	ret->nchars = buf->nchars;
 	memcpy(ret->data, buf->data, buf->nalloc);
-	free(buf);
+	xfree(buf);
 	return ret;
 }
 
@@ -43,18 +33,11 @@ Buffer* wrireCharToBuffer(Buffer* buf, char ch){
 	return buf;
 }
 
-// Note: 如果文件打开失败，返回NULL
 Buffer* readFileToBuffer(char *name){
-	Buffer *ret;
-	FILE* file;
 	int ch;
 
-	file = fopen(name, "r");
-	if( !file){
-		return NULL;
-	}
-
-	ret = newBuffer(name);
+	FILE* file = xfopen(name, "r");
+	Buffer* ret = newBuffer(name);
 
 	for(ch=fgetc(file); ch != EOF; ch=fgetc(file)){
 		ret = wrireCharToBuffer(ret,(char)ch);
@@ -69,7 +52,7 @@ Buffer* readFileToBuffer(char *name){
 }
 
 void deleteBuffer(Buffer *buf){
-	free(buf);
+	xfree(buf);
 }
 
 void printBuffer(Buffer* buf){

@@ -5,30 +5,18 @@
 const int ALLOC_SIZE = 16;
 
 dynstr* newDynstr(){
-	dynstr* ret;
-
-	ret = malloc(sizeof(dynstr) + ALLOC_SIZE * sizeof(char));
-	if(!ret){
-		printf("Error: alloc dynstr return null");
-		exit(-1);
-	}
+	dynstr* ret = xmalloc(sizeof(dynstr) + ALLOC_SIZE * sizeof(char));
 	ret->nalloc=ALLOC_SIZE;
 	ret->len=0;
 	return ret;
 }
 
 dynstr* growDynstr(dynstr* ds){
-	dynstr* ret;
-
-	ret = malloc(sizeof(dynstr) + ALLOC_SIZE * sizeof(char) + ds->nalloc);
-	if(!ret){
-		printf("Error: grow dynstr return null");
-		exit(-1);
-	}
+	dynstr* ret = xmalloc(sizeof(dynstr) + ALLOC_SIZE * sizeof(char) + ds->nalloc);
 	ret->nalloc = ALLOC_SIZE + ds->nalloc;
 	ret->len    = ds->len;
 	memcpy(ret->data, ds->data, ds->len*sizeof(char));
-	free(ds);
+	xfree(ds);
 	return ret;
 }
 
@@ -41,7 +29,7 @@ dynstr* appendChar(dynstr* ds, char ch){
 }
 
 void deleteDynstr(dynstr* ds){
-	free(ds);
+	xfree(ds);
 }
 
 void printDynstr(dynstr* ds){
