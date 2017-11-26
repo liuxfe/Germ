@@ -7,6 +7,7 @@ union _tokenValue{
 	uint     i;
 	double   f;
 	dynstr*  ds;
+	symStr*  ss;
 };
 typedef union _tokenValue tokenValue;
 

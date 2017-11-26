@@ -87,12 +87,12 @@ static token* recognizeKeyWord(token* t){
 }
 
 token* lexical(Buffer* buf, char** cur, int* line){
+	char* start;
 	dynstr *ds;
 	token* ret;
 	char *p = *cur;
 
     repeat:
-	// skip white chars first.
 	while( *p == ' ' || *p== '\t' || *p== '\r'){
 		p++;
 	}
@@ -101,20 +101,18 @@ token* lexical(Buffer* buf, char** cur, int* line){
 		(*line)++;
 		goto repeat;
 	}
-	// deal with id and keywords.
+
 	if(isId(*p)){
+		start = p++ ;
 		ret = newToken(TokenID);
-		ds = newDynstr();
 		while(isId2(*p)){
-			ds = appendChar(ds, *p);
 			p++;
 		}
-		ds = appendChar(ds,'\0');
+		ret->tValue.ss=insertSymStr(start, p);
 		*cur = p;
-		ret->tValue.ds = ds;
-		return recognizeKeyWord(ret);
+		return ret;
 	}
-	// deal with number.
+
 	if(isNumber(*p)){
 		ret = newToken(TokenInteger);
 		ret->tValue.i= *p - '0';
@@ -366,7 +364,7 @@ static void printToken(token* t){
 		return;
 	}
 	if(t->tCode == TokenID){
-		printf("Id:%s\n", t->tValue.ds->data);
+		printf("Id:%s\n", t->tValue.ss->data);
 		return;
 	}
 	if(t->tCode == TokenChar){

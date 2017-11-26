@@ -8,6 +8,7 @@ OBJS =	src/routine.o	\
 	src/dynstr.o	\
 	src/scanner.o	\
 	src/declare.o	\
+	src/symbol.o	\
 	src/germ.o
 
 germ: $(OBJS)
@@ -17,5 +18,4 @@ test: germ
 	./germ example.germ
 
 clean:
-	-rm $(OBJS)
-	-rm germ
+	-rm germ $(OBJS)
