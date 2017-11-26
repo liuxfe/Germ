@@ -145,7 +145,6 @@ static struct kwCodeWithString kwStrMap[]={
 	{ TKw_float,    "float"   },
 	{ TKw_float32,  "float32" },
 	{ TKw_float64,  "float64" },
-	{ TKw_double,   "double"  },
 	{ TKw_char,     "char"    },
 	{ TKw_void,     "void"    },
 	{ TKw_func,     "func"    },
