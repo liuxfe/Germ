@@ -5,8 +5,8 @@
 
 OBJS =	src/routine.o	\
 	src/buffer.o	\
-	src/dynstr.o	\
 	src/scanner.o	\
+	src/xstring.o	\
 	src/declare.o	\
 	src/symbol.o	\
 	src/germ.o

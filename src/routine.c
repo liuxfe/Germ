@@ -9,6 +9,7 @@ void* xmalloc(uint bytes){
 		fprintf(stderr, "Fatal: out of memory\n");
 		exit(-1);
 	}
+	memset(ret, 0, bytes);
 	return ret;
 }
 

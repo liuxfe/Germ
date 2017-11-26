@@ -11,16 +11,30 @@ struct _symStr{
 };
 typedef struct _symStr symStr;
 
+union _symValue{
+	uint i;
+};
+typedef union _symValue SymValue;
+
 struct _symbol{
-	symStr* keystr;
+	uint     symType;
+	SymValue symValue;
+	symStr*  keystr;
 	struct _symbol symNext;
 	struct _symbol symScope;
 };
-typedef struct _symbol symbol;
+typedef struct _symbol Symbol;
 
+/* values of symType*/
+enum {
+	ST_KeyWord = 100,
+};
 
 uint hashValue(char*, char*);
 symStr* newSymStr(char*, char*, uint);
 symStr* lookUpSymStr(char*, char*, uint);
 symStr* insertSymStr(char*, char*);
+void printHashTable();
+void initKeyWordSymbol();
+
 #endif

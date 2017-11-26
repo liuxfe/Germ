@@ -25,9 +25,9 @@ typedef char bool;
 #define null  NULL;
 
 #include "routine.h"
-#include "buffer.h"
-#include "dynstr.h"
 #include "symbol.h"
+#include "xstring.h"
+#include "buffer.h"
 #include "scanner.h"
 #include "declare.h"
 

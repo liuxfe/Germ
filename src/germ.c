@@ -4,6 +4,7 @@
 
 int doComplie(char* file){
 	token* tlist = scanFile(file);
+	printHashTable();
 	printTokenList(tlist);
 
 	return 0;
@@ -20,5 +21,6 @@ int main(int argc, char* argv[]){
 
 	setvbuf(out, NULL, _IONBF, 0);
 
+	initKeyWordSymbol();
 	return doComplie(argv[1]);
 }
