@@ -6,6 +6,7 @@
 void* xmalloc(uint);
 void  xfree(void*);
 bool  xstrcmp(char*, char*, char*);
+uint escapeChar(char**);
 FILE* xfopen(char*, char*);
 void  xfclose(FILE*);
 

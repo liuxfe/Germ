@@ -6,7 +6,7 @@
 union _tokenValue{
 	uint     i;
 	double   f;
-	dynstr*  s;
+	dynstr*  ds;
 };
 typedef union _tokenValue tokenValue;
 
@@ -49,9 +49,6 @@ enum {
 	TKw_typedef,
 	TKw_struct,
 	TKw_union,
-	Tkw_true,
-	TKw_false,
-	TKw_null,
 	TKw_if,
 	TKw_elif,
 	TKw_else,
@@ -98,14 +95,15 @@ enum {
 	TOp_ltEq,		// <=
 	TOp_shl,		// <<
 	TOp_shlAssign,		// <<=
-	TokenThreeDot,		// ...
-	TokenStar,		// *
-	TokenDot,		// .
-	TokenId,
-	TokenNumber,
-	TokenInteger,
-	TokenString,
-	TokenChar,
+	TOp_threeDot,		// ...
+	TOp_star,		// *
+	TOp_dot,		// .
+	TokenInteger,		// 整数常量
+	TokenChar,		// 字符常量
+	TokenBool,		// 布尔常量
+	TokenFloat,		// 浮点常量
+	TokenString,		// 字符串常量
+	TokenID,		// 标识符
 	TokenEnd
 };
 

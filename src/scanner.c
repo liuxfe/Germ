@@ -28,95 +28,6 @@ static bool isNumber2(char ch){
 	return (ch >='0' && ch <= '9');
 }
 
-static uint char_escape(char **str){
-	uint tmp;
-	char *p =*str;
-	switch(*p){
-	    case 'a':
-		*str = ++p;
-		return '\a';
-	    case 'b':
-		*str = ++p;
-		return '\b';
-	    case 'f':
-		*str = ++p;
-		return '\f';
-	    case 'n':
-		*str = ++p;
-		return '\n';
-	    case 'r':
-		*str = ++p;
-		return '\r';
-	    case 't':
-		*str = ++p;
-		return '\t';
-	    case 'v':
-		*str = p++;
-		return '\v';
-	    case '\\':
-		*str = p++;
-		return '\\';
-	    case '\'':
-		*str = p++;
-		return '\'';
-	    case '"':
-		*str = p++;
-		return '"';
-	    case '?':
-		*str = p++;
-		return '\?';
-	    case '0':
-		if( !(*(p+1)>='1' && *(p+1)<='9') ){
-			*str= p;
-			return '\0';
-		}
-	    case '1': case '2': case '3': case '4':
-	    case '5': case '6': case '7':
-		tmp = *p - '0';
-		p++;
-		if( *p >='0' && *p<='7'){
-			tmp= tmp * 8 + *p - '0';
-			p++;
-		}
-		if( *p >='0' && *p<='7'){
-			tmp= tmp * 8 + *p - '0';
-			p++;
-		}
-		*str = p;
-		return tmp;
-	    case 'x':
-		p++;
-		// 处理第一个字符.
-		if( *p >='0' && *p <='9'){
-			tmp = *p - '9';
-		} else if( *p >= 'A' && *p <='F'){
-			tmp = *p - 'A' +10;
-		}else if( *p >= 'a' && *p <='f'){
-			tmp = *p - 'a' +10;
-		} else {
-			*str =p;
-			return 'x';
-		}
-		p++;
-		// 处理第二个字符.
-		if( *p >='0' && *p <='9'){
-			tmp = tmp * 16 + *p - '9';
-		} else if( *p >= 'A' && *p <='F'){
-			tmp = tmp * 16 + *p - 'A' +10;
-		}else if( *p >= 'a' && *p <='f'){
-			tmp = tmp * 16 + *p - 'a' +10;
-		} else {
-			*str =++p;
-			return tmp;
-		}
-		*str = ++p;
-		return tmp;
-	    default:
-		*str = ++p;
-		return *(p-1);
-	}
-}
-
 struct kwCodeWithString{
 	uint  code;
 	char* str;
@@ -145,9 +56,6 @@ static struct kwCodeWithString kwStrMap[]={
 	{ TKw_typedef,  "typedef" },
 	{ TKw_struct,   "struct"  },
 	{ TKw_union,    "union"   },
-	{ Tkw_true,     "true"    },
-	{ TKw_false,    "false"   },
-	{ TKw_null,     "null"    },
 	{ TKw_if,       "if"      },
 	{ TKw_elif,     "elif"    },
 	{ TKw_else,     "else"    },
@@ -168,9 +76,9 @@ static struct kwCodeWithString kwStrMap[]={
 static token* recognizeKeyWord(token* t){
 	struct kwCodeWithString *map = kwStrMap;
 	while( map->code){
-		if(strcmp(t->tValue.s->data, map->str) == 0){
+		if(strcmp(t->tValue.ds->data, map->str) == 0){
 			t->tCode = map->code;
-			deleteDynstr(t->tValue.s);
+			deleteDynstr(t->tValue.ds);
 			return t;
 		}
 		map++;
@@ -195,7 +103,7 @@ token* lexical(Buffer* buf, char** cur, int* line){
 	}
 	// deal with id and keywords.
 	if(isId(*p)){
-		ret = newToken(TokenId);
+		ret = newToken(TokenID);
 		ds = newDynstr();
 		while(isId2(*p)){
 			ds = appendChar(ds, *p);
@@ -203,7 +111,7 @@ token* lexical(Buffer* buf, char** cur, int* line){
 		}
 		ds = appendChar(ds,'\0');
 		*cur = p;
-		ret->tValue.s = ds;
+		ret->tValue.ds = ds;
 		return recognizeKeyWord(ret);
 	}
 	// deal with number.
@@ -228,10 +136,10 @@ token* lexical(Buffer* buf, char** cur, int* line){
 	    case '.' :
 		if( *(p+1) =='.' && *(p+2) == '.'){
 			*cur = p+3;
-			return newToken(TokenThreeDot);
+			return newToken(TOp_threeDot);
 		}else{
 			*cur = p+1;
-			return newToken(TokenDot);
+			return newToken(TOp_dot);
 		}
 	    case '+' :
 		if( *(p+1) == '+'){
@@ -264,7 +172,7 @@ token* lexical(Buffer* buf, char** cur, int* line){
 			return newToken(TOp_mulAssign);
 		}else{
 			*cur = p+1;
-			return newToken(TokenStar);
+			return newToken(TOp_star);
 		}
 	     case '/' :
 		if( *(p+1) == '/'){		// skip line comment.
@@ -384,14 +292,14 @@ token* lexical(Buffer* buf, char** cur, int* line){
 		p++;
 		if(*p == '\\'){
 			p++;
-			ret->tValue.i=char_escape(&p);
+			ret->tValue.i=escapeChar(&p);
 		} else if( *p == '\''){
 			printf("Error: Not have availbe char");
 			ret->tValue.i= 0 ; // 空字符就设置成0.
 			*cur = ++p;
 			return ret;
 		} else{
-			ret->tValue.i=*p;
+			ret->tValue.i = *p;
 			p++;
 		}
 		// 处理关闭.
@@ -409,26 +317,8 @@ token* lexical(Buffer* buf, char** cur, int* line){
 		}
 	    case '"' :
 		ret = newToken(TokenString);
-		ds  = newDynstr();
-		++p;
-		while(*p && (*p !='"')){
-			if(*p == '\\'){
-				++p;
-				ds = appendChar(ds, (char)char_escape(&p));
-			} else{
-				ds = appendChar(ds, *p);
-				++p;
-			}
-		}
-		ds = appendChar(ds, '\0');
-		ret->tValue.s = ds;
-		
-		if( *p =='"'){
-			*cur = ++p; // skip the close ".
-			return ret;
-		}
-		printf("Error: lexical sting not close");
-		*cur = p; // skip the close ".
+		ret->tValue.ds=scanStrLiteral(&p);
+		*cur = p;
 		return ret;
 	    case '\0':
 		*cur = ++p; 
@@ -475,8 +365,8 @@ static void printToken(token* t){
 		printf("KeyWord:%s\n", kwStrMap[t->tCode -TKw_package].str);
 		return;
 	}
-	if(t->tCode == TokenId){
-		printf("Id:%s\n", t->tValue.s->data);
+	if(t->tCode == TokenID){
+		printf("Id:%s\n", t->tValue.ds->data);
 		return;
 	}
 	if(t->tCode == TokenChar){
@@ -484,7 +374,7 @@ static void printToken(token* t){
 		return;
 	}
 	if(t->tCode == TokenString){
-		printf("String:%s\n", t->tValue.s->data);
+		printf("String:%s\n", t->tValue.ds->data);
 		return;
 	}
 	if(t->tCode == TokenInteger){
