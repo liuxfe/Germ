@@ -3,22 +3,21 @@
 #ifndef _SCANNER_H
 #define _SCANNER_H
 
+typedef union _tokenValue tokenValue;
 union _tokenValue{
 	uint     i;
 	double   f;
 	String*  s;
-	symStr*  ss;
 };
-typedef union _tokenValue tokenValue;
 
+typedef struct _token Token;
 struct _token{
-	struct _token* tNext;
+	Token*         tNext;
 	int            tCode;
 	tokenValue     tValue;
 	char*          tPosFile;
 	int            tPosLine;
 };
-typedef struct _token token;
 
 /*
  * const values of token code.
@@ -108,7 +107,7 @@ enum {
 	TokenEnd
 };
 
-token* scanFile(char*);
-void printTokenList(token*);
+Token* scanFile(char*);
+void printTokenList(Token*);
 
 #endif

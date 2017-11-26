@@ -5,7 +5,7 @@
 
 void* xmalloc(uint);
 void  xfree(void*);
-bool  xstrcmp(char*, char*, char*);
+void  xstrncpy(char*, char*, int);
 uint escapeChar(char**);
 FILE* xfopen(char*, char*);
 void  xfclose(FILE*);

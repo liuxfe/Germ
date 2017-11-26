@@ -14,5 +14,8 @@ struct _string{
 };
 
 String* scanStringLiteral(char**);
+String* lookUpString(String*);
+String* storeString(char*, int);
+void printHashTable();
 
 #endif

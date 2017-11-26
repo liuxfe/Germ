@@ -3,7 +3,7 @@
 #include "germ.h"
 
 int doComplie(char* file){
-	token* tlist = scanFile(file);
+	Token* tlist = scanFile(file);
 	printHashTable();
 	printTokenList(tlist);
 

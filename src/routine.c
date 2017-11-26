@@ -22,20 +22,11 @@ void xfree(void* p){
 }
 
 /* -------------- String Operate Routines ----------------*/
-/* 比较字符串，相等返回true，反之返回false
-   字符串1是null结尾，字符串2指定起始和结尾地址 */
-bool xstrcmp(char* s1, char* start, char* end){
-	while( *s1 && start < end){
-		if( *s1 != *start){
-			return false;
-		}
-		s1++;
-		start++;
+void xstrncpy(char* dst, char* src, int len){
+	while(len--){
+		*dst++ = *src++;
 	}
-	if( (*s1 != 0) || (start!=end) ){
-		return false;
-	}
-	return true;
+	*dst='\0';
 }
 
 uint escapeChar(char** str){

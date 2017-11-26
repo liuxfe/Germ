@@ -2,8 +2,8 @@
 
 #include "germ.h"
 
-static token* newToken(int tokencode){
-	token* ret = xmalloc(sizeof(token));
+static Token* newToken(int tokencode){
+	Token* ret = xmalloc(sizeof(Token));
 	ret->tCode = tokencode;
 	ret->tNext = null;
 	return ret;
@@ -28,9 +28,9 @@ static bool isNumber2(char ch){
 	return (ch >='0' && ch <= '9');
 }
 
-token* lexical(Buffer* buf, char** cur, int* line){
+Token* lexical(Buffer* buf, char** cur, int* line){
 	char* start;
-	token* ret;
+	Token* ret;
 	char *p = *cur;
 
     repeat:
@@ -49,7 +49,7 @@ token* lexical(Buffer* buf, char** cur, int* line){
 		while(isId2(*p)){
 			p++;
 		}
-		ret->tValue.ss=insertSymStr(start, p);
+		ret->tValue.s=storeString(start, p - start);
 		*cur = p;
 		return ret;
 	}
@@ -270,9 +270,9 @@ token* lexical(Buffer* buf, char** cur, int* line){
 }
 
 // scan the buffer, return the token list.
-token* doScan(Buffer* buf){
-	token* head = newToken(TokenStart);
-	token* tail = head;
+Token* doScan(Buffer* buf){
+	Token* head = newToken(TokenStart);
+	Token* tail = head;
 	char* p = buf->data;
 	int line = 1;
 
@@ -286,9 +286,9 @@ token* doScan(Buffer* buf){
 	return head;
 }
 
-token* scanFile(char* filename){
+Token* scanFile(char* filename){
 	Buffer* buf;
-	token* tokenlist;
+	Token* tokenlist;
 
 	buf = readFileToBuffer(filename);
 	tokenlist = doScan(buf);
@@ -298,14 +298,14 @@ token* scanFile(char* filename){
 	return tokenlist;
 }
 
-static void printToken(token* t){
+static void printToken(Token* t){
 	printf("(File: %s Line:%d)\t", t->tPosFile, t->tPosLine);
 	if(t->tCode >= TKw_package && t->tCode <= TKw_const){
-		printf("KeyWord:%s\n", t->tValue.ss->data);
+		printf("KeyWord:%s\n", t->tValue.s->data);
 		return;
 	}
 	if(t->tCode == TokenID){
-		printf("Id:%s\n", t->tValue.ss->data);
+		printf("Id:%s\n", t->tValue.s->data);
 		return;
 	}
 	if(t->tCode == TokenChar){
@@ -323,8 +323,8 @@ static void printToken(token* t){
 	printf("TCode:%d\n", t->tCode);
 }
 
-void printTokenList(token* t){
-	token* tmp=t;
+void printTokenList(Token* t){
+	Token* tmp=t;
 	printf("----------Debug Token-------------\n");
 	while(tmp->tCode != TokenEnd){
 		printToken(tmp);
