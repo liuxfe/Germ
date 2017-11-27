@@ -3,7 +3,7 @@
 .c.o:
 	cc -fno-builtin -c -o $@  $<
 
-OBJS =	src/routine.o	\
+OBJS =	src/xroutine.o	\
 	src/vector.o	\
 	src/buffer.o	\
 	src/scanner.o	\

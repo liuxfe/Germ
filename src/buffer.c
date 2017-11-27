@@ -4,18 +4,15 @@
 
 const int B_SIZE = 1024;
 
-Buffer* newBuffer(char* name){
+Buffer* _newBuffer(char* name){
 	Buffer *ret = xmalloc(sizeof(Buffer) + B_SIZE);
-
 	ret->filename = name;
 	ret->nalloc = B_SIZE;
-	ret->nchars = 0;
 	return ret;
 }
 
-Buffer* growBuffer(Buffer* buf){
+Buffer* _growBuffer(Buffer* buf){
 	Buffer *ret = malloc(sizeof(Buffer) + buf->nalloc + B_SIZE);
-
 	ret->filename = buf->filename;
 	ret->nalloc = buf->nalloc + B_SIZE;
 	ret->nchars = buf->nchars;
@@ -24,12 +21,11 @@ Buffer* growBuffer(Buffer* buf){
 	return ret;
 }
 
-Buffer* wrireCharToBuffer(Buffer* buf, char ch){
+Buffer* _wrireCharToBuffer(Buffer* buf, char ch){
 	if( buf->nchars + 1 >= buf->nalloc ){
-		buf = growBuffer(buf);
+		buf = _growBuffer(buf);
 	}
 	buf->data[buf->nchars++] = ch;
-
 	return buf;
 }
 
@@ -37,16 +33,16 @@ Buffer* readFileToBuffer(char *name){
 	int ch;
 
 	FILE* file = xfopen(name, "r");
-	Buffer* ret = newBuffer(name);
+	Buffer* ret = _newBuffer(name);
 
 	for(ch=fgetc(file); ch != EOF; ch=fgetc(file)){
-		ret = wrireCharToBuffer(ret,(char)ch);
+		ret = _wrireCharToBuffer(ret,(char)ch);
 	}
 	// Append '\n','\0' to the file end, make lexcier easier.
-	ret = wrireCharToBuffer(ret,'\n');
-	ret = wrireCharToBuffer(ret,'\0');
+	ret = _wrireCharToBuffer(ret,'\n');
+	ret = _wrireCharToBuffer(ret,'\0');
 
-	fclose(file);
+	xfclose(file);
 
 	return ret;
 }

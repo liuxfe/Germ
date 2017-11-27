@@ -22,11 +22,39 @@ typedef char bool;
 #define true  1;
 #define false 0;
 
-#include "routine.h"
-#include "vector.h"
+// xrourine.c
+void* xmalloc(uint);
+void  xfree(void*);
+FILE* xfopen(char*, char*);
+void  xfclose(FILE*);
+void  xstrncpy(char*, char*, int);
+uint  escapeChar(char**);
+
+// vector.c
+typedef struct _vector Vector;
+struct _vector{
+	int    solt;
+	int    item;
+	void** data;
+};
+
+void pushToVector(Vector*, void*);
+void deleteVector(Vector*);
+
+// buffer.c
+typedef struct _buffer Buffer;
+struct _buffer{
+	char*   filename;
+	int     nalloc;
+	int     nchars;
+	char    data[0];
+};
+
+Buffer* readFileToBuffer(char*);
+void deleteBuffer(Buffer*);
+
 #include "symbol.h"
 #include "xstring.h"
-#include "buffer.h"
 #include "scanner.h"
 #include "declare.h"
 #include "statement.h"
