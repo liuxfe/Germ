@@ -25,6 +25,6 @@ enum {
 	ST_KeyWord = 100,
 };
 
-void initKeyWordSymbol();
+Symbol* newSymbol(uint);
 
 #endif
