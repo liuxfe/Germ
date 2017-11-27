@@ -17,6 +17,7 @@ BasicType Float32Type = {BTypeId_float32,4};
 BasicType Float64Type = {BTypeId_float64,8};
 BasicType BoolType    = {BTypeId_bool,   1};
 BasicType CharType    = {BTypeId_char,   4};
+BasicType CharVoid    = {BTypeId_viod,   0};
 
 BasicType* matchType(Token* t){
 	switch(t->tCode){
@@ -53,6 +54,6 @@ BasicType* matchType(Token* t){
 	    case TKw_char :
 		return &CharType;
 	    default :
-		return null;
+		return NULL;
 	}
 }
