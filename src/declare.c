@@ -45,10 +45,6 @@ BasicType* matchType(Token* t){
 		return &Float32Type;
 	    case TKw_float64 :
 		return &Float64Type;
-	    case TKw_float64 :
-		return &Float64Type;
-	    case TKw_float64 :
-		return &Float64Type;
 	    case TKw_bool :
 		return &BoolType;
 	    case TKw_char :

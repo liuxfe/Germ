@@ -1,7 +1,7 @@
 # Copyright (c) 2017 Tohack<tohack@foxmail.com>. All Rights Reserved.
 
 .c.o:
-	cc -c -o $@  $<
+	cc -fno-builtin -c -o $@  $<
 
 OBJS =	src/routine.o	\
 	src/vector.o	\
