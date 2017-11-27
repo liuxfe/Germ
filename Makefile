@@ -4,11 +4,13 @@
 	cc -c -o $@  $<
 
 OBJS =	src/routine.o	\
+	src/vector.o	\
 	src/buffer.o	\
 	src/scanner.o	\
 	src/xstring.o	\
 	src/declare.o	\
 	src/symbol.o	\
+	src/statement.o \
 	src/germ.o
 
 germ: $(OBJS)

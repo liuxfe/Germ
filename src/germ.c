@@ -88,8 +88,9 @@ void initResWordSymbol(){
 
 int doComplie(char* file){
 	Token* tlist = scanFile(file);
-	printHashTable();
-	printTokenList(tlist);
+	except(&tlist, TokenStart);
+	PackageStmt* st = parsePackageStmt(&tlist);
+	printPackageStmt(st);
 
 	return 0;
 }

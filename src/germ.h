@@ -25,10 +25,12 @@ typedef char bool;
 #define null  NULL;
 
 #include "routine.h"
+#include "vector.h"
 #include "symbol.h"
 #include "xstring.h"
 #include "buffer.h"
 #include "scanner.h"
 #include "declare.h"
+#include "statement.h"
 
 #endif

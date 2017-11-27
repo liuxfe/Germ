@@ -337,6 +337,9 @@ Token* scanFile(char* filename){
 	return tokenlist;
 }
 
+void deleteToken(Token* t){
+	xfree(t);
+}
 static void printToken(Token* t){
 	printf("(File: %s Line:%d)\t", t->tPosFile, t->tPosLine);
 	if(t->tCode >= TKw_package && t->tCode <= TKw_const){

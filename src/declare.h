@@ -26,6 +26,7 @@ enum {
 	BTypeId_bool,
 	BTypeId_char,
 	BTypeId_void,
+	BTypeId_viod,
 };
 
 extern BasicType IntType;

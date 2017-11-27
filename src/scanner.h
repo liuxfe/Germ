@@ -116,6 +116,7 @@ enum {
 };
 
 Token* scanFile(char*);
+void deleteToken(Token*);
 void printTokenList(Token*);
 
 #endif
