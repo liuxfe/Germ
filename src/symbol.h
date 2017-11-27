@@ -23,6 +23,7 @@ struct _symbol{
 /* values of symType*/
 enum {
 	ST_KeyWord = 100,
+	ST_ResWord,
 };
 
 Symbol* newSymbol(uint);

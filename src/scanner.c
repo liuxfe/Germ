@@ -54,6 +54,40 @@ Token* lexical(Buffer* buf, char** cur, int* line){
 		if( ret->tValue.s->symbol){
 			if(ret->tValue.s->symbol->sType == ST_KeyWord){
 				ret->tCode = ret->tValue.s->symbol->sValue.i;
+				return ret;
+			}
+			if(ret->tValue.s->symbol->sType == ST_ResWord){
+				switch(ret->tValue.s->symbol->sValue.i){
+				    case TRw_true:
+					ret->tCode = TokenBool;
+					ret->tValue.i = 1;
+					return ret;
+				    case TRw_false:
+					ret->tCode = TokenBool;
+					ret->tValue.i = 0;
+					return ret;
+				    case TRw_NULL:
+					ret->tCode = TokenNULL;
+					return ret;
+				    case TRw___FILE__:
+					ret->tCode = TokenString;
+					ret->tValue.s=storeString(buf->filename, strlen(buf->filename));
+					return ret;
+				    case TRw___LINE__:
+					ret->tCode = TokenInteger;
+					ret->tValue.i = *line;
+					return ret;
+				    case TRw___DATA__:
+					ret->tCode = TokenString;
+					ret->tValue.s=storeString("2017-11-11",10);
+					return ret;
+				    case TRw___TIME__:
+					ret->tCode = TokenInteger;
+					ret->tValue.i=time(NULL);
+					return ret;
+				    default:
+					printf("Fatal: ResWord not deal");
+				}
 			}
 		}
 		return ret;

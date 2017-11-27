@@ -63,6 +63,13 @@ enum {
 	TKw_return,
 	TKw_goto,
 	TKw_const,
+	TRw_true,		// bool常量
+	TRw_false,		// bool常量
+	TRw_NULL,		// NULL常量
+	TRw___FILE__,		// __FILE__ 字符串常量
+	TRw___LINE__,		// __LINE__ 整数常量
+	TRw___DATA__,		// __DATE__ 字符串常量
+	TRw___TIME__,		// __TIME__ 整数常量
 	TOp_add,		// +
 	TOp_sub,		// -
 	TOp_div,		// /
@@ -103,6 +110,7 @@ enum {
 	TokenBool,		// 布尔常量
 	TokenFloat,		// 浮点常量
 	TokenString,		// 字符串常量
+	TokenNULL,		// NULL常量
 	TokenID,		// 标识符
 	TokenEnd
 };

@@ -46,6 +46,16 @@ struct tCodeStringMap keyWordMap[]={
 	{ TKw_const,    "const"   },
 	{ 0, NULL}
 };
+struct tCodeStringMap resWordMap[]={
+	{ TRw_true,     "true"    },
+	{ TRw_false,    "false"   },
+	{ TRw_NULL,     "NULL"    },
+	{ TRw___FILE__, "__FILE__"},
+	{ TRw___LINE__, "__LINE__"},
+	{ TRw___DATA__, "__DATE__"},
+	{ TRw___TIME__, "__TIME__"},
+	{ 0, NULL}
+};
 
 // 给关键字够建符号表，并将关键字字符串插入到字符串散列表中
 void initKeyWordSymbol(){
@@ -56,9 +66,21 @@ void initKeyWordSymbol(){
 	for(tmp=keyWordMap; tmp->code; tmp++){
 		string= storeString(tmp->str, strlen(tmp->str));
 		symbol = newSymbol(ST_KeyWord);
-
 		string->symbol = symbol;
-		
+		symbol->sID = string;
+		symbol->sValue.i = tmp->code;
+	}
+}
+
+void initResWordSymbol(){
+	String* string;
+	Symbol* symbol;
+	struct tCodeStringMap* tmp;
+
+	for(tmp=resWordMap; tmp->code; tmp++){
+		string= storeString(tmp->str, strlen(tmp->str));
+		symbol = newSymbol(ST_ResWord);
+		string->symbol = symbol;
 		symbol->sID = string;
 		symbol->sValue.i = tmp->code;
 	}
@@ -84,5 +106,6 @@ int main(int argc, char* argv[]){
 	setvbuf(out, NULL, _IONBF, 0);
 
 	initKeyWordSymbol();
+	initResWordSymbol();
 	return doComplie(argv[1]);
 }
