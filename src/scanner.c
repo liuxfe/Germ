@@ -5,7 +5,6 @@
 static Token* newToken(int tokencode){
 	Token* ret = xmalloc(sizeof(Token));
 	ret->tCode = tokencode;
-	ret->tNext = null;
 	return ret;
 }
 
