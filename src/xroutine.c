@@ -2,18 +2,23 @@
 
 #include "germ.h"
 
-/* --------------- Memory Manage Routines ------------------*/
+/* --------------- Memory Manage Function ------------------*/
+
 void* xmalloc(uint bytes){
 	void* ret = malloc(bytes);
+	char* p = ret;
+
 	if( !ret ){
 		fprintf(stderr, "Fatal: out of memory\n");
 		exit(-1);
 	}
-	memset(ret, 0, bytes);
+	while(bytes--){
+		*p++ = 0;
+	}
 	return ret;
 }
 
-void xfree(void* p){
+void  xfree(void* p){
 	if(!p){
 		fprintf(stderr, "Warn: free empty memory\n");
 		return;
@@ -21,8 +26,34 @@ void xfree(void* p){
 	free(p);
 }
 
-/* -------------- String Operate Routines ----------------*/
-void xstrncpy(char* dst, char* src, int len){
+
+/* -------------- String Operate Function ----------------*/
+
+int   xstrlen(char* s){
+	int i = 0;
+	while(*s++){
+		i++;
+	}
+	return i;
+}
+
+int   xstrcmp(char* s1, char* s2){
+	while(*s1 && *s2 && (*s1 == *s2)){
+		s1++;
+		s2++;
+	}
+	return *s1 - *s2;
+}
+
+void  xmemcpy(void* s1, void* s2, int len){
+	char* p1 = s1;
+	char* p2 = s2;
+	while(len--){
+		*p1++ = *p2++;
+	}
+}
+
+void  xstrncpy(char* dst, char* src, int len){
 	while(len--){
 		*dst++ = *src++;
 	}
@@ -97,7 +128,9 @@ uint escapeChar(char** str){
 	}
 }
 
+
 /* ---------------- File IO Routines ---------------------*/
+
 FILE* xfopen(char* filename, char* op){
 	FILE* ret = fopen(filename, op);
 	if( !ret ){

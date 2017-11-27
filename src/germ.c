@@ -64,7 +64,7 @@ void initKeyWordSymbol(){
 	struct tCodeStringMap* tmp;
 
 	for(tmp=keyWordMap; tmp->code; tmp++){
-		string= storeString(tmp->str, strlen(tmp->str));
+		string= storeString(tmp->str, xstrlen(tmp->str));
 		symbol = newSymbol(ST_KeyWord);
 		string->symbol = symbol;
 		symbol->sID = string;
@@ -78,7 +78,7 @@ void initResWordSymbol(){
 	struct tCodeStringMap* tmp;
 
 	for(tmp=resWordMap; tmp->code; tmp++){
-		string= storeString(tmp->str, strlen(tmp->str));
+		string= storeString(tmp->str, xstrlen(tmp->str));
 		symbol = newSymbol(ST_ResWord);
 		string->symbol = symbol;
 		symbol->sID = string;
@@ -96,7 +96,6 @@ int doComplie(char* file){
 }
 
 int main(int argc, char* argv[]){
-	FILE* in;
 	FILE* out = stdout;
 
 	if(argc != 2){

@@ -6,7 +6,7 @@ const int V_SIZE = 2;
 
 void _expandVector(Vector* vec){
 	void** p = xmalloc((vec->solt + V_SIZE)* sizeof(void**));
-	memcpy(p, vec->data, vec->solt * sizeof(void**));
+	xmemcpy(p, vec->data, vec->solt * sizeof(void**));
 	if(vec->data){
 		xfree(vec->data);
 	}

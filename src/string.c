@@ -13,7 +13,7 @@ String* _growDynString(String* str){
 	String* ret = xmalloc(sizeof(String) + D_SIZE + str->nalloc);
 	ret->nalloc = str->nalloc + D_SIZE;
 	ret->nchars = str->nchars;
-	memcpy(ret->data, str->data, str->nchars);
+	xmemcpy(ret->data, str->data, str->nchars);
 	xfree(str);
 	return ret;
 }
@@ -57,7 +57,7 @@ uint _stringHash(char* start, int len){
 	uint x = 0;
 
 	while(len--){
-		h = *start + h<< 4;
+		h = *start + (h << 4);
 		if( h & 0xF0000000){
 			x = h >> 24;
 			h ^= x;
@@ -91,7 +91,7 @@ String* lookUpString(String* s){
 		if(find->hash != s->hash){
 			continue;
 		}
-		if(strcmp(find->data, s->data) == 0){
+		if(xstrcmp(find->data, s->data) == 0){
 			break;
 		}
 	}

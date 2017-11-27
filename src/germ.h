@@ -25,10 +25,13 @@ typedef char bool;
 // xrourine.c
 void* xmalloc(uint);
 void  xfree(void*);
-FILE* xfopen(char*, char*);
-void  xfclose(FILE*);
+int   xstrlen(char*);
+int   xstrcmp(char*, char*);
+void  xmemcpy(void*, void*, int);
 void  xstrncpy(char*, char*, int);
 uint  escapeChar(char**);
+FILE* xfopen(char*, char*);
+void  xfclose(FILE*);
 
 // vector.c
 typedef struct _vector Vector;
@@ -54,7 +57,7 @@ Buffer* readFileToBuffer(char*);
 void deleteBuffer(Buffer*);
 
 #include "symbol.h"
-#include "xstring.h"
+#include "string.h"
 #include "scanner.h"
 #include "declare.h"
 #include "statement.h"

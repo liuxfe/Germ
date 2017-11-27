@@ -12,11 +12,11 @@ Buffer* _newBuffer(char* name){
 }
 
 Buffer* _growBuffer(Buffer* buf){
-	Buffer *ret = malloc(sizeof(Buffer) + buf->nalloc + B_SIZE);
+	Buffer *ret = xmalloc(sizeof(Buffer) + buf->nalloc + B_SIZE);
 	ret->filename = buf->filename;
 	ret->nalloc = buf->nalloc + B_SIZE;
 	ret->nchars = buf->nchars;
-	memcpy(ret->data, buf->data, buf->nalloc);
+	xmemcpy(ret->data, buf->data, buf->nalloc);
 	xfree(buf);
 	return ret;
 }

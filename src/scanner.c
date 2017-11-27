@@ -70,7 +70,7 @@ Token* lexical(Buffer* buf, char** cur, int* line){
 					return ret;
 				    case TRw___FILE__:
 					ret->tCode = TokenString;
-					ret->tValue.s=storeString(buf->filename, strlen(buf->filename));
+					ret->tValue.s=storeString(buf->filename, xstrlen(buf->filename));
 					return ret;
 				    case TRw___LINE__:
 					ret->tCode = TokenInteger;
@@ -82,7 +82,7 @@ Token* lexical(Buffer* buf, char** cur, int* line){
 					return ret;
 				    case TRw___TIME__:
 					ret->tCode = TokenInteger;
-					ret->tValue.i=time(NULL);
+					ret->tValue.i=115;
 					return ret;
 				    default:
 					printf("Fatal: ResWord not deal");
