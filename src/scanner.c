@@ -51,6 +51,11 @@ Token* lexical(Buffer* buf, char** cur, int* line){
 		}
 		ret->tValue.s=storeString(start, p - start);
 		*cur = p;
+		if( ret->tValue.s->symbol){
+			if(ret->tValue.s->symbol->sType == ST_KeyWord){
+				ret->tCode = ret->tValue.s->symbol->sValue.i;
+			}
+		}
 		return ret;
 	}
 

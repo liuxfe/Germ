@@ -3,18 +3,22 @@
 #ifndef _SYMBOL_H
 #define _SYMBOL_H
 
-union _symValue{
+typedef union _symbolValue symbolValue;
+union _symbolValue{
 	uint i;
 };
-typedef union _symValue SymValue;
 
-struct _symbol{
-	uint     symType;
-	SymValue symValue;
-	struct _symbol symNext;
-	struct _symbol symScope;
-};
+// defined at xstring.h
+typedef struct _string String;
+
 typedef struct _symbol Symbol;
+struct _symbol{
+	uint           sType;
+	Symbol*        sNext;
+	Symbol*        sScope;
+	String*        sID;
+	symbolValue    sValue;
+};
 
 /* values of symType*/
 enum {

@@ -4,7 +4,7 @@
 
 Symbol* newSymbol(uint type){
 	Symbol* ret=xmalloc(sizeof(Symbol));
-	ret->symType=type;
+	ret->sType=type;
 	return ret;
 }
 
@@ -55,14 +55,17 @@ static struct kwCodeWithString kwStrMap[]={
 
 // 给关键字够建符号表，并将关键字字符串插入到字符串散列表中
 void initKeyWordSymbol(){
+	String* string;
 	Symbol* symbol;
 	struct kwCodeWithString* tmp;
 
 	for(tmp=kwStrMap; tmp->code; tmp++){
-		//symstr = insertSymStr(tmp->str, tmp->str + strlen(tmp->str));
+		string= storeString(tmp->str, strlen(tmp->str));
 		symbol = newSymbol(ST_KeyWord);
-		//symbol->keystr = symstr;
-		symbol->symValue.i = tmp->code;
-		//symstr->symList = symbol;
+
+		string->symbol = symbol;
+		
+		symbol->sID = string;
+		symbol->sValue.i = tmp->code;
 	}
 }
