@@ -2,6 +2,8 @@
 
 #include "germ.h"
 
+int wantDumpTokenVector = 1;
+
 struct tCodeStringMap{
 	uint  code;
 	char* str;
@@ -66,7 +68,7 @@ void initKeyWordSymbol(){
 	for(tmp=keyWordMap; tmp->code; tmp++){
 		string= storeString(tmp->str, xstrlen(tmp->str));
 		symbol = newSymbol(ST_KeyWord);
-		string->symbol = symbol;
+		//string->symbol = symbol;
 		symbol->sID = string;
 		symbol->sValue.i = tmp->code;
 	}
@@ -80,7 +82,7 @@ void initResWordSymbol(){
 	for(tmp=resWordMap; tmp->code; tmp++){
 		string= storeString(tmp->str, xstrlen(tmp->str));
 		symbol = newSymbol(ST_ResWord);
-		string->symbol = symbol;
+		//string->symbol = symbol;
 		symbol->sID = string;
 		symbol->sValue.i = tmp->code;
 	}

@@ -3,25 +3,19 @@
 #ifndef _SCANNER_H
 #define _SCANNER_H
 
-typedef union _tokenValue tokenValue;
-union _tokenValue{
-	uint     i;
-	double   f;
-	String*  s;
-};
-
-typedef struct _token Token;
-struct _token{
+typedef struct _token{
 	int            tCode;
-	tokenValue     tValue;
+	union{
+	    uint       iValue;
+	    double     fValue;
+	    String*    sValue;
+	};
 	char*          tPosFile;
 	int            tPosLine;
-};
+} Token;
 
 /*
  * const values of token code.
- * TKw_ for KeyWord.
- * TOp_ for Operate.
  */
 enum {
 	TKw_package,
@@ -114,4 +108,5 @@ enum {
 };
 
 Vector* ScanFile(char*);
+
 #endif

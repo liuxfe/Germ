@@ -8,9 +8,6 @@ union _symbolValue{
 	uint i;
 };
 
-// defined at xstring.h
-typedef struct _string String;
-
 typedef struct _symbol Symbol;
 struct _symbol{
 	uint           sType;

@@ -31,7 +31,7 @@ void  xmemcpy(void*, void*, int);
 int   xstrlen(char*);
 int   xstrcmp(char*, char*);
 void  xstrncpy(char*, char*, int);
-uint  escapeChar(char**);
+int   xhex2num(char);
 
 // vector.c
 typedef struct _vector{
@@ -43,12 +43,29 @@ typedef struct _vector{
 void pushToVector(Vector*, void*);
 void deleteVector(Vector*);
 
-char* loadFile(char*);
+// string.c
+typedef struct _string String;
+struct _string{
+	Vector  symbol;
+	String* next;
+	uint	hash;
+	uint	nalloc;
+	uint	nchars;
+	char	data[0];
+};
 
-#include "symbol.h"
-#include "string.h"
+String* CreateDynString();
+String* AppendCharToDynString(String*, char);
+String* scanStringLiteral(char**);
+String* lookUpString(String*);
+String* storeString(char*, int);
+void printHashTable();
+
 #include "scanner.h"
+#include "symbol.h"
 #include "declare.h"
 #include "statement.h"
+
+extern int wantDumpTokenVector;
 
 #endif

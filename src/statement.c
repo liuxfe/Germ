@@ -17,13 +17,13 @@ PackageStmt* parsePackageStmt(Token** tokenlist){
 	Token* t = *tokenlist;
 	PackageStmt* ret = xmalloc(sizeof(PackageStmt));
 
-	ret->stmtType = StmtT_package;
+	ret->stmtType = Stmt_package;
 
 	except(&t,TKw_package);
 
     repeat:
 	if(t->tCode == TokenID){
-		pushToVector(&(ret->vector),t->tValue.s);
+		pushToVector(&(ret->vector),t->sValue);
 		except(&t,TokenID);
 		if(t->tCode == TOp_dot){
 			except(&t,TOp_dot);
