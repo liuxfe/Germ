@@ -2,7 +2,7 @@
 
 #include "germ.h"
 
-const int V_SIZE = 2;
+const int V_SIZE = 4;
 
 void _expandVector(Vector* vec){
 	void** p = xmalloc((vec->solt + V_SIZE)* sizeof(void**));

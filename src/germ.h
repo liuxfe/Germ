@@ -34,12 +34,11 @@ void  xstrncpy(char*, char*, int);
 uint  escapeChar(char**);
 
 // vector.c
-typedef struct _vector Vector;
-struct _vector{
+typedef struct _vector{
 	int    solt;
 	int    item;
 	void** data;
-};
+} Vector;
 
 void pushToVector(Vector*, void*);
 void deleteVector(Vector*);
