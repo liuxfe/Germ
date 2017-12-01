@@ -87,10 +87,11 @@ void initResWordSymbol(){
 }
 
 int doComplie(char* file){
-	Token* tlist = scanFile(file);
-	except(&tlist, TokenStart);
-	PackageStmt* st = parsePackageStmt(&tlist);
-	printPackageStmt(st);
+	ScanFile(file);
+	//Token* tlist = ;
+	//except(&tlist, TokenStart);
+	//PackageStmt* st = parsePackageStmt(&tlist);
+	//printPackageStmt(st);
 
 	return 0;
 }

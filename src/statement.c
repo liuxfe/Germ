@@ -5,8 +5,8 @@
 void except(Token** tokenlist, uint tcode){
 	Token* t = *tokenlist;
 	if(t->tCode == tcode){
-		*tokenlist = t->tNext;
-		deleteToken(t);
+		
+		//deleteToken(t);
 		return;
 	}
 	printf("except:%d(%c) not match at (%s,%d)", tcode,tcode,t->tPosFile,t->tPosLine);

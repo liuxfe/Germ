@@ -2,7 +2,54 @@
 
 #include "germ.h"
 
-static Token* newToken(int tokencode){
+const int FB_GROWSIZE = 1024;
+
+typedef struct _buffer{
+	int     nalloc;
+	int     nchars;
+	char*   data;
+} Buffer;
+
+void _insertCharToBuffer(Buffer* buf, char ch){
+	char* tmp;
+	if(buf->nchars+1 >= buf->nalloc){
+		tmp = xmalloc(buf->nalloc + FB_GROWSIZE);
+		if(buf->data){
+			xmemcpy(tmp, buf->data, buf->nchars);
+			xfree(buf->data);
+		}
+		buf->nalloc = buf->nalloc + FB_GROWSIZE;
+		buf->data = tmp;
+	}
+	buf->data[buf->nchars++] = ch;
+}
+
+char* _loadFile(char* filename){
+	int  ch;
+
+	Buffer buf = {0, 0, NULL};
+	FILE* file = xfopen(filename, "r");
+
+	for(ch=fgetc(file); ch != EOF; ch=fgetc(file)){
+		_insertCharToBuffer(&buf,(char)ch);
+	}
+	// Append '\n','\0' to the file end, make lexcier easier.
+	_insertCharToBuffer(&buf,'\n');
+	_insertCharToBuffer(&buf,'\0');
+
+	xfclose(file);
+
+	return buf.data;
+}
+
+typedef struct _scanState{
+	char* filename;
+	char* buf;
+	char* cur;
+	int   line;
+} ScanState;
+
+static Token* _newToken(int tokencode){
 	Token* ret = xmalloc(sizeof(Token));
 	ret->tCode = tokencode;
 	return ret;
@@ -27,29 +74,26 @@ static bool isNumber2(char ch){
 	return (ch >='0' && ch <= '9');
 }
 
-Token* lexical(Buffer* buf, char** cur, int* line){
+bool _exceptChar(ScanState* ss, char ch){
+	if(*ss->cur == ch ){
+		ss->cur++;
+		return true;
+	}
+	return false;
+}
+
+Token* lexical(ScanState* ss){
 	char* start;
 	Token* ret;
-	char *p = *cur;
 
     repeat:
-	while( *p == ' ' || *p== '\t' || *p== '\r'){
-		p++;
-	}
-	if( *p == '\n' ){
-		p++;
-		(*line)++;
-		goto repeat;
-	}
-
-	if(isId(*p)){
-		start = p++ ;
-		ret = newToken(TokenID);
-		while(isId2(*p)){
-			p++;
+	if(isId(*ss->cur)){
+		start = ss->cur;
+		ret = _newToken(TokenID);
+		while(isId2(*ss->cur)){
+			ss->cur++;
 		}
-		ret->tValue.s=storeString(start, p - start);
-		*cur = p;
+		ret->tValue.s=storeString(start, ss->cur - start);
 		if( ret->tValue.s->symbol){
 			if(ret->tValue.s->symbol->sType == ST_KeyWord){
 				ret->tCode = ret->tValue.s->symbol->sValue.i;
@@ -68,14 +112,14 @@ Token* lexical(Buffer* buf, char** cur, int* line){
 				    case TRw_NULL:
 					ret->tCode = TokenNULL;
 					return ret;
-				    case TRw___FILE__:
-					ret->tCode = TokenString;
-					ret->tValue.s=storeString(buf->filename, xstrlen(buf->filename));
-					return ret;
-				    case TRw___LINE__:
-					ret->tCode = TokenInteger;
-					ret->tValue.i = *line;
-					return ret;
+				    //case TRw___FILE__:
+					//ret->tCode = TokenString;
+					//ret->tValue.s=storeString(buf->filename, xstrlen(buf->filename));
+					//return ret;
+				    //case TRw___LINE__:
+					//ret->tCode = TokenInteger;
+					//ret->tValue.i = *line;
+					//return ret;
 				    case TRw___DATA__:
 					ret->tCode = TokenString;
 					ret->tValue.s=storeString("2017-11-11",10);
@@ -92,253 +136,192 @@ Token* lexical(Buffer* buf, char** cur, int* line){
 		return ret;
 	}
 
-	if(isNumber(*p)){
-		ret = newToken(TokenInteger);
-		ret->tValue.i= *p - '0';
-		p++;
-		while(isNumber2(*p)){
-			ret->tValue.i = ret->tValue.i * 10 + *p - '0';
-			p++;
+	if(isNumber(*ss->cur)){
+		ret = _newToken(TokenInteger);
+		ret->tValue.i= *ss->cur - '0';
+		ss->cur++;
+		while(isNumber2(*ss->cur)){
+			ret->tValue.i = ret->tValue.i * 10 + *ss->cur - '0';
+			ss->cur++;
 		}
-		*cur = p;
 		return ret;
 	}
-	// deal with other chars.
-	switch(*p){
-	    case '{' : case '}' : case '[' : case ']' :
-	    case '(' : case ')' : case ';' : case ':' :
-	    case ',' :
-		*cur =p +1;
-		return newToken(*p);
+
+	switch(*ss->cur){
+	    case '\n':
+		ss->line++;
+	    case ' ' : case '\t' : case '\r' :
+		ss->cur++;
+		goto repeat;
+	    case '{' : case '}' : case '[' : case ']' : case '(' : case ')' :
+	    case ';' : case ':' : case ',' :
+		return _newToken(*ss->cur++);
 	    case '.' :
-		if( *(p+1) =='.' && *(p+2) == '.'){
-			*cur = p+3;
-			return newToken(TOp_threeDot);
-		}else{
-			*cur = p+1;
-			return newToken(TOp_dot);
+		ss->cur++;
+		if(_exceptChar(ss, '.')){
+			if(_exceptChar(ss, '.')){
+				return _newToken(TOp_3dot);
+			}
+			return _newToken(TOp_2dot);
 		}
+		return _newToken(TOp_dot);
 	    case '+' :
-		if( *(p+1) == '+'){
-			*cur = p+2;
-			return newToken(TOp_inc);
-		}else if( *(p+1) == '='){
-			*cur = p+2;
-			return newToken(TOp_addAssign);
-		}else{
-			*cur = p+1;
-			return newToken(TOp_add);
+		ss->cur++;
+		if(_exceptChar(ss, '+')){
+			return _newToken(TOp_inc);
 		}
+		if(_exceptChar(ss, '=')){
+			return _newToken(TOp_addAssign);
+		}
+		return _newToken(TOp_add);
 	    case '-' :
-		if( *(p+1) == '-'){
-			*cur = p+2;
-			return newToken(TOp_dec);
-		}else if( *(p+1) == '='){
-			*cur = p+2;
-			return newToken(TOp_subAssign);
-		}else if( *(p+1) == '>'){
-			*cur = p+2;
-			return newToken(TOp_ra);
-		}else{
-			*cur = p+1;
-			return newToken(TOp_sub);
+		ss->cur++;
+		if(_exceptChar(ss, '-')){
+			return _newToken(TOp_dec);
 		}
+		if(_exceptChar(ss, '=')){
+			return _newToken(TOp_subAssign);
+		}
+		if(_exceptChar(ss, '>')){
+			return _newToken(TOp_ra);
+		}
+		return _newToken(TOp_sub);
 	    case '*' :
-		if( *(p+1) == '='){
-			*cur = p+2;
-			return newToken(TOp_mulAssign);
-		}else{
-			*cur = p+1;
-			return newToken(TOp_star);
+		ss->cur++;
+		if(_exceptChar(ss, '=')){
+			return _newToken(TOp_mulAssign);
 		}
-	     case '/' :
-		if( *(p+1) == '/'){		// skip line comment.
-			while(*p != '\n'){
-				p++;
+		return _newToken(TOp_star);
+	    case '/' :
+		ss->cur++;
+		if(_exceptChar(ss, '=')){
+			return _newToken(TOp_divAssign);
+		}
+		if(_exceptChar(ss, '/')){		// skip line comment.
+			while(*ss->cur != '\n'){
+				ss->cur++;
 			}
 			goto repeat;
-		} else if(*(p+1) =='*'){	// skip multline comment.
-			p++;
+		}
+		if(_exceptChar(ss, '*')){	// skip multline comment.
 			do{
-				p++;
-				if( *p == '\n'){
-					(*line)++;
-				}
-				if(!*p){
+				if(!*ss->cur){
 					printf("Error: lexical multline comment not close");
-					return newToken(TokenEnd);
+					return NULL;
 				}
-			}while(!(*p == '*' && *(p+1) == '/'));
-			p++;p++;
+				if( *ss->cur == '\n'){
+					ss->line++;
+				}
+				ss->cur++;
+			}while(!(*ss->cur == '*' && *(ss->cur+1) == '/'));
+			ss->cur += 2;
 			goto repeat;
-		} else if( *(p+1) == '='){
-			*cur = p+1;
-			return newToken(TOp_divAssign);
-		} else {
-			*cur = p+1;
-			return newToken(TOp_div);
 		}
+		return _newToken(TOp_div);
 	    case '%' :
-		if( *(p+1) == '='){
-			*cur = p+2;
-			return newToken(TOp_remAssign);
-		}else{
-			*cur = p+1;
-			return newToken(TOp_rem);
+		ss->cur++;
+		if(_exceptChar(ss, '=')){
+			return _newToken(TOp_remAssign);
 		}
+		return _newToken(TOp_rem);
 	    case '!' :
-		if( *(p+1) == '='){
-			*cur = p+2;
-			return newToken(TOp_notEq);
-		}else{
-			*cur = p+1;
-			return newToken(TOp_not);
+		ss->cur++;
+		if(_exceptChar(ss, '=')){
+			return _newToken(TOp_notEq);
 		}
+		return _newToken(TOp_not);
 	    case '&' :
-		if( *(p+1) == '='){
-			*cur = p+2;
-			return newToken(TOp_andAssign);
-		}else if ( *(p+1) == '&'){
-			*cur = p+2;
-			return newToken(TOp_andAnd);
-		} else {
-			*cur = p+1;
-			return newToken(TOp_and);
+		ss->cur++;
+		if(_exceptChar(ss, '=')){
+			return _newToken(TOp_andAssign);
 		}
+		if(_exceptChar(ss, '&')){
+			return _newToken(TOp_andAnd);
+		}
+		return _newToken(TOp_and);
 	    case '=' :
-		if( *(p+1) == '='){
-			*cur = p+2;
-			return newToken(TOp_eq);
-		}else{
-			*cur = p+1;
-			return newToken(TOp_assign);
+		ss->cur++;
+		if(_exceptChar(ss, '=')){
+			return _newToken(TOp_eq);
 		}
+		return _newToken(TOp_assign);
 	    case '|' :
-		if( *(p+1) == '='){
-			*cur = p+2;
-			return newToken(TOp_orAssign);
-		}else if ( *(p+1) == '|'){
-			*cur = p+2;
-			return newToken(TOp_orOr);
-		} else {
-			*cur = p+1;
-			return newToken(TOp_or);
+		ss->cur++;
+		if(_exceptChar(ss, '=')){
+			return _newToken(TOp_orAssign);
 		}
+		if(_exceptChar(ss, '|')){
+			return _newToken(TOp_orOr);
+		}
+		return _newToken(TOp_or);
 	    case '~' :
-		if( *(p+1) == '='){
-			*cur = p+2;
-			return newToken(TOp_negAssign);
-		}else{
-			*cur = p+1;
-			return newToken(TOp_neg);
+		ss->cur++;
+		if(_exceptChar(ss, '=')){
+			return _newToken(TOp_negAssign);
 		}
+		return _newToken(TOp_neg);
 	    case '>' :
-		if( *(p+1) == '='){
-			*cur = p+2;
-			return newToken(TOp_gtEq);
-		}else if ( *(p+1) == '>'){
-			if( *(p+2) == '=' ){
-				*cur = p+3;
-				return newToken(TOp_shrAssign);
-			} else{
-				*cur = p+2;
-				return newToken(TOp_shr);
-			}
-		}else{
-			*cur = p+1;
-			return newToken(TOp_gt);
+		ss->cur++;
+		if(_exceptChar(ss, '=')){
+			return _newToken(TOp_gtEq);
 		}
+		if(_exceptChar(ss, '>')){
+			if(_exceptChar(ss, '=')){
+				return _newToken(TOp_shrAssign);
+			}
+			return _newToken(TOp_shr);
+		}
+		return _newToken(TOp_gt);
 	    case '<' :
-		if( *(p+1) == '='){
-			*cur = p+2;
-			return newToken(TOp_ltEq);
-		}else if ( *(p+1) == '<'){
-			if( *(p+2) == '=' ){
-				*cur = p+3;
-				return newToken(TOp_shlAssign);
-			} else{
-				*cur = p+2;
-				return newToken(TOp_shl);
-			}
-		}else{
-			*cur = p+1;
-			return newToken(TOp_lt);
+		ss->cur++;
+		if(_exceptChar(ss, '=')){
+			return _newToken(TOp_ltEq);
 		}
+		if(_exceptChar(ss, '<')){
+			if(_exceptChar(ss, '=')){
+				return _newToken(TOp_shlAssign);
+			}
+			return _newToken(TOp_shl);
+		}
+		return _newToken(TOp_lt);
 	    case '\'':
-		ret =newToken(TokenChar);
-		p++;
-		if(*p == '\\'){
-			p++;
-			ret->tValue.i=escapeChar(&p);
-		} else if( *p == '\''){
+		ss->cur++;
+		ret =_newToken(TokenChar);
+		if(_exceptChar(ss, '\'')){
 			printf("Error: Not have availbe char");
 			ret->tValue.i= 0 ; // 空字符就设置成0.
-			*cur = ++p;
 			return ret;
-		} else{
-			ret->tValue.i = *p;
-			p++;
 		}
-		// 处理关闭.
-		if(*p == '\''){
-			*cur = ++p;
+		if(_exceptChar(ss, '\\')){
+			//ret->tValue.i=escapeChar(&p);
+		}else{
+			ret->tValue.i = *ss->cur++;
+		}
+
+		if(_exceptChar(ss, '\'')){
 			return ret;
 		}else{
-			printf("Error: have more chars in char:%c\n", *p);
+			printf("Error: have more chars in char:%c\n", *ss->cur);
 			// skip the more chars.
-			while(*p != '\''){
-				p++;
+			while(*ss->cur != '\''){
+				ss->cur++;
 			}
-			*cur = ++p;
+			ss->cur++;
 			return ret;
 		}
 	    case '"' :
-		ret = newToken(TokenString);
-		ret->tValue.s=scanStringLiteral(&p);
-		*cur = p;
+		ret = _newToken(TokenString);
+		ret->tValue.s=scanStringLiteral(&ss->cur);
 		return ret;
 	    case '\0':
-		*cur = ++p; 
-		return newToken(TokenEnd);
+		return NULL;
 	    default:
-		printf("Error: lexical can't recognize char:%d(%c)\n", *p, *p);
-		++p;
+		printf("Error: lexical can't recognize char:%d(%c)\n", *ss->cur, *ss->cur);
+		ss->cur++;
 		goto repeat;
 	}
 }
 
-// scan the buffer, return the token list.
-Token* doScan(Buffer* buf){
-	Token* head = newToken(TokenStart);
-	Token* tail = head;
-	char* p = buf->data;
-	int line = 1;
-
-	do{
-		tail->tPosFile = buf->filename;
-		tail->tPosLine = line;
-		tail->tNext = lexical(buf, &p, &line);
-		tail = tail->tNext;
-	}while(tail->tCode != TokenEnd);
-
-	return head;
-}
-
-Token* scanFile(char* filename){
-	Buffer* buf;
-	Token* tokenlist;
-
-	buf = readFileToBuffer(filename);
-	tokenlist = doScan(buf);
-
-	deleteBuffer(buf);
-
-	return tokenlist;
-}
-
-void deleteToken(Token* t){
-	xfree(t);
-}
 static void printToken(Token* t){
 	printf("(File: %s Line:%d)\t", t->tPosFile, t->tPosLine);
 	if(t->tCode >= TKw_package && t->tCode <= TKw_const){
@@ -364,12 +347,34 @@ static void printToken(Token* t){
 	printf("TCode:%d\n", t->tCode);
 }
 
-void printTokenList(Token* t){
-	Token* tmp=t;
-	printf("----------Debug Token-------------\n");
-	while(tmp->tCode != TokenEnd){
-		printToken(tmp);
-		tmp = tmp->tNext;
+void _dumpTokenVector(Vector* tokenVector){
+	Token* token;
+	int i;
+	for(i=0; i<tokenVector->item;i++){
+		token = tokenVector->data[i];
+		printToken(token);
 	}
-	printf("----------------------------------\n");
+}
+
+Vector* ScanFile(char* filename){
+	ScanState ss;
+	Token* token;
+	Vector* tokenVector = xmalloc(sizeof(Vector));
+
+	ss.filename = filename;
+	ss.buf = _loadFile(filename);
+	ss.cur = ss.buf;
+	ss.line = 1;
+
+	while(true){
+		token = lexical(&ss);
+		if( !token){
+			break;
+		}
+		token->tPosFile = filename;
+		token->tPosLine = ss.line;
+		pushToVector(tokenVector, token);
+	}
+	_dumpTokenVector(tokenVector);
+	return tokenVector;
 }

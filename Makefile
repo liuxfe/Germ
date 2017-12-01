@@ -3,11 +3,8 @@
 .c.o:
 	cc -Wall -fno-builtin -c -o $@  $<
 
-OBJS =	src/xroutine.o	\
-	src/vector.o	\
-	src/buffer.o	\
+OBJS =	src/xroutine.o	src/vector.o	src/string.o	\
 	src/scanner.o	\
-	src/string.o	\
 	src/declare.o	\
 	src/symbol.o	\
 	src/statement.o \

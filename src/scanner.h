@@ -12,7 +12,6 @@ union _tokenValue{
 
 typedef struct _token Token;
 struct _token{
-	Token*         tNext;
 	int            tCode;
 	tokenValue     tValue;
 	char*          tPosFile;
@@ -25,7 +24,6 @@ struct _token{
  * TOp_ for Operate.
  */
 enum {
-	TokenStart =257,
 	TKw_package,
 	TKw_import,
 	TKw_as,
@@ -102,9 +100,10 @@ enum {
 	TOp_ltEq,		// <=
 	TOp_shl,		// <<
 	TOp_shlAssign,		// <<=
-	TOp_threeDot,		// ...
 	TOp_star,		// *
 	TOp_dot,		// .
+	TOp_2dot,		// ..
+	TOp_3dot,		// ...
 	TokenInteger,		// 整数常量
 	TokenChar,		// 字符常量
 	TokenBool,		// 布尔常量
@@ -112,11 +111,7 @@ enum {
 	TokenString,		// 字符串常量
 	TokenNULL,		// NULL常量
 	TokenID,		// 标识符
-	TokenEnd
 };
 
-Token* scanFile(char*);
-void deleteToken(Token*);
-void printTokenList(Token*);
-
+Vector* ScanFile(char*);
 #endif

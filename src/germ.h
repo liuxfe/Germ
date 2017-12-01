@@ -19,8 +19,8 @@ typedef unsigned int   uint;
 
 typedef char bool;
 
-#define true  1;
-#define false 0;
+#define true  1
+#define false 0
 
 // xrourine.c
 FILE* xfopen(char*, char*);
@@ -43,17 +43,7 @@ typedef struct _vector{
 void pushToVector(Vector*, void*);
 void deleteVector(Vector*);
 
-// buffer.c
-typedef struct _buffer Buffer;
-struct _buffer{
-	char*   filename;
-	int     nalloc;
-	int     nchars;
-	char    data[0];
-};
-
-Buffer* readFileToBuffer(char*);
-void deleteBuffer(Buffer*);
+char* loadFile(char*);
 
 #include "symbol.h"
 #include "string.h"
