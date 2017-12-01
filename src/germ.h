@@ -23,15 +23,15 @@ typedef char bool;
 #define false 0;
 
 // xrourine.c
-void* xmalloc(uint);
-void  xfree(void*);
-int   xstrlen(char*);
-int   xstrcmp(char*, char*);
-void  xmemcpy(void*, void*, int);
-void  xstrncpy(char*, char*, int);
-uint  escapeChar(char**);
 FILE* xfopen(char*, char*);
 void  xfclose(FILE*);
+void* xmalloc(uint);
+void  xfree(void*);
+void  xmemcpy(void*, void*, int);
+int   xstrlen(char*);
+int   xstrcmp(char*, char*);
+void  xstrncpy(char*, char*, int);
+uint  escapeChar(char**);
 
 // vector.c
 typedef struct _vector Vector;

@@ -2,7 +2,22 @@
 
 #include "germ.h"
 
-/* --------------- Memory Manage Function ------------------*/
+FILE* xfopen(char* filename, char* op){
+	FILE* ret = fopen(filename, op);
+	if( !ret ){
+		fprintf(stderr, "Fatal: can't find or open %s\n", filename);
+		exit(-1);
+	}
+	return ret;
+}
+
+void  xfclose(FILE* fp){
+	if( !fp ){
+		fprintf(stderr, "Warn: fclose null file\n");
+		return;
+	}
+	fclose(fp);
+}
 
 void* xmalloc(uint bytes){
 	void* ret = malloc(bytes);
@@ -26,8 +41,13 @@ void  xfree(void* p){
 	free(p);
 }
 
-
-/* -------------- String Operate Function ----------------*/
+void  xmemcpy(void* s1, void* s2, int len){
+	char* p1 = s1;
+	char* p2 = s2;
+	while(len--){
+		*p1++ = *p2++;
+	}
+}
 
 int   xstrlen(char* s){
 	int i = 0;
@@ -43,14 +63,6 @@ int   xstrcmp(char* s1, char* s2){
 		s2++;
 	}
 	return *s1 - *s2;
-}
-
-void  xmemcpy(void* s1, void* s2, int len){
-	char* p1 = s1;
-	char* p2 = s2;
-	while(len--){
-		*p1++ = *p2++;
-	}
 }
 
 void  xstrncpy(char* dst, char* src, int len){
@@ -126,24 +138,4 @@ uint escapeChar(char** str){
 		*str = ++p;
 		return *(p-1);
 	}
-}
-
-
-/* ---------------- File IO Routines ---------------------*/
-
-FILE* xfopen(char* filename, char* op){
-	FILE* ret = fopen(filename, op);
-	if( !ret ){
-		fprintf(stderr, "Fatal: can't find or open %s\n", filename);
-		exit(-1);
-	}
-	return ret;
-}
-
-void xfclose(FILE* fp){
-	if( !fp ){
-		fprintf(stderr, "Warn: fclose null file\n");
-		return;
-	}
-	fclose(fp);
 }
