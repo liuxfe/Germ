@@ -61,10 +61,9 @@ String* lookUpString(String*);
 String* storeString(char*, int);
 void printHashTable();
 
-#include "scanner.h"
 #include "symbol.h"
-#include "declare.h"
-#include "statement.h"
+#include "scanner.h"
+#include "parser.h"
 
 extern int wantDumpTokenVector;
 

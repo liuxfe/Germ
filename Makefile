@@ -5,9 +5,8 @@
 
 OBJS =	src/xroutine.o	src/vector.o	src/string.o	\
 	src/scanner.o	\
-	src/declare.o	\
+	src/parser.o	\
 	src/symbol.o	\
-	src/statement.o \
 	src/germ.o
 
 germ: $(OBJS)
