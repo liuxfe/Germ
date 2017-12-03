@@ -30,6 +30,7 @@ void  xfree(void*);
 void  xmemcpy(void*, void*, int);
 int   xstrlen(char*);
 int   xstrcmp(char*, char*);
+bool  xstrncmp(char*, char*, int);
 void  xstrncpy(char*, char*, int);
 int   xhex2num(char);
 

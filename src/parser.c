@@ -54,7 +54,7 @@ void except(Token** tokenlist, uint tcode){
 		//deleteToken(t);
 		return;
 	}
-	printf("except:%d(%c) not match at (%s,%d)", tcode,tcode,t->tPosFile,t->tPosLine);
+	printf("except:%d(%c) not match at (%s,%d)", tcode,tcode,NULL,t->tLine);
 	exit(-1);
 }
 

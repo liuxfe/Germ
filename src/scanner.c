@@ -117,56 +117,151 @@ uint _escapeChar(ScanState* ss){
 }
 
 Token* _scanId(ScanState* ss){
+	Token* ret;
 	char* start = ss->cur;
-	Token* ret = _newToken(TokenID);
 
 	while(*ss->cur =='_' || (*ss->cur >= 'a' && *ss->cur <= 'z')
 	                     || (*ss->cur >= 'A' && *ss->cur <= 'Z')
 	                     || (*ss->cur >= '0' && *ss->cur <= '9') ){
 		ss->cur++;
 	}
-	ret->sValue=storeString(start, ss->cur - start);
-		/*
-		if( ret->tValue.s->symbol){
-			if(ret->tValue.s->symbol->sType == ST_KeyWord){
-				ret->tCode = ret->tValue.s->symbol->sValue.i;
-				return ret;
-			}
-			if(ret->tValue.s->symbol->sType == ST_ResWord){
-				switch(ret->tValue.s->symbol->sValue.i){
-				    case TRw_true:
-					ret->tCode = TokenBool;
-					ret->tValue.i = 1;
-					return ret;
-				    case TRw_false:
-					ret->tCode = TokenBool;
-					ret->tValue.i = 0;
-					return ret;
-				    case TRw_NULL:
-					ret->tCode = TokenNULL;
-					return ret;
-				    //case TRw___FILE__:
-					//ret->tCode = TokenString;
-					//ret->tValue.s=storeString(buf->filename, xstrlen(buf->filename));
-					//return ret;
-				    //case TRw___LINE__:
-					//ret->tCode = TokenInteger;
-					//ret->tValue.i = *line;
-					//return ret;
-				    case TRw___DATA__:
-					ret->tCode = TokenString;
-					ret->tValue.s=storeString("2017-11-11",10);
-					return ret;
-				    case TRw___TIME__:
-					ret->tCode = TokenInteger;
-					ret->tValue.i=115;
-					return ret;
-				    default:
-					printf("Fatal: ResWord not deal");
-				}
-			}
+
+	switch(ss->cur - start){
+	    case 2 :
+		if(xstrncmp(start,"if",2)){
+			return _newToken(TKw_if);
 		}
-		*/
+		if(xstrncmp(start,"as",2)){
+			return _newToken(TKw_as);
+		}
+	    case 3 :
+		if(xstrncmp(start,"int",3)){
+			return _newToken(TKw_int);
+		}
+		if(xstrncmp(start,"for",3)){
+			return _newToken(TKw_for);
+		}
+	    case 4 :
+		if(xstrncmp(start,"int8",4)){
+			return _newToken(TKw_int8);
+		}
+		if(xstrncmp(start,"uint",4)){
+			return _newToken(TKw_uint);
+		}
+		if(xstrncmp(start,"bool",4)){
+			return _newToken(TKw_bool);
+		}
+		if(xstrncmp(start,"char",4)){
+			return _newToken(TKw_char);
+		}
+		if(xstrncmp(start,"void",4)){
+			return _newToken(TKw_void);
+		}
+		if(xstrncmp(start,"func",4)){
+			return _newToken(TKw_func);
+		}
+		if(xstrncmp(start,"elif",4)){
+			return _newToken(TKw_elif);
+		}
+		if(xstrncmp(start,"else",4)){
+			return _newToken(TKw_else);
+		}
+		if(xstrncmp(start,"case",4)){
+			return _newToken(TKw_case);
+		}
+		if(xstrncmp(start,"goto",4)){
+			return _newToken(TKw_goto);
+		}
+		if(xstrncmp(start,"true",4)){
+			ret = _newToken(TokenBool);
+			ret->iValue = 1;
+			return ret;
+		}
+		if(xstrncmp(start,"NULL",4)){
+			return _newToken(TokenNULL);
+		}
+	    case 5 :
+		if(xstrncmp(start,"int16",5)){
+			return _newToken(TKw_int16);
+		}
+		if(xstrncmp(start,"int32",5)){
+			return _newToken(TKw_int32);
+		}
+		if(xstrncmp(start,"int64",5)){
+			return _newToken(TKw_int64);
+		}
+		if(xstrncmp(start,"uint8",5)){
+			return _newToken(TKw_uint8);
+		}
+		if(xstrncmp(start,"float",5)){
+			return _newToken(TKw_float);
+		}
+		if(xstrncmp(start,"union",5)){
+			return _newToken(TKw_union);
+		}
+		if(xstrncmp(start,"while",5)){
+			return _newToken(TKw_while);
+		}
+		if(xstrncmp(start,"break",5)){
+			return _newToken(TKw_break);
+		}
+		if(xstrncmp(start,"throw",5)){
+			return _newToken(TKw_throw);
+		}
+		if(xstrncmp(start,"const",5)){
+			return _newToken(TKw_const);
+		}
+		if(xstrncmp(start,"false",5)){
+			ret = _newToken(TokenBool);
+			ret->iValue = 0;
+			return ret;
+		}
+	    case 6 :
+		if(xstrncmp(start,"import",6)){
+			return _newToken(TKw_import);
+		}
+		if(xstrncmp(start,"uint16",6)){
+			return _newToken(TKw_uint16);
+		}
+		if(xstrncmp(start,"uint32",6)){
+			return _newToken(TKw_uint32);
+		}
+		if(xstrncmp(start,"uint64",6)){
+			return _newToken(TKw_uint64);
+		}
+		if(xstrncmp(start,"struct",6)){
+			return _newToken(TKw_struct);
+		}
+		if(xstrncmp(start,"switch",6)){
+			return _newToken(TKw_switch);
+		}
+		if(xstrncmp(start,"return",6)){
+			return _newToken(TKw_return);
+		}
+	    case 7 :
+		if(xstrncmp(start,"package",7)){
+			return _newToken(TKw_package);
+		}
+		if(xstrncmp(start,"float32",7)){
+			return _newToken(TKw_float32);
+		}
+		if(xstrncmp(start,"float64",7)){
+			return _newToken(TKw_float64);
+		}
+		if(xstrncmp(start,"typedef",7)){
+			return _newToken(TKw_typedef);
+		}
+		if(xstrncmp(start,"default",7)){
+			return _newToken(TKw_default);
+		}
+	    case 8 :
+		if(xstrncmp(start,"continue",8)){
+			return _newToken(TKw_continue);
+		}
+	}
+
+	ret = _newToken(TokenID);
+	ret->sValue=storeString(start, ss->cur - start);
 	return ret;
 }
 
@@ -392,15 +487,12 @@ Token* _lexical(ScanState* ss){
 	}
 }
 
-void _dumpTokenVector(Vector* tokenVector){
-	Token* t;
-	int i;
-
-	for(i=0; i<tokenVector->item;i++){
-		t = tokenVector->data[i];
-		printf("(Line:%d)\t", t->tPosLine);
+void _dumpTokenList(Token* tokenlist){
+	Token* t = tokenlist;
+	for(t=tokenlist; t; t=t->tNext){
+		printf("(Line:%d)\t", t->tLine);
 		if(t->tCode >= TKw_package && t->tCode <= TKw_const){
-			printf("KeyWord:%s\n", t->sValue->data);
+			printf("KeyWord:%d\n", t->tCode);
 			continue;
 		}
 		if(t->tCode == TokenID){
@@ -423,28 +515,25 @@ void _dumpTokenVector(Vector* tokenVector){
 	}
 }
 
-Vector* ScanFile(char* filename){
+Token* ScanFile(char* filename){
 	ScanState ss;
-	Token* token;
-	Vector* tokenVector = xmalloc(sizeof(Vector));
+	Token* tokenHead = _newToken(TokenStart);
+	Token* tokenTail = tokenHead;
 
 	ss.filename = filename;
 	ss.buf = _loadFile(filename);
 	ss.cur = ss.buf;
 	ss.line = 1;
 
-	while(true){
-		token = _lexical(&ss);
-		if( !token){
-			break;
-		}
-		token->tPosFile = filename;
-		token->tPosLine = ss.line;
-		pushToVector(tokenVector, token);
-	}
+	do{
+		tokenTail->tLine = ss.line;
+		tokenTail->tNext = _lexical(&ss);
+		tokenTail = tokenTail->tNext;
+	}while(tokenTail);
+
 	if(wantDumpTokenVector){
 		printf("\nDump Token in file: %s\n",filename);
-		_dumpTokenVector(tokenVector);
+		_dumpTokenList(tokenHead);
 	}
-	return tokenVector;
+	return tokenHead;
 }

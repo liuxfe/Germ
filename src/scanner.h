@@ -4,20 +4,26 @@
 #define _SCANNER_H
 
 typedef struct _token{
+	struct _token* tNext;
+	int            tLine;
 	int            tCode;
 	union{
 	    uint       iValue;
 	    double     fValue;
 	    String*    sValue;
 	};
-	char*          tPosFile;
-	int            tPosLine;
 } Token;
 
-/*
- * const values of token code.
- */
+/* values of token tCode. */
 enum {
+	TokenStart = 257,
+	TokenID,		// 标识符
+	TokenNULL,		// NULL常量
+	TokenInteger,		// 整数常量
+	TokenChar,		// 字符常量
+	TokenBool,		// 布尔常量
+	TokenFloat,		// 浮点常量
+	TokenString,		// 字符串常量
 	TKw_package,
 	TKw_import,
 	TKw_as,
@@ -58,10 +64,10 @@ enum {
 	TRw_true,		// bool常量
 	TRw_false,		// bool常量
 	TRw_NULL,		// NULL常量
-	TRw___FILE__,		// __FILE__ 字符串常量
-	TRw___LINE__,		// __LINE__ 整数常量
-	TRw___DATA__,		// __DATE__ 字符串常量
-	TRw___TIME__,		// __TIME__ 整数常量
+	//TRw___FILE__,		// __FILE__ 字符串常量
+	//TRw___LINE__,		// __LINE__ 整数常量
+	//TRw___DATA__,		// __DATE__ 字符串常量
+	//TRw___TIME__,		// __TIME__ 整数常量
 	TOp_add,		// +
 	TOp_sub,		// -
 	TOp_div,		// /
@@ -98,15 +104,8 @@ enum {
 	TOp_dot,		// .
 	TOp_2dot,		// ..
 	TOp_3dot,		// ...
-	TokenInteger,		// 整数常量
-	TokenChar,		// 字符常量
-	TokenBool,		// 布尔常量
-	TokenFloat,		// 浮点常量
-	TokenString,		// 字符串常量
-	TokenNULL,		// NULL常量
-	TokenID,		// 标识符
 };
 
-Vector* ScanFile(char*);
+Token* ScanFile(char*);
 
 #endif
