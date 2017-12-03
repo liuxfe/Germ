@@ -52,12 +52,12 @@ typedef struct _vector{
 } Vector;
 
 void pushToVector(Vector*, void*);
+void* lastItemOfVector(Vector*);
 void deleteVector(Vector*);
 
 // string.c
 typedef struct _string String;
 struct _string{
-	Vector  symbol;
 	String* next;
 	uint	hash;
 	uint	nalloc;

@@ -22,6 +22,13 @@ void pushToVector(Vector* vec, void* item){
 	vec->item++;
 }
 
+void* lastItemOfVector(Vector* vec){
+	if(vec->item <=0){
+		Debug(__FILE__,__LINE__,"Empty Vector to get last Item");
+	}
+	return vec->data[vec->item-1];
+}
+
 void deleteVector(Vector* vec){
 	xfree(vec->data, __FILE__, __LINE__);
 }
