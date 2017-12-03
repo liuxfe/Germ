@@ -22,6 +22,16 @@ typedef char bool;
 #define true  1
 #define false 0
 
+// error.c
+extern int NoticeCnt;
+extern int WarningCnt;
+extern int ErrorCnt;
+void Notice(char*, int, char*, ...);
+void Warning(char*, int, char*, ...);
+void Error(char*, int, char*, ...);
+void Debug(char*, int, char*, ...);
+void Fatal(char*, int, char*, ...);
+
 // xrourine.c
 FILE* xfopen(char*, char*);
 void  xfclose(FILE*);
