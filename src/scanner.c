@@ -12,10 +12,10 @@ void _insertCharToBuffer(Buffer* buf, char ch){
 	const int FB_GROWSIZE = 1024;
 	char* tmp;
 	if(buf->nchars+1 >= buf->nalloc){
-		tmp = xmalloc(buf->nalloc + FB_GROWSIZE);
+		tmp = xmalloc(buf->nalloc + FB_GROWSIZE, __FILE__, __LINE__);
 		if(buf->data){
 			xmemcpy(tmp, buf->data, buf->nchars);
-			xfree(buf->data);
+			xfree(buf->data, __FILE__, __LINE__);
 		}
 		buf->nalloc = buf->nalloc + FB_GROWSIZE;
 		buf->data = tmp;
@@ -27,7 +27,7 @@ char* _loadFile(char* filename){
 	int  ch;
 
 	Buffer buf = {0, 0, NULL};
-	FILE* file = xfopen(filename, "r");
+	FILE* file = xfopen(filename, "r", __FILE__, __LINE__);
 
 	for(ch=fgetc(file); ch != EOF; ch=fgetc(file)){
 		_insertCharToBuffer(&buf,(char)ch);
@@ -36,13 +36,13 @@ char* _loadFile(char* filename){
 	_insertCharToBuffer(&buf,'\n');
 	_insertCharToBuffer(&buf,'\0');
 
-	xfclose(file);
+	xfclose(file, __FILE__, __LINE__);
 
 	return buf.data;
 }
 
 Token* _newToken(int tokencode){
-	Token* ret = xmalloc(sizeof(Token));
+	Token* ret = xmalloc(sizeof(Token), __FILE__, __LINE__);
 	ret->tCode = tokencode;
 	return ret;
 }
@@ -281,7 +281,7 @@ Token* _scanCharLiteral(ScanState* ss){
 
 	ss->cur++; // skip begin char(')
 	if(_exceptChar(ss, '\'')){
-		printf("Error: Not have availbe char");
+		Warning(ss->filename, ss->line, "CharLiteral has no char");
 		ret->iValue= 0 ; // 空字符就设置成0.
 		return ret;
 	}
@@ -294,12 +294,15 @@ Token* _scanCharLiteral(ScanState* ss){
 	if(_exceptChar(ss, '\'')){
 		return ret;
 	}else{
-		printf("Error: have more chars in char:%c\n", *ss->cur);
-		// skip the more chars.
-		while(*ss->cur != '\''){
+		Error(ss->filename, ss->line, "CharLiteral has too many char");
+		while(*ss->cur && (*ss->cur != '\'')){ // skip the more chars.
 			ss->cur++;
 		}
-		ss->cur++;
+		if(*ss->cur == '\0'){
+			Error(ss->filename, ss->line, "CharLiteral not closed");
+			return ret;
+		}
+		ss->cur++; // skip close char(')
 		return ret;
 	}
 }
@@ -320,7 +323,7 @@ Token* _scanStringLiteral(ScanState* ss){
 	str = AppendCharToDynString(str, '\0');
 
 	if(!_exceptChar(ss,'"')){
-		printf("Error: lexical sting not close");
+		Error(ss->filename, ss->line,"StringLiteral not close");
 	}
 	ret->sValue = str;
 	return ret;
@@ -481,7 +484,7 @@ Token* _lexical(ScanState* ss){
 	    case '\0':
 		return NULL;
 	    default:
-		printf("Error: lexical can't recognize char:%d(%c)\n", *ss->cur, *ss->cur);
+		Error(ss->filename, ss->line, "illegal character \\%d(%c)",*ss->cur, *ss->cur);
 		ss->cur++;
 		goto repeat;
 	}

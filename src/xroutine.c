@@ -2,30 +2,28 @@
 
 #include "germ.h"
 
-FILE* xfopen(char* filename, char* op){
+FILE* xfopen(char* filename, char* op, char* __file, int __line){
 	FILE* ret = fopen(filename, op);
 	if( !ret ){
-		fprintf(stderr, "Fatal: can't find or open %s\n", filename);
-		exit(-1);
+		Fatal(__file, __line, "Cannot open \"%s\"\n", filename);
 	}
 	return ret;
 }
 
-void  xfclose(FILE* fp){
+void  xfclose(FILE* fp, char* __file, int __line){
 	if( !fp ){
-		fprintf(stderr, "Warn: fclose null file\n");
+		Debug(__file, __line, "xfclose: fclose NULL file\n");
 		return;
 	}
 	fclose(fp);
 }
 
-void* xmalloc(uint bytes){
+void* xmalloc(uint bytes, char* __file, int __line){
 	void* ret = malloc(bytes);
 	char* p = ret;
 
 	if( !ret ){
-		fprintf(stderr, "Fatal: out of memory\n");
-		exit(-1);
+		Fatal(__file, __line, "xmalloc: out of memory\n");
 	}
 	while(bytes--){
 		*p++ = 0;
@@ -33,9 +31,9 @@ void* xmalloc(uint bytes){
 	return ret;
 }
 
-void  xfree(void* p){
+void  xfree(void* p, char* __file, int __line){
 	if(!p){
-		fprintf(stderr, "Warn: free empty memory\n");
+		Debug(__file, __line, "xfree: free NULL pointer\n");
 		return;
 	}
 	free(p);

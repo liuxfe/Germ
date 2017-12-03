@@ -60,7 +60,7 @@ void except(Token** tokenlist, uint tcode){
 
 PackageStmt* parsePackageStmt(Token** tokenlist){
 	Token* t = *tokenlist;
-	PackageStmt* ret = xmalloc(sizeof(PackageStmt));
+	PackageStmt* ret = xmalloc(sizeof(PackageStmt), __FILE__, __LINE__);
 
 	ret->stmtType = Stmt_package;
 

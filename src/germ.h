@@ -33,10 +33,10 @@ void Debug(char*, int, char*, ...);
 void Fatal(char*, int, char*, ...);
 
 // xrourine.c
-FILE* xfopen(char*, char*);
-void  xfclose(FILE*);
-void* xmalloc(uint);
-void  xfree(void*);
+FILE* xfopen(char*, char*, char*, int);
+void  xfclose(FILE*, char*, int);
+void* xmalloc(uint, char*, int);
+void  xfree(void*, char*, int);
 void  xmemcpy(void*, void*, int);
 int   xstrlen(char*);
 int   xstrcmp(char*, char*);

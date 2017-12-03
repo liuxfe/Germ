@@ -3,7 +3,7 @@
 #include "germ.h"
 
 Symbol* newSymbol(uint type){
-	Symbol* ret=xmalloc(sizeof(Symbol));
+	Symbol* ret=xmalloc(sizeof(Symbol), __FILE__, __LINE__);
 	ret->sType=type;
 	return ret;
 }

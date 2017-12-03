@@ -5,7 +5,7 @@
 const int DYS_GROWSIZE = 8;
 
 String* CreateDynString(){
-	String* ret = xmalloc(sizeof(String) + DYS_GROWSIZE);
+	String* ret = xmalloc(sizeof(String) + DYS_GROWSIZE, __FILE__, __LINE__);
 	ret->nalloc = DYS_GROWSIZE;
 	return ret;
 }
@@ -13,11 +13,11 @@ String* CreateDynString(){
 String* AppendCharToDynString(String* str, char ch){
 	String* ret = str;
 	if( ret->nchars + 1 >= ret->nalloc ){
-		ret = xmalloc(sizeof(String) + DYS_GROWSIZE + str->nalloc);
+		ret = xmalloc(sizeof(String) + DYS_GROWSIZE + str->nalloc, __FILE__, __LINE__);
 		ret->nalloc = str->nalloc + DYS_GROWSIZE;
 		ret->nchars = str->nchars;
 		xmemcpy(ret->data, str->data, str->nchars);
-		xfree(str);
+		xfree(str, __FILE__, __LINE__);
 	}
 	ret->data[ret->nchars++] = ch;
 	return ret;
@@ -41,7 +41,7 @@ uint _stringHash(char* start, int len){
 }
 
 String* _newFixString(char* s, int len){
-	String* ret = xmalloc(sizeof(String) + len + 1);
+	String* ret = xmalloc(sizeof(String) + len + 1, __FILE__, __LINE__);
 	ret->nalloc = len + 1;
 	ret->nchars = len;
 	ret->hash   = _stringHash(s, len);
@@ -50,7 +50,7 @@ String* _newFixString(char* s, int len){
 }
 
 void deleteString(String* s){
-	xfree(s);
+	xfree(s, __FILE__, __LINE__);
 }
 
 #define HASHITEM  53
