@@ -19,25 +19,10 @@ DataType BoolType    = {DTT_Basic, 1, NULL, BTypeId_bool   };
 DataType CharType    = {DTT_Basic, 4, NULL, BTypeId_char   };
 DataType VoidType    = {DTT_Basic, 0, NULL, BTypeId_void   };
 
-DataType* matchType(Token* t){
-	switch(t->tCode){
-	    case TKw_int :	return &IntType;
-	    case TKw_int8 : 	return &Int8Type;
-	    case TKw_int16 :	return &Int16Type;
-	    case TKw_int32 :	return &Int32Type;
-	    case TKw_int64 :	return &Int64Type;
-	    case TKw_uint :	return &UintType;
-	    case TKw_uint16 :	return &Uint16Type;
-	    case TKw_uint32 :	return &Uint32Type;
-	    case TKw_uint64 :	return &Uint64Type;
-	    case TKw_float :	return &FloatType;
-	    case TKw_float32 :	return &Float32Type;
-	    case TKw_float64 :	return &Float64Type;
-	    case TKw_bool :	return &BoolType;
-	    case TKw_char :	return &CharType;
-	    case TKw_void :	return &VoidType;
-	    default :		return NULL;
-	}
+Symbol* _newSymbol(int type){
+	Symbol* ret = xmalloc(sizeof(Symbol), __FILE__, __LINE__);
+	ret->sType = type;
+	return ret;
 }
 
 Statement* _newStatement(int type){
@@ -144,15 +129,45 @@ Statement* _parseImportStmt(ParseState* ps){
 	return ret;
 }
 
-Statement* _parseDeclStmt(ParseState* ps, Symbol* scope){
-	if(_exceptToken(ps, TKw_typedef)){
-		//return _parseTypeDeclStmt(ps, scope);
-	}
-
-	//if(_exceptToken(ps, TKw_int)){}
+Statement* _parseTypeDecl(ParseState* ps, Symbol* scope){
 	return NULL;
 }
 
+Statement* _parseDeclStmt(ParseState* ps, Symbol* scope){
+	DataType *dt;
+	DataType *bdt;
+
+	if(_exceptToken(ps, TKw_typedef)){
+		//return _parseTypeDeclare(ps, scope);
+	}
+
+	switch(ps->tokenList->tCode){
+	    case TKw_int :	bdt = &IntType; break;
+	    case TKw_int8 : 	bdt =  &Int8Type; break;
+	    case TKw_int16 :	bdt =  &Int16Type; break;
+	    case TKw_int32 :	bdt =  &Int32Type; break;
+	    case TKw_int64 :	bdt =  &Int64Type; break;
+	    case TKw_uint :	bdt =  &UintType; break;
+	    case TKw_uint16 :	bdt =  &Uint16Type; break;
+	    case TKw_uint32 :	bdt =  &Uint32Type; break;
+	    case TKw_uint64 :	bdt =  &Uint64Type; break;
+	    case TKw_float :	bdt =  &FloatType; break;
+	    case TKw_float32 :	bdt =  &Float32Type; break;
+	    case TKw_float64 :	bdt =  &Float64Type; break;
+	    case TKw_bool :	bdt =  &BoolType; break;
+	    case TKw_char :	bdt =  &CharType; break;
+	    case TKw_void :	bdt =  &VoidType; break;
+	    case TokenID :
+	    default:
+		Fatal(ps->filename, ps->tokenList->tLine,"except dataType declear");
+	}
+
+	if(_exceptToken(ps, '[')){
+		//
+	}
+
+	return NULL;
+}
 
 /*
  * <ParseModule>:= <pkgstmt> <impStmt>{0,n} <declStmt>{0,n}
