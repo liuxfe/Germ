@@ -2,27 +2,6 @@
 
 #include "germ.h"
 
-const int DYS_GROWSIZE = 8;
-
-String* CreateDynString(){
-	String* ret = xmalloc(sizeof(String) + DYS_GROWSIZE, __FILE__, __LINE__);
-	ret->nalloc = DYS_GROWSIZE;
-	return ret;
-}
-
-String* AppendCharToDynString(String* str, char ch){
-	String* ret = str;
-	if( ret->nchars + 1 >= ret->nalloc ){
-		ret = xmalloc(sizeof(String) + DYS_GROWSIZE + str->nalloc, __FILE__, __LINE__);
-		ret->nalloc = str->nalloc + DYS_GROWSIZE;
-		ret->nchars = str->nchars;
-		xmemcpy(ret->data, str->data, str->nchars);
-		xfree(str, __FILE__, __LINE__);
-	}
-	ret->data[ret->nchars++] = ch;
-	return ret;
-}
-
 /* ELF_hash */
 uint _stringHash(char* start, int len){
 	uint h = 0;
@@ -40,61 +19,44 @@ uint _stringHash(char* start, int len){
 	return h;
 }
 
-String* _newFixString(char* s, int len){
-	String* ret = xmalloc(sizeof(String) + len + 1, __FILE__, __LINE__);
-	ret->nalloc = len + 1;
-	ret->nchars = len;
-	ret->hash   = _stringHash(s, len);
-	xstrncpy(ret->data, s, len);
-	return ret;
-}
+#define HASHITEM  499
+String* _StringBucket[HASHITEM];
 
-void deleteString(String* s){
-	xfree(s, __FILE__, __LINE__);
-}
+String* StoreString(char* s, int len){
+	uint hash = _stringHash(s, len);
 
-#define HASHITEM  53
-String* _StringHashTable[HASHITEM];
+	String* str = _StringBucket[hash % HASHITEM];
 
-String* lookUpString(String* s){
-	String* find = _StringHashTable[s->hash % HASHITEM];
-
-	for(;find; find= find->next){
-		if(find->hash != s->hash){
+	for(;str; str= str->next){
+		if(str->hash != hash){
 			continue;
 		}
-		if(xstrcmp(find->data, s->data) == 0){
-			break;
+		if(str->len != len){
+			continue;
+		}
+		if(xstrncmp(str->data, s, len)){
+			str->ref++;
+			return str;
 		}
 	}
-	return find;
+
+	str = xmalloc(sizeof(String) + len + 1, __FILE__, __LINE__);
+	xstrncpy(str->data, s, len);
+	str->len = len;
+	str->ref = 1;
+	str->hash= hash;
+	str->next= _StringBucket[hash % HASHITEM];
+	_StringBucket[hash % HASHITEM] = str;
+	return str;
 }
 
-String* storeString(char* s, int len){
-	int i;
-	String* ret = _newFixString(s, len);
-	String* find= lookUpString(ret);
-
-	if(find){
-		deleteString(ret);
-		return find;
-	}
-
-	i= ret->hash % HASHITEM;
-
-	ret->next = _StringHashTable[i];
-	_StringHashTable[i]= ret;
-
-	return ret;
-}
-
-void printHashTable(){
+void dumpStringBucket(){
 	int i;
 	String* s;
-	printf("--------------String HashTable -------------------");
+	printf("--------------StringBuctket -------------------");
 	for(i=0; i<HASHITEM;i++){
 		printf("\n--------hash:%d--------\n",i);
-		s = _StringHashTable[i];
+		s = _StringBucket[i];
 		while(s){
 			printf("%s\t", s->data);
 			s = s->next;

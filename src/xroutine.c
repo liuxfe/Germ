@@ -55,14 +55,6 @@ int   xstrlen(char* s){
 	return i;
 }
 
-int   xstrcmp(char* s1, char* s2){
-	while(*s1 && *s2 && (*s1 == *s2)){
-		s1++;
-		s2++;
-	}
-	return *s1 - *s2;
-}
-
 bool  xstrncmp(char* s1, char* s2, int len){
 	while(len--){
 		if(*s1 && *s2 && *s1==*s2){

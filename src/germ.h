@@ -60,17 +60,12 @@ typedef struct _string String;
 struct _string{
 	String* next;
 	uint	hash;
-	uint	nalloc;
-	uint	nchars;
+	uint	ref;
+	uint	len;
 	char	data[0];
 };
 
-String* CreateDynString();
-String* AppendCharToDynString(String*, char);
-String* scanStringLiteral(char**);
-String* lookUpString(String*);
-String* storeString(char*, int);
-void printHashTable();
+String* StoreString(char*, int);
 
 // input.c
 char* LoadFile(char*);

@@ -222,7 +222,7 @@ Token* _scanId(ScanState* ss){
 	}
 
 	ret = _newToken(TokenID);
-	ret->sValue=storeString(start, ss->cur - start);
+	ret->sValue= StoreString(start, ss->cur - start);
 	return ret;
 }
 
@@ -269,24 +269,26 @@ Token* _scanCharLiteral(ScanState* ss){
 }
 
 Token* _scanStringLiteral(ScanState* ss){
+	char* start;
+	char* tail;
 	Token* ret= _newToken(TokenString);
-	String* str = CreateDynString();
 
 	ss->cur++; // skip begin char(")
+	tail = start = ss->cur;
 	while(*ss->cur && (*ss->cur !='"')){
 		if(*ss->cur == '\\'){
 			ss->cur++;
-			str = AppendCharToDynString(str, (char)_escapeChar(ss));
+			*tail = (char)_escapeChar(ss);
+			tail++;
 		} else{
-			str = AppendCharToDynString(str, *ss->cur++);
+			*tail++ = *ss->cur++;
 		}
 	}
-	str = AppendCharToDynString(str, '\0');
 
 	if(!_exceptChar(ss,'"')){
 		Error(ss->filename, ss->line,"StringLiteral not close");
 	}
-	ret->sValue = str;
+	ret->sValue = StoreString(start, tail-start);
 	return ret;
 }
 
