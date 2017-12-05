@@ -72,6 +72,9 @@ String* lookUpString(String*);
 String* storeString(char*, int);
 void printHashTable();
 
+// input.c
+char* LoadFile(char*);
+
 #include "symbol.h"
 #include "scanner.h"
 #include "parser.h"

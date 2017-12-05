@@ -4,6 +4,7 @@
 	cc -Wall -fno-builtin -c -o $@  $<
 
 OBJS =	src/error.o	src/xroutine.o	src/vector.o	src/string.o	\
+	src/input.o	\
 	src/scanner.o	\
 	src/parser.o	\
 	src/symbol.o	\
