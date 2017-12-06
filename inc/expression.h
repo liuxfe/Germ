@@ -34,4 +34,6 @@ enum {
 	Expr_FunCall,
 };
 
+Expression* ParseExpression(ParseState*);
+
 #endif

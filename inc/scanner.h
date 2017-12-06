@@ -24,6 +24,7 @@ enum {
 	TokenBool,		// 布尔常量
 	TokenFloat,		// 浮点常量
 	TokenString,		// 字符串常量
+	Token3dot,		// ...
 	TKw_package,
 	TKw_import,
 	TKw_as,
@@ -71,8 +72,6 @@ enum {
 	TOp_add,		// +
 	TOp_sub,		// -
 	TOp_div,		// /
-	TOp_inc,		// ++
-	TOp_dec,		// -
 	TOp_rem,		// %
 	TOp_assign,		// =
 	TOp_addAssign,		// +=
@@ -92,18 +91,16 @@ enum {
 	TOp_neg,		// ~
 	TOp_negAssign,		// ~=
 	TOp_gt,			// >
-	TOp_gtEq,		// >=
+	TOp_ge,			// >=
 	TOp_shr,		// >>
 	TOp_shrAssign,		// >>=
 	TOp_ra,			// ->
 	TOp_lt,			// <
-	TOp_ltEq,		// <=
+	TOp_le,			// <=
 	TOp_shl,		// <<
 	TOp_shlAssign,		// <<=
 	TOp_star,		// *
 	TOp_dot,		// .
-	TOp_2dot,		// ..
-	TOp_3dot,		// ...
 };
 
 Token* ScanFile(char*);

@@ -26,6 +26,7 @@ bool _exceptChar(ScanState* ss, char ch){
 uint _escapeChar(ScanState* ss){
 	uint tmp;
 	switch(*ss->cur){
+	    case '0': ss->cur++; return '\0';
 	    case 'a': ss->cur++; return '\a';
 	    case 'b': ss->cur++; return '\b';
 	    case 'e': ss->cur++; return '\e';
@@ -37,12 +38,6 @@ uint _escapeChar(ScanState* ss){
 	    case '\\':ss->cur++; return '\\';
 	    case '\'':ss->cur++; return '\'';
 	    case '\"':ss->cur++; return '\"';
-	    case '0':
-		ss->cur++;
-		if( !(*(ss->cur +1)>='1' && *(ss->cur +1)<='7') ){
-			return '\0';
-		}
-		ss->cur--;
 	    case '1': case '2': case '3': case '4':
 	    case '5': case '6': case '7':
 		tmp = *ss->cur - '0';
@@ -58,22 +53,24 @@ uint _escapeChar(ScanState* ss){
 		return tmp;
 	    case 'x':
 		ss->cur++;
-		// 处理第一个字符.
 		if( xhex2num(*ss->cur) == -1){
-			return 'x';
+			Error(ss->filename,ss->line, "lexical escape char");
+			return 0;
 		} else{
 			tmp = xhex2num(*ss->cur);
 			ss->cur++;
 		}
-		// 处理第二个字符.
 		if( xhex2num(*ss->cur) == -1){
 			return tmp;
 		} else{
 			tmp = tmp * 16 + xhex2num(*ss->cur);
 			ss->cur++;
+			return tmp;
 		}
 	    default:
-		return *ss->cur++;
+		ss->cur++;
+		Error(ss->filename,ss->line, "lexical escape char");
+		return 0;
 	}
 }
 
@@ -242,7 +239,7 @@ Token* _scanCharLiteral(ScanState* ss){
 
 	ss->cur++; // skip begin char(')
 	if(_exceptChar(ss, '\'')){
-		Warning(ss->filename, ss->line, "CharLiteral has no char");
+		Error(ss->filename, ss->line, "CharLiteral has no char");
 		ret->iValue= 0 ; // 空字符就设置成0.
 		return ret;
 	}
@@ -316,25 +313,20 @@ Token* _lexical(ScanState* ss){
 		ss->cur++;
 		if(_exceptChar(ss, '.')){
 			if(_exceptChar(ss, '.')){
-				return _newToken(TOp_3dot);
+				return _newToken(Token3dot);
 			}
-			return _newToken(TOp_2dot);
+			Error(ss->filename, ss->line, "illegal character ..");
+			return _newToken(TOp_dot);
 		}
 		return _newToken(TOp_dot);
 	    case '+' :
 		ss->cur++;
-		if(_exceptChar(ss, '+')){
-			return _newToken(TOp_inc);
-		}
 		if(_exceptChar(ss, '=')){
 			return _newToken(TOp_addAssign);
 		}
 		return _newToken(TOp_add);
 	    case '-' :
 		ss->cur++;
-		if(_exceptChar(ss, '-')){
-			return _newToken(TOp_dec);
-		}
 		if(_exceptChar(ss, '=')){
 			return _newToken(TOp_subAssign);
 		}
@@ -360,16 +352,16 @@ Token* _lexical(ScanState* ss){
 			goto repeat;
 		}
 		if(_exceptChar(ss, '*')){  // skip multline comment.
-			do{
-				if(!*ss->cur){
-					printf("Error: lexical multline comment not close");
-					return NULL;
-				}
+			while(!(*ss->cur == '*' && *(ss->cur+1) == '/')){
+				ss->cur++;
 				if( *ss->cur == '\n'){
 					ss->line++;
 				}
-				ss->cur++;
-			}while(!(*ss->cur == '*' && *(ss->cur+1) == '/'));
+				if( *ss->cur == '\0'){
+					Error(ss->filename, ss->line, "Error: lexical multline comment not close");
+					return NULL;
+				}
+			}
 			ss->cur += 2;
 			goto repeat;
 		}
@@ -419,7 +411,7 @@ Token* _lexical(ScanState* ss){
 	    case '>' :
 		ss->cur++;
 		if(_exceptChar(ss, '=')){
-			return _newToken(TOp_gtEq);
+			return _newToken(TOp_ge);
 		}
 		if(_exceptChar(ss, '>')){
 			if(_exceptChar(ss, '=')){
@@ -431,7 +423,7 @@ Token* _lexical(ScanState* ss){
 	    case '<' :
 		ss->cur++;
 		if(_exceptChar(ss, '=')){
-			return _newToken(TOp_ltEq);
+			return _newToken(TOp_le);
 		}
 		if(_exceptChar(ss, '<')){
 			if(_exceptChar(ss, '=')){

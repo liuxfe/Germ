@@ -28,12 +28,7 @@ typedef char bool;
 
 #include "input.h"
 #include "scanner.h"
-
-#include "declare.h"
-#include "expression.h"
-#include "statement.h"
-
-void ParseFile(char* filename);
+#include "parser.h"
 
 extern int wantDumpTokenVector;
 

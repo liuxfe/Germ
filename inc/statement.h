@@ -6,7 +6,6 @@
 typedef struct _statement Statement;
 struct _statement{
 	uint                stmtType;
-	Statement*          stmtNext;
 	union{
 	    Vector          pkgVector;	// PackageStmt
 	    struct{			// ImportStmt
@@ -23,18 +22,18 @@ struct _statement{
 	    };
 	    struct{			// switchStmt
 	        Expression* switchExpr;
-	        Statement*  defaultStmt;
+	        Vector      defaultStmt;
 	        Vector      switchCondElement;
 	    };
 	    struct{			// forStmt
 	        Expression* forExpr1;
 	        Expression* forExpr2;
 	        Expression* forExpr3;
-	        Statement*  forStmt;
+	        Vector      forStmt;
 	    };
 	    struct{			// whileStmt
 	        Expression* whileExpr;
-	        Statement*  whileStmt;
+	        Vector      whileStmt;
 	    };
 	};
 };
@@ -42,7 +41,7 @@ struct _statement{
 // Child Element of ifStmt and switchStmt.
 typedef struct _condElement{
 	Expression* expression;
-	Statement*  statement;
+	Vector      statement;
 } CondElement;
 
 /* values of stmtType */
@@ -62,5 +61,11 @@ enum{
 	Stmt_return,
 	Stmt_throw
 };
+
+Statement* ParsePackageStmt(ParseState*);
+Statement* ParseImportStmt(ParseState*);
+Statement* ParseExternalDeclareStmt(ParseState*);
+Statement* ParseLabelStmt(ParseState*, String*);
+Statement* ParseExpressionStmt(ParseState*);
 
 #endif
