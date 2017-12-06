@@ -1,7 +1,7 @@
 # Copyright (c) 2017 Tohack<tohack@foxmail.com>. All Rights Reserved.
 
 .c.o:
-	cc -Wall -fno-builtin -c -o $@  $<
+	cc -I./inc -Wall -fno-builtin -c -o $@  $<
 
 OBJS =	src/error.o	src/xroutine.o	src/vector.o	src/string.o	\
 	src/input.o	\
