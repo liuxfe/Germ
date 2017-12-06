@@ -2,6 +2,8 @@
 
 #include "germ.h"
 
+const int POINTER_SIZE = 8;
+
 DataType IntType     = {DTT_Basic, 8, NULL, BTypeId_int    };
 DataType Int8Type    = {DTT_Basic, 1, NULL, BTypeId_int8   };
 DataType Int16Type   = {DTT_Basic, 2, NULL, BTypeId_int16  };
@@ -129,17 +131,20 @@ Statement* _parseImportStmt(ParseState* ps){
 	return ret;
 }
 
-Statement* _parseTypeDecl(ParseState* ps, Symbol* scope){
-	return NULL;
+DataType* _newDataType(int type){
+	DataType* ret = xmalloc(sizeof(DataType), __FILE__, __LINE__);
+	ret->dtType = type;
+	return ret;
 }
 
-Statement* _parseDeclStmt(ParseState* ps, Symbol* scope){
-	DataType *dt;
-	DataType *bdt;
-
-	if(_exceptToken(ps, TKw_typedef)){
-		//return _parseTypeDeclare(ps, scope);
-	}
+DataType* _parseDataType(ParseState* ps){
+	DataType* ret;
+	DataType* bdt;
+	int pointerLevel = 0;
+	int arrayDimCnt = 0;
+	int arrayDimEnt[MAX_ARRAY_DIM];
+	int i;
+	int sum;
 
 	switch(ps->tokenList->tCode){
 	    case TKw_int :	bdt = &IntType; break;
@@ -159,14 +164,92 @@ Statement* _parseDeclStmt(ParseState* ps, Symbol* scope){
 	    case TKw_void :	bdt =  &VoidType; break;
 	    case TokenID :
 	    default:
+		return NULL;
 		Fatal(ps->filename, ps->tokenList->tLine,"except dataType declear");
 	}
 
-	if(_exceptToken(ps, '[')){
-		//
+	while(_exceptToken(ps,'*')){
+		pointerLevel += 1;
+	}
+	while(true){
+		if(!_exceptToken(ps, '[')){
+			break;
+		}
+		if(ps->tokenList->tCode != TokenInteger){
+			Fatal(ps->filename, ps->tokenList->tLine,"except Integer got(%d)",ps->tokenList->tCode);
+		}
+		arrayDimEnt[arrayDimCnt] = ps->tokenList->iValue;
+		arrayDimCnt += 1;
+		_eatToken(ps);
+		if(!_exceptToken(ps, ']')){
+			Fatal(ps->filename, ps->tokenList->tLine,"except ] got(%d)",ps->tokenList->tCode);
+		}
 	}
 
+	if(pointerLevel && arrayDimCnt){
+		ret = _newDataType(DTT_PointerArray);
+		ret->pointLevel = pointerLevel;
+		ret->arrayDimCnt = arrayDimCnt;
+		sum=1;
+		for(i = 0; i<arrayDimCnt; i++){
+			ret->arrayDimItem[i]=arrayDimEnt[i];
+			sum *= arrayDimEnt[i];
+		}
+		ret->dtBytes = POINTER_SIZE * sum;
+		ret->dtBtype = bdt;
+		return ret;
+	}
+
+	if(arrayDimCnt){
+		if( bdt ==&VoidType ){
+			Fatal(ps->filename,ps->tokenList->tLine, "cant define array of void");
+		}
+		ret = _newDataType(DTT_PointerArray);
+		ret->arrayDimCnt = arrayDimCnt;
+		sum=1;
+		for(i = 0; i<arrayDimCnt; i++){
+			ret->arrayDimItem[i]=arrayDimEnt[i];
+			sum *= arrayDimEnt[i];
+		}
+		ret->dtBytes = POINTER_SIZE * sum;
+		ret->dtBtype = bdt;
+		return ret;
+	}
+
+	if(pointerLevel){
+		ret = _newDataType(DTT_Pointer);
+		ret->pointLevel = pointerLevel;
+		ret->dtBytes = POINTER_SIZE;
+		ret->dtBtype = bdt;
+		return ret;
+	}
+}
+
+Statement* _parseTypeDeclare(ParseState* ps, Symbol* scope){
 	return NULL;
+}
+
+Statement* _parseDeclStmt(ParseState* ps, Symbol* scope){
+	DataType *dt;
+	DataType *bdt;
+	Symbol* s;
+
+	if(_exceptToken(ps, TKw_typedef)){
+		return _parseTypeDeclare(ps, scope);
+	}
+
+	s = _newSymbol(ST_Variable);
+	if(ps->tokenList->tCode != TokenID){
+		Fatal(ps->filename, ps->tokenList->tLine,"except id got(%d)",ps->tokenList->tCode);
+	}
+	s->sName = ps->tokenList->sValue;
+	_eatToken(ps);
+	if(!_exceptToken(ps,';')){
+		Fatal(ps->filename, ps->tokenList->tLine,"except ; got(%d)",ps->tokenList->tCode);
+	}
+	s->varDataType = bdt;
+
+	return ;
 }
 
 /*
@@ -175,8 +258,8 @@ Statement* _parseDeclStmt(ParseState* ps, Symbol* scope){
 void ParseFile(char* filename){
 	ParseState ps;
 	Statement* pkgstmt;
-	Vector impStmts;
-	Vector declStmts;
+	Vector imports;
+	Vector symbols;
 
 	ps.filename = filename;
 	ps.tokenList = ScanFile(filename);
@@ -186,10 +269,10 @@ void ParseFile(char* filename){
 	pkgstmt = _parsePackageStmt(&ps);
 
 	while(_exceptToken(&ps, TKw_import)){
-		pushToVector(&impStmts, _parseImportStmt(&ps));
+		pushToVector(&imports, _parseImportStmt(&ps));
 	}
 
 	while(ps.tokenList){
-		pushToVector(&declStmts,_parseDeclStmt(&ps, NULL));
+		pushToVector(&symbols,_parseDeclStmt(&ps, NULL));
 	}
 }

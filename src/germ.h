@@ -236,12 +236,14 @@ struct _symbol{
 	String*          sName;
 	Symbol*          sScope;
 	union{
-	   struct{			// 模块
-	       Vector    modSymbol;
-	   };
-	   struct{
-	       DataType* varDataType;
-	   };
+	    struct{
+	        Vector    modPackage;
+	        Vector    modImports;			// 模块
+	        Vector    modSymbols;
+	    };
+	    struct{
+	        DataType* varDataType;
+	    };
 	};
 };
 
