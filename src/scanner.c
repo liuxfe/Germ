@@ -346,7 +346,7 @@ Token* _lexical(ScanState* ss){
 			return _newToken(TOp_divAssign);
 		}
 		if(_exceptChar(ss, '/')){  // skip line comment.
-			while(*ss->cur != '\n'){
+			while(*ss->cur && *ss->cur != '\n'){
 				ss->cur++;
 			}
 			goto repeat;
@@ -359,7 +359,7 @@ Token* _lexical(ScanState* ss){
 				}
 				if( *ss->cur == '\0'){
 					Error(ss->filename, ss->line, "Error: lexical multline comment not close");
-					return NULL;
+					goto repeat;
 				}
 			}
 			ss->cur += 2;
@@ -437,7 +437,7 @@ Token* _lexical(ScanState* ss){
 	    case '"' :
 		return _scanStringLiteral(ss);
 	    case '\0':
-		return NULL;
+		return _newToken(TokenEnd);
 	    default:
 		Error(ss->filename, ss->line, "illegal character \\%d(%c)",*ss->cur, *ss->cur);
 		ss->cur++;
@@ -483,11 +483,11 @@ Token* ScanFile(char* filename){
 	ss.cur = ss.buf;
 	ss.line = 1;
 
-	do{
-		tokenTail->tLine = ss.line;
+	while(tokenTail->tCode != TokenEnd){
 		tokenTail->tNext = _lexical(&ss);
 		tokenTail = tokenTail->tNext;
-	}while(tokenTail);
+		tokenTail->tLine = ss.line;
+	}
 
 	if(wantDumpTokenVector){
 		printf("\nDump Token in file: %s\n",filename);

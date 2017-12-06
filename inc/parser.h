@@ -6,10 +6,14 @@
 typedef struct _parseState{
 	char*    filename;
 	Token*   tokenList;
+	String*  continueLabel;
+	String*  breakLabel;
 } ParseState;
 
 void eatToken(ParseState*);
 bool exceptToken(ParseState*, int);
+void ParseFatal(ParseState*, char*);
+void exceptTokenDealError(ParseState*, int, char*);
 
 #include "declare.h"
 #include "symbol.h"

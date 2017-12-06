@@ -115,14 +115,12 @@ DataType* _parseDataType(ParseState* ps){
 	}
 }
 
-Symbol* ParseTypeDeclare(ParseState* ps){
+
+Symbol* ParseExternalDeclare(ParseState* ps){
 	return NULL;
 }
 
-Symbol* ParseExternalTypeDeclare(ParseState* ps){
-	return ParseTypeDeclare(ps);
-}
-
-Symbol* ParseExternalOtherDeclare(ParseState* ps){
+Symbol* ParseInternalDeclare(ParseState* ps){
 	return NULL;
 }
+

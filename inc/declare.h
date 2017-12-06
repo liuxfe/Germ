@@ -58,7 +58,7 @@ enum {
 };
 
 typedef struct _symbol Symbol;
-Symbol* ParseExternalTypeDeclare(ParseState*);
-Symbol* ParseExternalOtherDeclare(ParseState*);
+Symbol* ParseExternalDeclare(ParseState*);
+Symbol* ParseInternalDeclare(ParseState*);
 
 #endif

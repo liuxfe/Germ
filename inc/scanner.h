@@ -17,6 +17,7 @@ typedef struct _token{
 /* values of token tCode. */
 enum {
 	TokenStart = 257,
+	TokenEnd,
 	TokenID,		// 标识符
 	TokenNULL,		// NULL常量
 	TokenInteger,		// 整数常量

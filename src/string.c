@@ -50,6 +50,15 @@ String* StoreString(char* s, int len){
 	return str;
 }
 
+int __lable_id = 0;
+String* CreateLabelString(){
+	String* ret = xmalloc(sizeof(String) + 6 + 1, __FILE__, __LINE__);
+	ret->len = 6;
+	ret->ref = 1;
+	sprintf(&ret->data, ".LC%03d", ++__lable_id);
+	return ret;
+}
+
 void dumpStringBucket(){
 	int i;
 	String* s;

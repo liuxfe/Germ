@@ -32,8 +32,6 @@ char* LoadFile(char* filename){
 	for(ch=fgetc(file); ch != EOF; ch=fgetc(file)){
 		_insertCharToBuffer(&buf,(char)ch);
 	}
-	// Append '\n','\0' to the file end, make lexcier easier.
-	_insertCharToBuffer(&buf,'\n');
 	_insertCharToBuffer(&buf,'\0');
 
 	xfclose(file, __FILE__, __LINE__);

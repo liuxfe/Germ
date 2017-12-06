@@ -17,23 +17,28 @@ struct _statement{
 	    String*         labelString;// LabelStmt/GotoStmt
 	    Expression*     expression;	// ExprsssionStmt/ReturnStmt/ThrowStmt
 	    struct{			// ifStmt
-	        Statement*  elseStmt;
+	        Vector      elseStmt;
 	        Vector      ifCondElements;
 	    };
 	    struct{			// switchStmt
 	        Expression* switchExpr;
 	        Vector      defaultStmt;
 	        Vector      switchCondElement;
+	        String*     switchBreakLabel;
 	    };
 	    struct{			// forStmt
 	        Expression* forExpr1;
 	        Expression* forExpr2;
 	        Expression* forExpr3;
 	        Vector      forStmt;
+	        String*     forContinueLabel;
+	        String*     forBreakLabel;
 	    };
 	    struct{			// whileStmt
 	        Expression* whileExpr;
 	        Vector      whileStmt;
+	        String*     whileContinueLable;
+	        String*     whileBreakLabel;
 	    };
 	};
 };

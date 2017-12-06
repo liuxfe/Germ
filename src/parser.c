@@ -23,6 +23,18 @@ bool exceptToken(ParseState* ps, int tcode){
 	return false;
 }
 
+void ParseFatal(ParseState* ps, char* s){
+	Fatal(ps->filename, ps->tokenList->tLine, 
+		"Parse Except %s got(%d)\n", s, ps->tokenList->tCode);
+}
+
+void exceptTokenDealError(ParseState* ps, int tcode, char* s){
+	if(exceptToken(ps, tcode)){
+		return;
+	}
+	ParseFatal(ps, s);
+}
+
 /*
  * <ParseModule>:= <PackageStmt> <ImportStmt>{0,n} <ExternalDeclareStmt>{0,n}
  */
@@ -35,15 +47,21 @@ void ParseFile(char* filename){
 	ps.filename = filename;
 	ps.tokenList = ScanFile(filename);
 
-	exceptToken(&ps, TokenStart);
+	if(!exceptToken(&ps, TokenStart)){
+		Debug(__FILE__, __LINE__, "Token list not start with TokenStart");
+	}
 
 	pkgstmt = ParsePackageStmt(&ps);
 
-	while(exceptToken(&ps, TKw_import)){
+	while(ps.tokenList->tCode == TKw_import){
 		pushToVector(&imports, ParseImportStmt(&ps));
 	}
 
-	while(ps.tokenList){
+	while(ps.tokenList->tCode != TokenEnd){
 		pushToVector(&symbols, ParseExternalDeclareStmt(&ps));
+	}
+
+	if(!exceptToken(&ps, TokenEnd)){
+		Debug(__FILE__, __LINE__, "Token list not end with TokenEnd");
 	}
 }
