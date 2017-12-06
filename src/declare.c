@@ -55,7 +55,7 @@ DataType* _parseDataType(ParseState* ps){
 	    case TokenID :
 	    default:
 		return NULL;
-		Fatal(ps->filename, ps->tokenList->tLine,"except dataType declear");
+		ParseFatal(ps, "dataType");
 	}
 
 	while(exceptToken(ps,'*')){
@@ -66,14 +66,12 @@ DataType* _parseDataType(ParseState* ps){
 			break;
 		}
 		if(ps->tokenList->tCode != TokenInteger){
-			Fatal(ps->filename, ps->tokenList->tLine,"except Integer got(%d)",ps->tokenList->tCode);
+			ParseFatal(ps,"Integer");
 		}
 		arrayDimEnt[arrayDimCnt] = ps->tokenList->iValue;
 		arrayDimCnt += 1;
 		eatToken(ps);
-		if(!exceptToken(ps, ']')){
-			Fatal(ps->filename, ps->tokenList->tLine,"except ] got(%d)",ps->tokenList->tCode);
-		}
+		exceptTokenDealError(ps, ']',"]")
 	}
 
 	if(pointerLevel && arrayDimCnt){

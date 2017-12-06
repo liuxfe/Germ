@@ -55,7 +55,7 @@ String* CreateLabelString(){
 	String* ret = xmalloc(sizeof(String) + 6 + 1, __FILE__, __LINE__);
 	ret->len = 6;
 	ret->ref = 1;
-	sprintf(&ret->data, ".LC%03d", ++__lable_id);
+	sprintf(ret->data, ".LC%03d", ++__lable_id);
 	return ret;
 }
 
