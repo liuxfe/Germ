@@ -1,6 +1,6 @@
 /* Copyright (c) 2017 Tohack<tohack@foxmail.com>. All Rights Reserved. */
 
-#include "germ.h"
+#include "main.h"
 
 int wantDumpTokenVector = 1;
 

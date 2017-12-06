@@ -1,7 +1,7 @@
 /* Copyright (c) 2017 Tohack<tohack@foxmail.com>. All Rights Reserved. */
 
 #include <stdarg.h>
-#include "germ.h"
+#include "main.h"
 
 static
 void _error(char* label, char* file, int line, char* fmt, va_list ap){

@@ -1,6 +1,6 @@
 /* Copyright (c) 2017 Tohack<tohack@foxmail.com>. All Rights Reserved. */
 
-#include "germ.h"
+#include "main.h"
 
 /* ELF_hash */
 uint _stringHash(char* start, int len){

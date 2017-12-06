@@ -1,6 +1,6 @@
 /* Copyright (c) 2017 Tohack<tohack@foxmail.com>. All Rights Reserved. */
 
-#include "germ.h"
+#include "main.h"
 
 Token* _newToken(int tokencode){
 	Token* ret = xmalloc(sizeof(Token), __FILE__, __LINE__);
