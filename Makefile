@@ -7,7 +7,6 @@ OBJS =	src/error.o	src/xroutine.o	src/vector.o	src/string.o	\
 									\
 	src/input.o	src/scanner.o	src/parser.o			\
 					src/declare.o 			\
-					src/symbol.o 			\
 					src/expression.o 		\
 					src/statement.o 		\
 	src/main.o

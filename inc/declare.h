@@ -58,6 +58,27 @@ enum {
 };
 
 typedef struct _symbol Symbol;
+struct _symbol{
+	int              sType;
+	String*          sName;
+	Symbol*          sScope;
+	union{
+	    struct{			// 模块
+	        Vector    modPackage;
+	        Vector    modSymbols;
+	    };
+	    struct{
+	        DataType* varDataType;
+	    };
+	};
+};
+
+/* values of sType*/
+enum {
+	ST_Module,
+	ST_Variable,
+};
+
 Symbol* ParseExternalDeclare(ParseState*);
 Symbol* ParseInternalDeclare(ParseState*);
 

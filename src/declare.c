@@ -27,6 +27,12 @@ DataType* _newDataType(int type){
 	return ret;
 }
 
+Symbol* _newSymbol(int type){
+	Symbol* ret = xmalloc(sizeof(Symbol), __FILE__, __LINE__);
+	ret->sType = type;
+	return ret;
+}
+
 DataType* _parseDataType(ParseState* ps){
 	DataType* ret;
 	DataType* bdt;

@@ -16,10 +16,9 @@ void ParseFatal(ParseState*, char*);
 void exceptTokenDealError(ParseState*, int, char*);
 
 #include "declare.h"
-#include "symbol.h"
 #include "expression.h"
 #include "statement.h"
 
-void ParseFile(char* filename);
+Symbol* ParseFile(char* filename);
 
 #endif

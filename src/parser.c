@@ -38,7 +38,7 @@ void exceptTokenDealError(ParseState* ps, int tcode, char* s){
 /*
  * <ParseModule>:= <PackageStmt> <ImportStmt>{0,n} <ExternalDeclareStmt>{0,n}
  */
-void ParseFile(char* filename){
+Symbol* ParseFile(char* filename){
 	ParseState ps;
 	Statement* pkgstmt;
 	Vector imports;
