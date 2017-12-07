@@ -71,7 +71,7 @@ DataType* _parseDataType(ParseState* ps){
 		arrayDimEnt[arrayDimCnt] = ps->tokenList->iValue;
 		arrayDimCnt += 1;
 		eatToken(ps);
-		exceptTokenDealError(ps, ']',"]")
+		exceptTokenDealError(ps, ']',"]");
 	}
 
 	if(pointerLevel && arrayDimCnt){
