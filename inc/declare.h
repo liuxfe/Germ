@@ -83,5 +83,4 @@ Symbol* ParseExternalDeclare(ParseState*);
 Symbol* ParseInternalDeclare(ParseState*);
 Symbol* ParseModule(char* filename);
 
-
 #endif

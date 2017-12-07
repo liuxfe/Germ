@@ -7,7 +7,6 @@ typedef struct _statement Statement;
 struct _statement{
 	uint                stmtType;
 	union{
-	    Vector          pkgVector;	// PackageStmt
 	    struct{			// ImportStmt
 	        Vector      impVector;
 	        String*     impAlias;
@@ -67,7 +66,6 @@ enum{
 	Stmt_throw
 };
 
-Statement* ParsePackageStmt(ParseState*);
 Statement* ParseImportStmt(ParseState*);
 Statement* ParseExternalDeclareStmt(ParseState*);
 Statement* ParseLabelStmt(ParseState*, String*);

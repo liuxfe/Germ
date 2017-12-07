@@ -8,24 +8,6 @@ Statement* _newStatement(int type){
 	return ret;
 }
 
-Statement* ParsePackageStmt(ParseState* ps){
-	Statement* ret = _newStatement(Stmt_package);
-
-	exceptToken(ps,TKw_package);
-    repeat:
-	if(ps->tokenList->tCode == TokenID) {
-		pushToVector(&(ret->pkgVector),ps->tokenList->sValue);
-		eatToken(ps);
-		if(exceptToken(ps, TOp_dot)){
-			goto repeat;
-		}
-		if(exceptToken(ps, ';')){
-			return ret;
-		}
-	}
-	ParseFatal(ps, "id");
-}
-
 Statement* ParseImportStmt(ParseState* ps){
 	Statement* ret = _newStatement(Stmt_import);
 
