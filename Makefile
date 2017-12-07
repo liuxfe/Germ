@@ -16,7 +16,7 @@ germ: $(OBJS)
 	cc -o germ $(OBJS)
 
 test: germ
-	./germ example.germ
+	./germ test/step1.germ
 
 clean:
 	-rm germ $(OBJS)
