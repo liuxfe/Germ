@@ -128,3 +128,33 @@ Symbol* ParseInternalDeclare(ParseState* ps){
 	return NULL;
 }
 
+/*
+ * <ParseModule>:= <PackageStmt> <ImportStmt>{0,n} <ExternalDeclareStmt>{0,n}
+ */
+Symbol* ParseModule(char* filename){
+	ParseState ps;
+	Statement* pkgstmt;
+	Vector imports;
+	Vector symbols;
+
+	ps.filename = filename;
+	ps.tokenList = ScanFile(filename);
+
+	if(!exceptToken(&ps, TokenStart)){
+		Debug(__FILE__, __LINE__, "Token list not start with TokenStart");
+	}
+
+	pkgstmt = ParsePackageStmt(&ps);
+
+	while(ps.tokenList->tCode == TKw_import){
+		pushToVector(&imports, ParseImportStmt(&ps));
+	}
+
+	while(ps.tokenList->tCode != TokenEnd){
+		pushToVector(&symbols, ParseExternalDeclareStmt(&ps));
+	}
+
+	if(!exceptToken(&ps, TokenEnd)){
+		Debug(__FILE__, __LINE__, "Token list not end with TokenEnd");
+	}
+}

@@ -5,7 +5,7 @@
 int wantDumpTokenVector = 1;
 
 int doComplie(char* file){
-	ParseFile(file);
+	ParseModule(file);
 
 	return 0;
 }
