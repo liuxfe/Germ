@@ -2,7 +2,7 @@
 
 #include "main.h"
 
-int wantDumpTokenVector = 1;
+int wantDumpTokenVector = 0;
 
 int doComplie(char* file){
 	ParseModule(file);

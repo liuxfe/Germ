@@ -14,5 +14,6 @@ struct _string{
 
 String* StoreString(char*, int);
 String* CreateLabelString();
+String* GetModuleName(char*);
 
 #endif

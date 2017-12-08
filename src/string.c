@@ -59,6 +59,31 @@ String* CreateLabelString(){
 	return ret;
 }
 
+String* GetModuleName(char* s){
+	char* os=s;
+	char* start = s;
+	char* end;
+
+	while(*s){
+		if(*s == '/'){
+			start = s + 1;
+		}
+		s++;
+	}
+	s= start;
+	while(*s){
+		end = s - 1;
+		if(*s == '.'){
+			break;
+		}
+		s++;
+	}
+	if( start == end){
+		Error(__FILE__,__LINE__,"GetModuleName: (%s) cannt get module name", os);
+	}
+	return StoreString(start, end - start);
+}
+
 void dumpStringBucket(){
 	int i;
 	String* s;

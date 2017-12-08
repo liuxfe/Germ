@@ -61,7 +61,6 @@ typedef struct _symbol Symbol;
 struct _symbol{
 	int              sType;
 	String*          sName;
-	Symbol*          sScope;
 	union{
 	    struct{			// 模块
 	        Vector    modPackage;

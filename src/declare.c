@@ -33,6 +33,42 @@ Symbol* _newSymbol(int type){
 	return ret;
 }
 
+char* type2char(DataType* dt){
+	if(dt->dtType == DTT_Basic){
+		switch(dt->btypeId){
+		    case BTypeId_int: return "int";
+		}
+	}
+}
+
+void dumpSymbol(Symbol* symbol, int indent){
+	String* str;
+	char tmp[80];
+	int i;
+	for(i=0; i<indent; i+=1){
+		tmp[i]=' ';
+	}
+	tmp[i]=0;
+	switch(symbol->sType){
+	    case ST_Module:
+		printf("%sModule:\n", tmp);
+		printf("%s  package: ", tmp);
+		for(i=0; i<symbol->modPackage.item; i+=1){
+			str=symbol->modPackage.data[i];
+			printf("%s.", str->data);
+		}
+		printf("\b\n");
+		for(i=0; i< symbol->modSymbols.item; i+=1){
+			dumpSymbol(symbol->modSymbols.data[i], indent+2);
+		}
+		break ;
+	    case ST_Variable:
+		printf("%sVariable(%s): %s\n", tmp, type2char(symbol->varDataType), symbol->sName->data);
+		break ;
+	}
+	return ;
+}
+
 DataType* _parseDataType(ParseState* ps){
 	DataType* ret;
 	DataType* bdt;
@@ -60,10 +96,12 @@ DataType* _parseDataType(ParseState* ps){
 	    case TKw_void :	bdt =  &VoidType; break;
 	    case TokenID :
 	    default:
-		return NULL;
+		return bdt = NULL;
 		ParseFatal(ps, "dataType");
 	}
-
+	eatToken(ps);
+	return bdt;
+/*
 	while(exceptToken(ps,'*')){
 		pointerLevel += 1;
 	}
@@ -117,8 +155,8 @@ DataType* _parseDataType(ParseState* ps){
 		ret->dtBtype = bdt;
 		return ret;
 	}
+*/
 }
-
 
 Symbol* ParseExternalDeclare(ParseState* ps){
 	return NULL;
@@ -138,6 +176,7 @@ void _parsePackage(ParseState* ps, Vector* vector){
 			goto repeat;
 		}
 		if(exceptToken(ps, ';')){
+			pushToVector(vector, GetModuleName(ps->filename));
 			return;
 		}
 		ParseFatal(ps, ";");
@@ -145,8 +184,47 @@ void _parsePackage(ParseState* ps, Vector* vector){
 	ParseFatal(ps, "id");
 }
 
+void _appendSymbol(ParseState* ps, Vector* scope, Symbol* symbol){
+	Symbol* s;
+	int i;
+
+	for(i=0; i<scope->item; i+=1){
+		s = scope->data[i];
+		if(s->sName != symbol->sName){
+			continue;
+		}
+		Error(ps->filename, ps->tokenList->tLine, "redefined (%s)", symbol->sName->data);
+	}
+	pushToVector(scope, symbol);
+}
+
+void _parseExternalDeclare(ParseState* ps, Vector* scope){
+	Symbol * symbol;
+	DataType* dt;
+	String* name;
+
+	dt = _parseDataType(ps);
+	if(!dt){
+		Fatal(ps->filename, ps->tokenList->tLine, "except type declare");
+	}
+
+	if(ps->tokenList->tCode != TokenID){
+		ParseFatal(ps, "id");
+	}
+	name = ps->tokenList->sValue;
+	eatToken(ps);
+	exceptTokenDealError(ps, ';', ";");
+
+	symbol = _newSymbol(ST_Variable);
+	symbol->varDataType = dt;
+	symbol->sName = name;
+
+	_appendSymbol(ps, scope, symbol);
+}
+
+
 /*
- * <ParseModule>:= <_parsePackage> <ImportStmt>{0,n} <ExternalDeclareStmt>{0,n}
+ * <ParseModule>:= <_parsePackage> <ExternalDeclareStmt>{0,n}
  */
 Symbol* ParseModule(char* filename){
 	ParseState ps = {};
@@ -168,11 +246,12 @@ Symbol* ParseModule(char* filename){
 	*/
 
 	while(ps.tokenList->tCode != TokenEnd){
-		eatToken(&ps);
-		//pushToVector(&symbols, ParseExternalDeclareStmt(&ps));
+		_parseExternalDeclare(&ps, &ret->modSymbols);
 	}
 
 	if(!exceptToken(&ps, TokenEnd)){
 		Debug(__FILE__, __LINE__, "Token list not end with TokenEnd");
 	}
+	dumpSymbol(ret, 0);
+	return ret;
 }
