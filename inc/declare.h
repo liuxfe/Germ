@@ -69,6 +69,10 @@ struct _symbol{
 	    struct{
 	        DataType* varDataType;
 	    };
+	    struct{
+	        DataType* funcRetType;
+
+	    };
 	};
 };
 
@@ -76,10 +80,9 @@ struct _symbol{
 enum {
 	ST_Module,
 	ST_Variable,
+	ST_Function,
 };
 
-Symbol* ParseExternalDeclare(ParseState*);
-Symbol* ParseInternalDeclare(ParseState*);
 Symbol* ParseModule(char* filename, String*);
 
 #endif

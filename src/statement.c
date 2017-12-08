@@ -39,18 +39,6 @@ Statement* ParseImportStmt(ParseState* ps){
 	ParseFatal(ps, "id");
 }
 
-Statement* ParseExternalDeclareStmt(ParseState* ps){
-	Statement* ret = _newStatement(Stmt_declare);
-	ret->declSymbol = ParseExternalDeclare(ps);
-	return ret;
-}
-
-Statement* ParseInternalDeclareStmt(ParseState* ps){
-	Statement* ret = _newStatement(Stmt_declare);
-	ret->declSymbol = ParseInternalDeclare(ps);
-	return ret;
-}
-
 // 所以的检查都由调用函数处理。
 Statement* ParseLabelStmt(ParseState* ps, String* label){
 	Statement* ret = _newStatement(Stmt_declare);

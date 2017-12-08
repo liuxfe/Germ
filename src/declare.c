@@ -66,6 +66,9 @@ void dumpSymbol(Symbol* symbol, int indent){
 	    case ST_Variable:
 		printf("%sVariable(%s): %s\n", tmp, type2char(symbol->varDataType), symbol->sName->data);
 		break ;
+	    case ST_Function:
+		printf("%sFunciton(ret:%s): %s\n", tmp, type2char(symbol->funcRetType), symbol->sName->data);
+		break;
 	}
 	return ;
 }
@@ -159,14 +162,6 @@ DataType* _parseDataType(ParseState* ps){
 */
 }
 
-Symbol* ParseExternalDeclare(ParseState* ps){
-	return NULL;
-}
-
-Symbol* ParseInternalDeclare(ParseState* ps){
-	return NULL;
-}
-
 void _parsePackage(ParseState* ps, Vector* vector){
 	exceptTokenDealError(ps, TKw_package, "package");
     repeat:
@@ -199,6 +194,22 @@ void _appendSymbol(ParseState* ps, Vector* scope, Symbol* symbol){
 	pushToVector(scope, symbol);
 }
 
+Symbol* _parseFunctionDeclare(ParseState* ps, DataType* dt, String* name){
+	Symbol* symbol = _newSymbol(ST_Function);
+
+	symbol->sName = name;
+	symbol->funcRetType = dt;
+	exceptTokenDealError(ps, ')', ")");
+	if(exceptToken(ps, ';')){
+		return symbol;
+	}
+	exceptTokenDealError(ps, '{', "{");
+	while(!exceptToken(ps, '}')){
+		eatToken(ps);
+	}
+	return symbol;
+}
+
 void _parseExternalDeclare(ParseState* ps, Vector* scope){
 	Symbol * symbol;
 	DataType* dt;
@@ -214,6 +225,11 @@ void _parseExternalDeclare(ParseState* ps, Vector* scope){
 	}
 	name = ps->tokenList->sValue;
 	eatToken(ps);
+	if(exceptToken(ps,'(')){
+		symbol = _parseFunctionDeclare(ps, dt, name);
+		_appendSymbol(ps, scope, symbol);
+		return ;
+	}
 	exceptTokenDealError(ps, ';', ";");
 
 	symbol = _newSymbol(ST_Variable);
