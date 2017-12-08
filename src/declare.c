@@ -210,7 +210,7 @@ Symbol* _parseFunctionDeclare(ParseState* ps, DataType* dt, String* name){
 	return symbol;
 }
 
-void _parseExternalDeclare(ParseState* ps, Vector* scope){
+Symbol* _parseExternalDeclare(ParseState* ps){
 	Symbol * symbol;
 	DataType* dt;
 	String* name;
@@ -226,9 +226,7 @@ void _parseExternalDeclare(ParseState* ps, Vector* scope){
 	name = ps->tokenList->sValue;
 	eatToken(ps);
 	if(exceptToken(ps,'(')){
-		symbol = _parseFunctionDeclare(ps, dt, name);
-		_appendSymbol(ps, scope, symbol);
-		return ;
+		return _parseFunctionDeclare(ps, dt, name);
 	}
 	exceptTokenDealError(ps, ';', ";");
 
@@ -236,7 +234,7 @@ void _parseExternalDeclare(ParseState* ps, Vector* scope){
 	symbol->varDataType = dt;
 	symbol->sName = name;
 
-	_appendSymbol(ps, scope, symbol);
+	return symbol;
 }
 
 
@@ -264,7 +262,7 @@ Symbol* ParseModule(char* filename, String* name){
 	*/
 
 	while(ps.tokenList->tCode != TokenEnd){
-		_parseExternalDeclare(&ps, &ret->modSymbols);
+		_appendSymbol(&ps, &ret->modSymbols, _parseExternalDeclare(&ps));
 	}
 
 	if(!exceptToken(&ps, TokenEnd)){
