@@ -3,6 +3,7 @@
 package Germ.Test;
 
 int t1;
-int t2;
-int t3;
-uint t5;
+
+int main(){
+
+}

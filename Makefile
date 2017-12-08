@@ -16,6 +16,7 @@ germ: $(OBJS)
 
 test: germ
 	./germ test/step1.germ
+	./germ test/step2.germ
 
 clean:
 	-rm germ $(OBJS)
