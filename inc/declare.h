@@ -80,6 +80,6 @@ enum {
 
 Symbol* ParseExternalDeclare(ParseState*);
 Symbol* ParseInternalDeclare(ParseState*);
-Symbol* ParseModule(char* filename);
+Symbol* ParseModule(char* filename, String*);
 
 #endif

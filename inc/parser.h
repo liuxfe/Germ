@@ -19,4 +19,6 @@ void exceptTokenDealError(ParseState*, int, char*);
 #include "expression.h"
 #include "statement.h"
 
+Symbol* ParseFile(char*);
+
 #endif

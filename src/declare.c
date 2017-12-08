@@ -37,6 +37,7 @@ char* type2char(DataType* dt){
 	if(dt->dtType == DTT_Basic){
 		switch(dt->btypeId){
 		    case BTypeId_int: return "int";
+		    case BTypeId_uint: return "uint";
 		}
 	}
 }
@@ -51,7 +52,7 @@ void dumpSymbol(Symbol* symbol, int indent){
 	tmp[i]=0;
 	switch(symbol->sType){
 	    case ST_Module:
-		printf("%sModule:\n", tmp);
+		printf("%sModule: %s\n", tmp, symbol->sName->data);
 		printf("%s  package: ", tmp);
 		for(i=0; i<symbol->modPackage.item; i+=1){
 			str=symbol->modPackage.data[i];
@@ -226,9 +227,10 @@ void _parseExternalDeclare(ParseState* ps, Vector* scope){
 /*
  * <ParseModule>:= <_parsePackage> <ExternalDeclareStmt>{0,n}
  */
-Symbol* ParseModule(char* filename){
+Symbol* ParseModule(char* filename, String* name){
 	ParseState ps = {};
 	Symbol* ret = _newSymbol(ST_Module);
+	ret->sName = name;
 
 	ps.filename = filename;
 	ps.tokenList = ScanFile(filename);

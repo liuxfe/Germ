@@ -34,3 +34,7 @@ void exceptTokenDealError(ParseState* ps, int tcode, char* s){
 	}
 	ParseFatal(ps, s);
 }
+
+Symbol* ParseFile(char* filename){
+	return ParseModule(filename, GetModuleName(filename));
+}

@@ -5,3 +5,4 @@ package Germ.exam;
 int t1;
 int t2;
 int t3;
+uint t5;
