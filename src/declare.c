@@ -237,7 +237,6 @@ Symbol* _parseExternalDeclare(ParseState* ps){
 	return symbol;
 }
 
-
 /*
  * <ParseModule>:= <_parsePackage> <ExternalDeclareStmt>{0,n}
  */
