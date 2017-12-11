@@ -223,37 +223,37 @@ void _parseFunctionParam(ParseState* ps, Vector* scope){
 	_appendSymbol(ps, scope, param);
 }
 
-Symbol* _parseFunctionDeclare(ParseState* ps, DataType* dt, String* name){
+void _parseFunctionDeclare(ParseState* ps, DataType* dt, String* name, Vector* scope){
 	Symbol* symbol = _newSymbol(ST_Function);
 	Symbol* param;
 
 	symbol->sName = name;
 	symbol->funcRetType = dt;
 
-	 //分析参数
 	if(exceptToken(ps, ')')){
 		goto param_over;
 	}
+
     param_repeat:
 	_parseFunctionParam(ps, &symbol->funcParam);
 	if(exceptToken(ps, ',')){
 		goto param_repeat;
 	}
-
 	exceptTokenDealError(ps, ')', ")");
-   param_over:
-	if(exceptToken(ps, ';')){
-		return symbol;
-	}
 
-	exceptTokenDealError(ps, '{', "{");
-	while(!exceptToken(ps, '}')){
-		eatToken(ps);
+   param_over:
+	if(exceptToken(ps, ';')){	// no function body
+		_appendSymbol(ps, scope, symbol);
+	} else{				// has function body
+		exceptTokenDealError(ps, '{', "{");
+		while(!exceptToken(ps, '}')){
+			eatToken(ps);
+		}
+		_appendSymbol(ps, scope, symbol);
 	}
-	return symbol;
 }
 
-Symbol* _parseExternalDeclare(ParseState* ps){
+void _parseExternalDeclare(ParseState* ps, Vector* scope){
 	Symbol * symbol;
 	DataType* dt;
 	String* name;
@@ -268,21 +268,20 @@ Symbol* _parseExternalDeclare(ParseState* ps){
 	}
 	name = ps->tokenList->sValue;
 	eatToken(ps);
-	if(exceptToken(ps,'(')){
-		return _parseFunctionDeclare(ps, dt, name);
+
+	if(exceptToken(ps,'(')){	// Function
+		_parseFunctionDeclare(ps, dt, name, scope);
+	} else{				// Variable
+		exceptTokenDealError(ps, ';', ";");
+
+		symbol = _newSymbol(ST_Variable);
+		symbol->varDataType = dt;
+		symbol->sName = name;
+		_appendSymbol(ps, scope, symbol);
 	}
-	exceptTokenDealError(ps, ';', ";");
-
-	symbol = _newSymbol(ST_Variable);
-	symbol->varDataType = dt;
-	symbol->sName = name;
-
-	return symbol;
 }
 
-/*
- * <ParseModule>:= <_parsePackage> <ExternalDeclareStmt>{0,n}
- */
+/*  <ParseModule>:= <_parsePackage> <_parseExternalDeclareStmt>{0,n}  */
 Symbol* ParseModule(char* filename, String* name){
 	ParseState ps = {};
 	Symbol* ret = _newSymbol(ST_Module);
@@ -304,7 +303,7 @@ Symbol* ParseModule(char* filename, String* name){
 	*/
 
 	while(ps.tokenList->tCode != TokenEnd){
-		_appendSymbol(&ps, &ret->modSymbols, _parseExternalDeclare(&ps));
+		_parseExternalDeclare(&ps, &ret->modSymbols);
 	}
 
 	if(!exceptToken(&ps, TokenEnd)){
