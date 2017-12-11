@@ -66,12 +66,15 @@ struct _symbol{
 	        Vector    modPackage;
 	        Vector    modSymbols;
 	    };
-	    struct{
+	    struct{			// 变量
 	        DataType* varDataType;
 	    };
-	    struct{
+	    struct{			// 函数
 	        DataType* funcRetType;
-
+	        Vector    funcParam;
+	    };
+	    struct{
+	    	DataType* paramDataType;
 	    };
 	};
 };
@@ -81,6 +84,7 @@ enum {
 	ST_Module,
 	ST_Variable,
 	ST_Function,
+	ST_FuncParam,
 };
 
 Symbol* ParseModule(char* filename, String*);

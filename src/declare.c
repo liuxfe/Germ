@@ -68,6 +68,12 @@ void dumpSymbol(Symbol* symbol, int indent){
 		break ;
 	    case ST_Function:
 		printf("%sFunciton(ret:%s): %s\n", tmp, type2char(symbol->funcRetType), symbol->sName->data);
+		for(i=0; i< symbol->funcParam.item; i+=1){
+			dumpSymbol(symbol->funcParam.data[i], indent+2);
+		}
+		break;
+	    case ST_FuncParam:
+		printf("%sParam(%s): %s\n", tmp, type2char(symbol->paramDataType), symbol->sName->data);
 		break;
 	}
 	return ;
@@ -194,15 +200,52 @@ void _appendSymbol(ParseState* ps, Vector* scope, Symbol* symbol){
 	pushToVector(scope, symbol);
 }
 
+void _parseFunctionParam(ParseState* ps, Vector* scope){
+	Symbol* param;
+	DataType* dt;
+	String* name;
+
+	dt = _parseDataType(ps);
+	if(!dt){
+		Fatal(ps->filename, ps->tokenList->tLine, "except type declare");
+	}
+
+	if(ps->tokenList->tCode != TokenID){
+		ParseFatal(ps, "id");
+	}
+	name = ps->tokenList->sValue;
+	eatToken(ps);
+
+	param = _newSymbol(ST_FuncParam);
+	param->paramDataType = dt;
+	param->sName = name;
+
+	_appendSymbol(ps, scope, param);
+}
+
 Symbol* _parseFunctionDeclare(ParseState* ps, DataType* dt, String* name){
 	Symbol* symbol = _newSymbol(ST_Function);
+	Symbol* param;
 
 	symbol->sName = name;
 	symbol->funcRetType = dt;
+
+	 //分析参数
+	if(exceptToken(ps, ')')){
+		goto param_over;
+	}
+    param_repeat:
+	_parseFunctionParam(ps, &symbol->funcParam);
+	if(exceptToken(ps, ',')){
+		goto param_repeat;
+	}
+
 	exceptTokenDealError(ps, ')', ")");
+   param_over:
 	if(exceptToken(ps, ';')){
 		return symbol;
 	}
+
 	exceptTokenDealError(ps, '{', "{");
 	while(!exceptToken(ps, '}')){
 		eatToken(ps);
