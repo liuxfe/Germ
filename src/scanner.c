@@ -7,9 +7,9 @@ typedef struct _scanState{
 	char* buf;
 	char* cur;
 	int   line;
-} ScanState;
+} scanState;
 
-bool _exceptChar(ScanState* ss, char ch){
+bool exceptChar(scanState* ss, char ch){
 	if(*ss->cur == ch ){
 		ss->cur++;
 		return true;
@@ -17,7 +17,7 @@ bool _exceptChar(ScanState* ss, char ch){
 	return false;
 }
 
-uint _escapeChar(ScanState* ss){
+uint escapeChar(scanState* ss){
 	uint tmp;
 	switch(*ss->cur){
 	    case '0': ss->cur++; return '\0';
@@ -36,25 +36,25 @@ uint _escapeChar(ScanState* ss){
 	    case '5': case '6': case '7':
 		tmp = *ss->cur - '0';
 		ss->cur++;
-		if( *ss->cur >='0' && *ss->cur<='7'){
+		if(Xisoct(*ss->cur)){
 			tmp= tmp * 8 + *ss->cur - '0';
 			ss->cur++;
 		}
-		if( *ss->cur >='0' && *ss->cur<='7'){
+		if(Xisoct(*ss->cur)){
 			tmp= tmp * 8 + *ss->cur - '0';
 			ss->cur++;
 		}
 		return tmp;
 	    case 'x':
 		ss->cur++;
-		if( Xhex2num(*ss->cur) == -1){
+		if(Xishex(*ss->cur)){
 			Error(ss->filename,ss->line, "lexical escape char");
 			return 0;
 		} else{
 			tmp = Xhex2num(*ss->cur);
 			ss->cur++;
 		}
-		if( Xhex2num(*ss->cur) == -1){
+		if(Xishex(*ss->cur)){
 			return tmp;
 		} else{
 			tmp = tmp * 16 + Xhex2num(*ss->cur);
@@ -68,7 +68,7 @@ uint _escapeChar(ScanState* ss){
 	}
 }
 
-Token* _scanId(ScanState* ss){
+Token* scanId(scanState* ss){
 	Token* ret;
 	char* start = ss->cur;
 
@@ -213,13 +213,13 @@ Token* _scanId(ScanState* ss){
 	}
 
 	ret = TokenAlloc(TokenID);
-	ret->sValue= StoreString(start, ss->cur - start);
+	ret->sValue = StoreString(start, ss->cur - start);
 	return ret;
 }
 
-Token* _scanNumberLiteral(ScanState* ss){
+Token* scanNumberLiteral(scanState* ss){
 	Token* ret = TokenAlloc(TokenInteger);
-	ret->iValue=0;
+	ret->iValue = 0;
 
 	while( *ss->cur >='0' && *ss->cur <= '9'){
 		ret->iValue= ret->iValue * 10 + *ss->cur - '0';
@@ -228,22 +228,23 @@ Token* _scanNumberLiteral(ScanState* ss){
 	return ret;
 }
 
-Token* _scanCharLiteral(ScanState* ss){
+Token* scanCharLiteral(scanState* ss){
 	Token* ret =TokenAlloc(TokenChar);
 
 	ss->cur++; // skip begin char(')
-	if(_exceptChar(ss, '\'')){
+	if(exceptChar(ss, '\'')){
 		Error(ss->filename, ss->line, "CharLiteral has no char");
 		ret->iValue= 0 ; // 空字符就设置成0.
 		return ret;
 	}
-	if(_exceptChar(ss, '\\')){
-		ret->iValue = _escapeChar(ss);
+
+	if(exceptChar(ss, '\\')){
+		ret->iValue = escapeChar(ss);
 	}else{
 		ret->iValue = *ss->cur++;
 	}
 
-	if(_exceptChar(ss, '\'')){
+	if(exceptChar(ss, '\'')){
 		return ret;
 	}else{
 		Error(ss->filename, ss->line, "CharLiteral has too many char");
@@ -259,7 +260,7 @@ Token* _scanCharLiteral(ScanState* ss){
 	}
 }
 
-Token* _scanStringLiteral(ScanState* ss){
+Token* scanStringLiteral(scanState* ss){
 	char* start;
 	char* tail;
 	Token* ret= TokenAlloc(TokenString);
@@ -269,29 +270,29 @@ Token* _scanStringLiteral(ScanState* ss){
 	while(*ss->cur && (*ss->cur !='"')){
 		if(*ss->cur == '\\'){
 			ss->cur++;
-			*tail = (char)_escapeChar(ss);
+			*tail = (char)escapeChar(ss);
 			tail++;
 		} else{
 			*tail++ = *ss->cur++;
 		}
 	}
 
-	if(!_exceptChar(ss,'"')){
+	if(!exceptChar(ss,'"')){
 		Error(ss->filename, ss->line,"StringLiteral not close");
 	}
 	ret->sValue = StoreString(start, tail-start);
 	return ret;
 }
 
-Token* _lexical(ScanState* ss){
+Token* scanLexical(scanState* ss){
     repeat:
 	if( *ss->cur =='_' || (*ss->cur >= 'a' && *ss->cur <= 'z')
 	                   || (*ss->cur >= 'A' && *ss->cur <= 'Z') ){
-		return _scanId(ss);
+		return scanId(ss);
 	}
 
 	if(*ss->cur >='0' && *ss->cur <= '9'){
-		return _scanNumberLiteral(ss);
+		return scanNumberLiteral(ss);
 	}
 
 	switch(*ss->cur){
@@ -305,8 +306,8 @@ Token* _lexical(ScanState* ss){
 		return TokenAlloc(*ss->cur++);
 	    case '.' :
 		ss->cur++;
-		if(_exceptChar(ss, '.')){
-			if(_exceptChar(ss, '.')){
+		if(exceptChar(ss, '.')){
+			if(exceptChar(ss, '.')){
 				return TokenAlloc(Token3dot);
 			}
 			Error(ss->filename, ss->line, "illegal character ..");
@@ -315,37 +316,37 @@ Token* _lexical(ScanState* ss){
 		return TokenAlloc(TOp_dot);
 	    case '+' :
 		ss->cur++;
-		if(_exceptChar(ss, '=')){
+		if(exceptChar(ss, '=')){
 			return TokenAlloc(TOp_addAssign);
 		}
 		return TokenAlloc(TOp_add);
 	    case '-' :
 		ss->cur++;
-		if(_exceptChar(ss, '=')){
+		if(exceptChar(ss, '=')){
 			return TokenAlloc(TOp_subAssign);
 		}
-		if(_exceptChar(ss, '>')){
+		if(exceptChar(ss, '>')){
 			return TokenAlloc(TOp_ra);
 		}
 		return TokenAlloc(TOp_sub);
 	    case '*' :
 		ss->cur++;
-		if(_exceptChar(ss, '=')){
+		if(exceptChar(ss, '=')){
 			return TokenAlloc(TOp_mulAssign);
 		}
 		return TokenAlloc(TOp_star);
 	    case '/' :
 		ss->cur++;
-		if(_exceptChar(ss, '=')){
+		if(exceptChar(ss, '=')){
 			return TokenAlloc(TOp_divAssign);
 		}
-		if(_exceptChar(ss, '/')){  // skip line comment.
+		if(exceptChar(ss, '/')){  // skip line comment.
 			while(*ss->cur && *ss->cur != '\n'){
 				ss->cur++;
 			}
 			goto repeat;
 		}
-		if(_exceptChar(ss, '*')){  // skip multline comment.
+		if(exceptChar(ss, '*')){  // skip multline comment.
 			while(!(*ss->cur == '*' && *(ss->cur+1) == '/')){
 				ss->cur++;
 				if( *ss->cur == '\n'){
@@ -362,53 +363,53 @@ Token* _lexical(ScanState* ss){
 		return TokenAlloc(TOp_div);
 	    case '%' :
 		ss->cur++;
-		if(_exceptChar(ss, '=')){
+		if(exceptChar(ss, '=')){
 			return TokenAlloc(TOp_remAssign);
 		}
 		return TokenAlloc(TOp_rem);
 	    case '!' :
 		ss->cur++;
-		if(_exceptChar(ss, '=')){
+		if(exceptChar(ss, '=')){
 			return TokenAlloc(TOp_notEq);
 		}
 		return TokenAlloc(TOp_not);
 	    case '&' :
 		ss->cur++;
-		if(_exceptChar(ss, '=')){
+		if(exceptChar(ss, '=')){
 			return TokenAlloc(TOp_andAssign);
 		}
-		if(_exceptChar(ss, '&')){
+		if(exceptChar(ss, '&')){
 			return TokenAlloc(TOp_andAnd);
 		}
 		return TokenAlloc(TOp_and);
 	    case '=' :
 		ss->cur++;
-		if(_exceptChar(ss, '=')){
+		if(exceptChar(ss, '=')){
 			return TokenAlloc(TOp_eq);
 		}
 		return TokenAlloc(TOp_assign);
 	    case '|' :
 		ss->cur++;
-		if(_exceptChar(ss, '=')){
+		if(exceptChar(ss, '=')){
 			return TokenAlloc(TOp_orAssign);
 		}
-		if(_exceptChar(ss, '|')){
+		if(exceptChar(ss, '|')){
 			return TokenAlloc(TOp_orOr);
 		}
 		return TokenAlloc(TOp_or);
 	    case '~' :
 		ss->cur++;
-		if(_exceptChar(ss, '=')){
+		if(exceptChar(ss, '=')){
 			return TokenAlloc(TOp_negAssign);
 		}
 		return TokenAlloc(TOp_neg);
 	    case '>' :
 		ss->cur++;
-		if(_exceptChar(ss, '=')){
+		if(exceptChar(ss, '=')){
 			return TokenAlloc(TOp_ge);
 		}
-		if(_exceptChar(ss, '>')){
-			if(_exceptChar(ss, '=')){
+		if(exceptChar(ss, '>')){
+			if(exceptChar(ss, '=')){
 				return TokenAlloc(TOp_shrAssign);
 			}
 			return TokenAlloc(TOp_shr);
@@ -416,20 +417,20 @@ Token* _lexical(ScanState* ss){
 		return TokenAlloc(TOp_gt);
 	    case '<' :
 		ss->cur++;
-		if(_exceptChar(ss, '=')){
+		if(exceptChar(ss, '=')){
 			return TokenAlloc(TOp_le);
 		}
-		if(_exceptChar(ss, '<')){
-			if(_exceptChar(ss, '=')){
+		if(exceptChar(ss, '<')){
+			if(exceptChar(ss, '=')){
 				return TokenAlloc(TOp_shlAssign);
 			}
 			return TokenAlloc(TOp_shl);
 		}
 		return TokenAlloc(TOp_lt);
 	    case '\'':
-		return _scanCharLiteral(ss);
+		return scanCharLiteral(ss);
 	    case '"' :
-		return _scanStringLiteral(ss);
+		return scanStringLiteral(ss);
 	    case '\0':
 		return TokenAlloc(TokenEnd);
 	    default:
@@ -440,7 +441,7 @@ Token* _lexical(ScanState* ss){
 }
 
 Token* ScanFile(char* filename){
-	ScanState ss;
+	scanState ss;
 	Token* tokenHead = TokenAlloc(TokenStart);
 	Token* tokenTail = tokenHead;
 
@@ -450,7 +451,7 @@ Token* ScanFile(char* filename){
 	ss.line = 1;
 
 	while(tokenTail->tCode != TokenEnd){
-		tokenTail->tNext = _lexical(&ss);
+		tokenTail->tNext = scanLexical(&ss);
 		tokenTail = tokenTail->tNext;
 		tokenTail->tLine = ss.line;
 	}
