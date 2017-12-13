@@ -26,10 +26,9 @@ void parseFuncParam(ParseState* ps, Vector* scope){
 }
 
 void parseFuncDeclare(ParseState* ps, Dtype* dt, String* name, Vector* scope){
-	Symbol* symbol = SymbolAlloc(ST_Function);
+	Symbol* symbol;
 
-	symbol->sName = name;
-	symbol->funcRetType = dt;
+	symbol = SymbolAllocFunc(dt, name);
 
 	if(exceptToken(ps, ')')){
 		goto param_over;
@@ -59,9 +58,7 @@ void parseVarDeclare(ParseState* ps, Dtype* dt, String* name, Vector* scope){
 	
 	exceptTokenDealError(ps, ';', ";");
 
-	symbol = SymbolAlloc(ST_Variable);
-	symbol->varDtype = dt;
-	symbol->sName = name;
+	symbol = SymbolAllocVar(dt, name);
 	SymbolAppend(ps, scope, symbol);
 }
 

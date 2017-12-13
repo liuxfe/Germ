@@ -33,6 +33,8 @@ enum {
 };
 
 Symbol* SymbolAlloc(int);
+Symbol* SymbolAllocVar(Dtype*, String*);
+Symbol* SymbolAllocFunc(Dtype*, String*);
 void SymbolFree(Symbol*);
 void SymbolDump(Symbol*, int);
 void SymbolAppend(ParseState*, Vector*, Symbol*);

@@ -11,6 +11,26 @@ Symbol* SymbolAlloc(int type){
 	return ret;
 }
 
+Symbol* SymbolAllocVar(Dtype* dt, String* name){
+	Symbol* ret;
+
+	ret = SymbolAlloc(ST_Variable);
+	ret->sName = name;
+	ret->varDtype = dt;
+
+	return ret;
+}
+
+Symbol* SymbolAllocFunc(Dtype* dt, String* name){
+	Symbol* ret;
+
+	ret = SymbolAlloc(ST_Function);
+	ret->sName = name;
+	ret->funcRetType = dt;
+
+	return ret;
+}
+
 void SymbolFree(Symbol* s){
 	Xfree(s, __FILE__, __LINE__);
 }
