@@ -1,0 +1,24 @@
+/* Copyright (c) 2017 Tohack<tohack@foxmail.com>. All Rights Reserved. */
+
+package Germ.Test;
+
+int t1;
+
+int main(int a){
+  int a;
+  int b;
+
+}
+
+int t2(int a, int b){
+  int c;
+  int d;
+
+}
+
+int t3(int a, int b, int c){
+  int a;
+  int d;
+  int f;
+
+}
