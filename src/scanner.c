@@ -3,7 +3,7 @@
 #include "main.h"
 
 Token* _newToken(int tokencode){
-	Token* ret = xmalloc(sizeof(Token), __FILE__, __LINE__);
+	Token* ret = Xmalloc(sizeof(Token), __FILE__, __LINE__);
 	ret->tCode = tokencode;
 	return ret;
 }
@@ -53,17 +53,17 @@ uint _escapeChar(ScanState* ss){
 		return tmp;
 	    case 'x':
 		ss->cur++;
-		if( xhex2num(*ss->cur) == -1){
+		if( Xhex2num(*ss->cur) == -1){
 			Error(ss->filename,ss->line, "lexical escape char");
 			return 0;
 		} else{
-			tmp = xhex2num(*ss->cur);
+			tmp = Xhex2num(*ss->cur);
 			ss->cur++;
 		}
-		if( xhex2num(*ss->cur) == -1){
+		if( Xhex2num(*ss->cur) == -1){
 			return tmp;
 		} else{
-			tmp = tmp * 16 + xhex2num(*ss->cur);
+			tmp = tmp * 16 + Xhex2num(*ss->cur);
 			ss->cur++;
 			return tmp;
 		}
@@ -86,134 +86,134 @@ Token* _scanId(ScanState* ss){
 
 	switch(ss->cur - start){
 	    case 2 :
-		if(xstrncmp(start,"if",2)){
+		if(Xstrncmp(start,"if",2)){
 			return _newToken(TKw_if);
 		}
-		if(xstrncmp(start,"as",2)){
+		if(Xstrncmp(start,"as",2)){
 			return _newToken(TKw_as);
 		}
 	    case 3 :
-		if(xstrncmp(start,"int",3)){
+		if(Xstrncmp(start,"int",3)){
 			return _newToken(TKw_int);
 		}
-		if(xstrncmp(start,"for",3)){
+		if(Xstrncmp(start,"for",3)){
 			return _newToken(TKw_for);
 		}
 	    case 4 :
-		if(xstrncmp(start,"int8",4)){
+		if(Xstrncmp(start,"int8",4)){
 			return _newToken(TKw_int8);
 		}
-		if(xstrncmp(start,"uint",4)){
+		if(Xstrncmp(start,"uint",4)){
 			return _newToken(TKw_uint);
 		}
-		if(xstrncmp(start,"bool",4)){
+		if(Xstrncmp(start,"bool",4)){
 			return _newToken(TKw_bool);
 		}
-		if(xstrncmp(start,"char",4)){
+		if(Xstrncmp(start,"char",4)){
 			return _newToken(TKw_char);
 		}
-		if(xstrncmp(start,"void",4)){
+		if(Xstrncmp(start,"void",4)){
 			return _newToken(TKw_void);
 		}
-		if(xstrncmp(start,"func",4)){
+		if(Xstrncmp(start,"func",4)){
 			return _newToken(TKw_func);
 		}
-		if(xstrncmp(start,"elif",4)){
+		if(Xstrncmp(start,"elif",4)){
 			return _newToken(TKw_elif);
 		}
-		if(xstrncmp(start,"else",4)){
+		if(Xstrncmp(start,"else",4)){
 			return _newToken(TKw_else);
 		}
-		if(xstrncmp(start,"case",4)){
+		if(Xstrncmp(start,"case",4)){
 			return _newToken(TKw_case);
 		}
-		if(xstrncmp(start,"goto",4)){
+		if(Xstrncmp(start,"goto",4)){
 			return _newToken(TKw_goto);
 		}
-		if(xstrncmp(start,"true",4)){
+		if(Xstrncmp(start,"true",4)){
 			ret = _newToken(TokenBool);
 			ret->iValue = 1;
 			return ret;
 		}
-		if(xstrncmp(start,"NULL",4)){
+		if(Xstrncmp(start,"NULL",4)){
 			return _newToken(TokenNULL);
 		}
 	    case 5 :
-		if(xstrncmp(start,"int16",5)){
+		if(Xstrncmp(start,"int16",5)){
 			return _newToken(TKw_int16);
 		}
-		if(xstrncmp(start,"int32",5)){
+		if(Xstrncmp(start,"int32",5)){
 			return _newToken(TKw_int32);
 		}
-		if(xstrncmp(start,"int64",5)){
+		if(Xstrncmp(start,"int64",5)){
 			return _newToken(TKw_int64);
 		}
-		if(xstrncmp(start,"uint8",5)){
+		if(Xstrncmp(start,"uint8",5)){
 			return _newToken(TKw_uint8);
 		}
-		if(xstrncmp(start,"float",5)){
+		if(Xstrncmp(start,"float",5)){
 			return _newToken(TKw_float);
 		}
-		if(xstrncmp(start,"union",5)){
+		if(Xstrncmp(start,"union",5)){
 			return _newToken(TKw_union);
 		}
-		if(xstrncmp(start,"while",5)){
+		if(Xstrncmp(start,"while",5)){
 			return _newToken(TKw_while);
 		}
-		if(xstrncmp(start,"break",5)){
+		if(Xstrncmp(start,"break",5)){
 			return _newToken(TKw_break);
 		}
-		if(xstrncmp(start,"throw",5)){
+		if(Xstrncmp(start,"throw",5)){
 			return _newToken(TKw_throw);
 		}
-		if(xstrncmp(start,"const",5)){
+		if(Xstrncmp(start,"const",5)){
 			return _newToken(TKw_const);
 		}
-		if(xstrncmp(start,"false",5)){
+		if(Xstrncmp(start,"false",5)){
 			ret = _newToken(TokenBool);
 			ret->iValue = 0;
 			return ret;
 		}
 	    case 6 :
-		if(xstrncmp(start,"import",6)){
+		if(Xstrncmp(start,"import",6)){
 			return _newToken(TKw_import);
 		}
-		if(xstrncmp(start,"uint16",6)){
+		if(Xstrncmp(start,"uint16",6)){
 			return _newToken(TKw_uint16);
 		}
-		if(xstrncmp(start,"uint32",6)){
+		if(Xstrncmp(start,"uint32",6)){
 			return _newToken(TKw_uint32);
 		}
-		if(xstrncmp(start,"uint64",6)){
+		if(Xstrncmp(start,"uint64",6)){
 			return _newToken(TKw_uint64);
 		}
-		if(xstrncmp(start,"struct",6)){
+		if(Xstrncmp(start,"struct",6)){
 			return _newToken(TKw_struct);
 		}
-		if(xstrncmp(start,"switch",6)){
+		if(Xstrncmp(start,"switch",6)){
 			return _newToken(TKw_switch);
 		}
-		if(xstrncmp(start,"return",6)){
+		if(Xstrncmp(start,"return",6)){
 			return _newToken(TKw_return);
 		}
 	    case 7 :
-		if(xstrncmp(start,"package",7)){
+		if(Xstrncmp(start,"package",7)){
 			return _newToken(TKw_package);
 		}
-		if(xstrncmp(start,"float32",7)){
+		if(Xstrncmp(start,"float32",7)){
 			return _newToken(TKw_float32);
 		}
-		if(xstrncmp(start,"float64",7)){
+		if(Xstrncmp(start,"float64",7)){
 			return _newToken(TKw_float64);
 		}
-		if(xstrncmp(start,"typedef",7)){
+		if(Xstrncmp(start,"typedef",7)){
 			return _newToken(TKw_typedef);
 		}
-		if(xstrncmp(start,"default",7)){
+		if(Xstrncmp(start,"default",7)){
 			return _newToken(TKw_default);
 		}
 	    case 8 :
-		if(xstrncmp(start,"continue",8)){
+		if(Xstrncmp(start,"continue",8)){
 			return _newToken(TKw_continue);
 		}
 	}

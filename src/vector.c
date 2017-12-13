@@ -5,10 +5,10 @@
 const int V_SIZE = 4;
 
 void _expandVector(Vector* vec){
-	void** p = xmalloc((vec->solt + V_SIZE)* sizeof(void**), __FILE__, __LINE__);
-	xmemcpy(p, vec->data, vec->solt * sizeof(void**));
+	void** p = Xmalloc((vec->solt + V_SIZE)* sizeof(void**), __FILE__, __LINE__);
+	Xmemcpy(p, vec->data, vec->solt * sizeof(void**));
 	if(vec->data){
-		xfree(vec->data, __FILE__, __LINE__);
+		Xfree(vec->data, __FILE__, __LINE__);
 	}
 	vec->data = p;
 	vec->solt += V_SIZE;
@@ -30,5 +30,5 @@ void* lastItemOfVector(Vector* vec){
 }
 
 void deleteVector(Vector* vec){
-	xfree(vec->data, __FILE__, __LINE__);
+	Xfree(vec->data, __FILE__, __LINE__);
 }

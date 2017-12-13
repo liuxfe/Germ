@@ -12,7 +12,7 @@ void eatToken(ParseState* ps){
 			printf("eat:%d\n",t->tCode);
 		}
 	}
-	xfree(t, __FILE__, __LINE__);
+	Xfree(t, __FILE__, __LINE__);
 }
 
 bool exceptToken(ParseState* ps, int tcode){

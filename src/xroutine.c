@@ -2,7 +2,7 @@
 
 #include "main.h"
 
-FILE* xfopen(char* filename, char* op, char* __file, int __line){
+FILE* Xfopen(char* filename, char* op, char* __file, int __line){
 	FILE* ret = fopen(filename, op);
 	if( !ret ){
 		Fatal(__file, __line, "Cannot open \"%s\"\n", filename);
@@ -10,7 +10,7 @@ FILE* xfopen(char* filename, char* op, char* __file, int __line){
 	return ret;
 }
 
-void  xfclose(FILE* fp, char* __file, int __line){
+void  Xfclose(FILE* fp, char* __file, int __line){
 	if( !fp ){
 		Debug(__file, __line, "xfclose: fclose NULL file\n");
 		return;
@@ -18,7 +18,7 @@ void  xfclose(FILE* fp, char* __file, int __line){
 	fclose(fp);
 }
 
-void* xmalloc(uint bytes, char* __file, int __line){
+void* Xmalloc(uint bytes, char* __file, int __line){
 	void* ret = malloc(bytes);
 	char* p = ret;
 
@@ -31,7 +31,7 @@ void* xmalloc(uint bytes, char* __file, int __line){
 	return ret;
 }
 
-void  xfree(void* p, char* __file, int __line){
+void  Xfree(void* p, char* __file, int __line){
 	if(!p){
 		Debug(__file, __line, "xfree: free NULL pointer\n");
 		return;
@@ -39,7 +39,7 @@ void  xfree(void* p, char* __file, int __line){
 	free(p);
 }
 
-void  xmemcpy(void* s1, void* s2, int len){
+void  Xmemcpy(void* s1, void* s2, int len){
 	char* p1 = s1;
 	char* p2 = s2;
 	while(len--){
@@ -47,7 +47,7 @@ void  xmemcpy(void* s1, void* s2, int len){
 	}
 }
 
-int   xstrlen(char* s){
+int   Xstrlen(char* s){
 	int i = 0;
 	while(*s++){
 		i++;
@@ -55,7 +55,7 @@ int   xstrlen(char* s){
 	return i;
 }
 
-bool  xstrncmp(char* s1, char* s2, int len){
+bool  Xstrncmp(char* s1, char* s2, int len){
 	while(len--){
 		if(*s1 && *s2 && *s1==*s2){
 			s1++;
@@ -67,14 +67,14 @@ bool  xstrncmp(char* s1, char* s2, int len){
 	return true;
 }
 
-void  xstrncpy(char* dst, char* src, int len){
+void  Xstrncpy(char* dst, char* src, int len){
 	while(len--){
 		*dst++ = *src++;
 	}
 	*dst='\0';
 }
 
-int   xhex2num(char ch){
+int   Xhex2num(char ch){
 	if(ch >= '0' && ch <='9'){
 		return ch - '0';
 	}

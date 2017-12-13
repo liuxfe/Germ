@@ -3,7 +3,7 @@
 #include "main.h"
 
 Statement* _newStatement(int type){
-	Statement* ret = xmalloc(sizeof(Statement), __FILE__, __LINE__);
+	Statement* ret = Xmalloc(sizeof(Statement), __FILE__, __LINE__);
 	ret->stmtType = type;
 	return ret;
 }
@@ -70,7 +70,7 @@ Statement* ParseIfStmt(ParseState* ps){
 	}
 
     repeat:
-	ce = xmalloc(sizeof(CondElement), __FILE__, __LINE__);
+	ce = Xmalloc(sizeof(CondElement), __FILE__, __LINE__);
 	exceptTokenDealError(ps, '(', "(");
 	ce->expression = ParseExpression(ps);
 	exceptTokenDealError(ps, ')', ")");
@@ -109,7 +109,7 @@ Statement* ParseSwitchStmt(ParseState* ps){
 	exceptTokenDealError(ps, ')', ")");
 	exceptTokenDealError(ps, '{', "{");
 	while(!exceptToken(ps,'}')){
-		ce = xmalloc(sizeof(CondElement), __FILE__, __LINE__);
+		ce = Xmalloc(sizeof(CondElement), __FILE__, __LINE__);
 		exceptTokenDealError(ps, TKw_case, "case");
 		ce->expression = ParseExpression(ps);
 		exceptTokenDealError(ps, ':', ":");

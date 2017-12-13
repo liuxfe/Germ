@@ -34,14 +34,14 @@ String* StoreString(char* s, int len){
 		if(str->len != len){
 			continue;
 		}
-		if(xstrncmp(str->data, s, len)){
+		if(Xstrncmp(str->data, s, len)){
 			str->ref++;
 			return str;
 		}
 	}
 
-	str = xmalloc(sizeof(String) + len + 1, __FILE__, __LINE__);
-	xstrncpy(str->data, s, len);
+	str = Xmalloc(sizeof(String) + len + 1, __FILE__, __LINE__);
+	Xstrncpy(str->data, s, len);
 	str->len = len;
 	str->ref = 1;
 	str->hash= hash;
@@ -52,7 +52,7 @@ String* StoreString(char* s, int len){
 
 int __lable_id = 0;
 String* CreateLabelString(){
-	String* ret = xmalloc(sizeof(String) + 6 + 1, __FILE__, __LINE__);
+	String* ret = Xmalloc(sizeof(String) + 6 + 1, __FILE__, __LINE__);
 	ret->len = 6;
 	ret->ref = 1;
 	sprintf(ret->data, ".LC%03d", ++__lable_id);

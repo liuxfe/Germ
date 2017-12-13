@@ -3,15 +3,14 @@
 #ifndef _ToHack_CL_XROUTINE_H
 #define _ToHack_CL_XROUTINE_H
 
-FILE* xfopen(char*, char*, char*, int);
-void  xfclose(FILE*, char*, int);
-void* xmalloc(uint, char*, int);
-void  xfree(void*, char*, int);
-void  xmemcpy(void*, void*, int);
-int   xstrlen(char*);
-int   xstrcmp(char*, char*);
-bool  xstrncmp(char*, char*, int);
-void  xstrncpy(char*, char*, int);
-int   xhex2num(char);
+FILE* Xfopen(char*, char*, char*, int);
+void  Xfclose(FILE*, char*, int);
+void* Xmalloc(uint, char*, int);
+void  Xfree(void*, char*, int);
+void  Xmemcpy(void*, void*, int);
+int   Xstrlen(char*);
+bool  Xstrncmp(char*, char*, int);
+void  Xstrncpy(char*, char*, int);
+int   Xhex2num(char);
 
 #endif

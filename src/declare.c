@@ -22,13 +22,13 @@ DataType CharType    = {DTT_Basic, 4, NULL, BTypeId_char   };
 DataType VoidType    = {DTT_Basic, 0, NULL, BTypeId_void   };
 
 DataType* _newDataType(int type){
-	DataType* ret = xmalloc(sizeof(DataType), __FILE__, __LINE__);
+	DataType* ret = Xmalloc(sizeof(DataType), __FILE__, __LINE__);
 	ret->dtType = type;
 	return ret;
 }
 
 Symbol* _newSymbol(int type){
-	Symbol* ret = xmalloc(sizeof(Symbol), __FILE__, __LINE__);
+	Symbol* ret = Xmalloc(sizeof(Symbol), __FILE__, __LINE__);
 	ret->sType = type;
 	return ret;
 }
