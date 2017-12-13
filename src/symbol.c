@@ -11,10 +11,10 @@ Symbol* SymbolAlloc(int type){
 	return ret;
 }
 
-Symbol* SymbolAllocVar(Dtype* dt, String* name){
+Symbol* SymbolAllocGVar(Dtype* dt, String* name){
 	Symbol* ret;
 
-	ret = SymbolAlloc(ST_Variable);
+	ret = SymbolAlloc(ST_GVariable);
 	ret->sName = name;
 	ret->varDtype = dt;
 
@@ -73,7 +73,7 @@ void SymbolDump(Symbol* symbol, int indent){
 			SymbolDump(symbol->modSymbols.data[i], indent+2);
 		}
 		break ;
-	    case ST_Variable:
+	    case ST_GVariable:
 		printf("%sVariable: %s\n", tmp, symbol->sName->data);
 		break ;
 	    case ST_Function:

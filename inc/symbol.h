@@ -27,13 +27,14 @@ typedef struct _symbol{
 /* values of sType*/
 enum {
 	ST_Module,
-	ST_Variable,
+	ST_GVariable,
+	ST_LVariable,
 	ST_Function,
 	ST_FuncParam,
 };
 
 Symbol* SymbolAlloc(int);
-Symbol* SymbolAllocVar(Dtype*, String*);
+Symbol* SymbolAllocGVar(Dtype*, String*);
 Symbol* SymbolAllocFunc(Dtype*, String*);
 void SymbolFree(Symbol*);
 void SymbolDump(Symbol*, int);

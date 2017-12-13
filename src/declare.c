@@ -58,7 +58,7 @@ void parseVarDeclare(ParseState* ps, Dtype* dt, String* name, Vector* scope){
 	
 	exceptTokenDealError(ps, ';', ";");
 
-	symbol = SymbolAllocVar(dt, name);
+	symbol = SymbolAllocGVar(dt, name);
 	SymbolAppend(ps, scope, symbol);
 }
 
