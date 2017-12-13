@@ -67,7 +67,6 @@ enum{
 };
 
 Statement* ParseImportStmt(ParseState*);
-Statement* ParseExternalDeclareStmt(ParseState*);
 Statement* ParseLabelStmt(ParseState*, String*);
 Statement* ParseExpressionStmt(ParseState*);
 
