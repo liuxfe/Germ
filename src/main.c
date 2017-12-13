@@ -2,8 +2,6 @@
 
 #include "main.h"
 
-int wantDumpTokenVector = 0;
-
 int doComplie(char* file){
 	ParseFile(file);
 

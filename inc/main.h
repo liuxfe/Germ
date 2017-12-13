@@ -31,6 +31,4 @@ typedef char bool;
 #include "scanner.h"
 #include "parser.h"
 
-extern int wantDumpTokenVector;
-
 #endif

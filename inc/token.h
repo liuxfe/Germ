@@ -106,5 +106,6 @@ enum {
 
 Token* TokenAlloc(int);
 void TokenFree(Token*);
+void TokenDump(Token*);
 
 #endif

@@ -439,34 +439,6 @@ Token* _lexical(ScanState* ss){
 	}
 }
 
-void _dumpTokenList(Token* tokenlist){
-	Token* t = tokenlist;
-	for(t=tokenlist; t; t=t->tNext){
-		printf("(Line:%d)\t", t->tLine);
-		if(t->tCode >= TKw_package && t->tCode <= TKw_const){
-			printf("KeyWord:%d\n", t->tCode);
-			continue;
-		}
-		if(t->tCode == TokenID){
-			printf("Id:%s\n", t->sValue->data);
-			continue;
-		}
-		if(t->tCode == TokenChar){
-			printf("Char:%d(%c)\n", t->iValue,t->iValue);
-			continue;
-		}
-		if(t->tCode == TokenString){
-			printf("String:%s\n", t->sValue->data);
-			continue;
-		}
-		if(t->tCode == TokenInteger){
-			printf("Number:%d\n", t->iValue);
-			continue;
-		}
-		printf("TCode:%d\n", t->tCode);
-	}
-}
-
 Token* ScanFile(char* filename){
 	ScanState ss;
 	Token* tokenHead = TokenAlloc(TokenStart);
@@ -483,9 +455,12 @@ Token* ScanFile(char* filename){
 		tokenTail->tLine = ss.line;
 	}
 
-	if(wantDumpTokenVector){
-		printf("\nDump Token in file: %s\n",filename);
-		_dumpTokenList(tokenHead);
+	if(1){
+		printf("\n Token Dump in file: %s\n",filename);
+		for(tokenTail=tokenHead; tokenTail; tokenTail=tokenTail->tNext){
+			TokenDump(tokenTail);
+		}
 	}
+
 	return tokenHead;
 }
