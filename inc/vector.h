@@ -9,8 +9,7 @@ typedef struct _vector{
 	void** data;
 } Vector;
 
-void pushToVector(Vector*, void*);
-void* lastItemOfVector(Vector*);
-void deleteVector(Vector*);
+void  VectorPush(Vector*, void*);
+void* VectorLastItem(Vector*);
 
 #endif

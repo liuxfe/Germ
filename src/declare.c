@@ -172,13 +172,13 @@ void _parsePackage(ParseState* ps, Vector* vector){
 	exceptTokenDealError(ps, TKw_package, "package");
     repeat:
 	if(ps->tokenList->tCode == TokenID) {
-		pushToVector(vector, ps->tokenList->sValue);
+		VectorPush(vector, ps->tokenList->sValue);
 		eatToken(ps);
 		if(exceptToken(ps, TOp_dot)){
 			goto repeat;
 		}
 		if(exceptToken(ps, ';')){
-			pushToVector(vector, GetModuleName(ps->filename));
+			VectorPush(vector, GetModuleName(ps->filename));
 			return;
 		}
 		ParseFatal(ps, ";");
@@ -197,7 +197,7 @@ void _appendSymbol(ParseState* ps, Vector* scope, Symbol* symbol){
 		}
 		Error(ps->filename, ps->tokenList->tLine, "redefined (%s)", symbol->sName->data);
 	}
-	pushToVector(scope, symbol);
+	VectorPush(scope, symbol);
 }
 
 void _parseFunctionParam(ParseState* ps, Vector* scope){

@@ -2,27 +2,25 @@
 
 #include "main.h"
 
-const int V_SIZE = 4;
+void VectorPush(Vector* vec, void* item){
+	const int V_SIZE = 4;
+	void** p;
 
-void _expandVector(Vector* vec){
-	void** p = Xmalloc((vec->solt + V_SIZE)* sizeof(void**), __FILE__, __LINE__);
-	Xmemcpy(p, vec->data, vec->solt * sizeof(void**));
-	if(vec->data){
-		Xfree(vec->data, __FILE__, __LINE__);
+	if(vec->item +1 >= vec->solt){
+		p = Xmalloc((vec->solt + V_SIZE)* sizeof(void**), __FILE__, __LINE__);
+		Xmemcpy(p, vec->data, vec->solt * sizeof(void**));
+		if(vec->data){
+			Xfree(vec->data, __FILE__, __LINE__);
+		}
+		vec->data = p;
+		vec->solt += V_SIZE;
 	}
-	vec->data = p;
-	vec->solt += V_SIZE;
-}
 
-void pushToVector(Vector* vec, void* item){
-	if(vec->item + 1 >= vec->solt){
-		_expandVector(vec);
-	}
 	*(vec->data + vec->item) = item;
 	vec->item++;
 }
 
-void* lastItemOfVector(Vector* vec){
+void* VectorLastItem(Vector* vec){
 	if(vec->item <=0){
 		Debug(__FILE__,__LINE__,"Empty Vector to get last Item");
 	}

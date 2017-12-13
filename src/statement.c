@@ -14,7 +14,7 @@ Statement* ParseImportStmt(ParseState* ps){
 	exceptToken(ps, TKw_import);
     repeat:
 	if(ps->tokenList->tCode == TokenID) {
-		pushToVector(&ret->impVector, ps->tokenList->sValue);
+		VectorPush(&ret->impVector, ps->tokenList->sValue);
 		eatToken(ps);
 		if(exceptToken(ps, TOp_dot)){
 			goto repeat;
@@ -31,7 +31,7 @@ Statement* ParseImportStmt(ParseState* ps){
 			ParseFatal(ps, "id");
 		}
 		if(exceptToken(ps, ';')){
-			ret->impAlias = lastItemOfVector(&ret->impVector);
+			ret->impAlias = VectorLastItem(&ret->impVector);
 			return ret;
 		}
 		ParseFatal(ps, ";");
@@ -76,9 +76,9 @@ Statement* ParseIfStmt(ParseState* ps){
 	exceptTokenDealError(ps, ')', ")");
 	exceptTokenDealError(ps, '{', "{");
 	while(!exceptToken(ps,'}')){
-		pushToVector(&ce->statement, ParseInternalStmt(ps));
+		VectorPush(&ce->statement, ParseInternalStmt(ps));
 	}
-	pushToVector(&ret->ifCondElements, ce);
+	VectorPush(&ret->ifCondElements, ce);
 
 	if(exceptToken(ps, TKw_elif)){
 		goto repeat;
@@ -89,7 +89,7 @@ Statement* ParseIfStmt(ParseState* ps){
 	}
 	exceptTokenDealError(ps, '{', "{");
 	while(!exceptToken(ps, '}')){
-		pushToVector(&ret->elseStmt, ParseInternalStmt(ps));
+		VectorPush(&ret->elseStmt, ParseInternalStmt(ps));
 	}
 	return ret;
 }
@@ -139,7 +139,7 @@ Statement* ParseForStmt(ParseState* ps){
 	exceptTokenDealError(ps, ')', ")");
 	exceptTokenDealError(ps, '{', "{");
 	while(!exceptToken(ps, '}')){
-		pushToVector(&ret->forStmt, ParseInternalStmt(ps));
+		VectorPush(&ret->forStmt, ParseInternalStmt(ps));
 	}
 	return ret;
 }
