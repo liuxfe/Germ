@@ -59,27 +59,22 @@ String* CreateLabelString(){
 	return ret;
 }
 
-String* GetModuleName(char* s){
-	char* os=s;
-	char* start = s;
+String* GetModuleName(char* fullname){
 	char* end;
+	char* start;
+	char* tmp = fullname;
 
-	while(*s){
-		if(*s == '/'){
-			start = s + 1;
+	while(*tmp){
+		if(*tmp == '/'){
+			start = tmp + 1;
 		}
-		s++;
-	}
-	s= start;
-	while(*s){
-		end = s - 1;
-		if(*s == '.'){
-			break;
+		if(*tmp =='.'){
+			end = tmp;
 		}
-		s++;
+		tmp++;
 	}
-	if( start == end){
-		Error(__FILE__,__LINE__,"GetModuleName: (%s) cannt get module name", os);
+	if( start >= end){
+		Error(__FILE__,__LINE__,"GetModuleName: (%s) cannt get module name", fullname);
 	}
 	return StoreString(start, end - start);
 }
