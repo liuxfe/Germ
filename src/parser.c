@@ -12,7 +12,7 @@ void eatToken(ParseState* ps){
 			printf("eat:%d\n",t->tCode);
 		}
 	}
-	Xfree(t, __FILE__, __LINE__);
+	TokenFree(t);
 }
 
 bool exceptToken(ParseState* ps, int tcode){
@@ -35,6 +35,58 @@ void exceptTokenDealError(ParseState* ps, int tcode, char* s){
 	ParseFatal(ps, s);
 }
 
+void parsePackage(ParseState* ps, Vector* vector){
+	exceptTokenDealError(ps, TKw_package, "package");
+    repeat:
+	if(ps->tokenList->tCode == TokenID) {
+		VectorPush(vector, ps->tokenList->sValue);
+		eatToken(ps);
+		if(exceptToken(ps, TOp_dot)){
+			goto repeat;
+		}
+		if(exceptToken(ps, ';')){
+			VectorPush(vector, GetModuleName(ps->filename));
+			return;
+		}
+		ParseFatal(ps, ";");
+	}
+	ParseFatal(ps, "id");
+}
+
+/*  <Module>:= <Package> <ExternalDeclare>{0,n}  */
+Symbol* parseModule(char* filename, String* name){
+	ParseState ps = {};
+	Symbol* ret = SymbolAlloc(ST_Module);
+	ret->sName = name;
+
+	ps.filename = filename;
+	ps.tokenList = ScanFile(filename);
+
+	if(!exceptToken(&ps, TokenStart)){
+		Debug(__FILE__, __LINE__, "Token list not start with TokenStart");
+	}
+
+	parsePackage(&ps, &ret->modPackage);
+
+	//while(ps.tokenList->tCode == TKw_import){
+	//	pushToVector(&imports, ParseImportStmt(&ps));
+	//}
+
+	while(ps.tokenList->tCode != TokenEnd){
+		ParseExternalDeclare(&ps, &ret->modSymbols);
+	}
+
+	if(!exceptToken(&ps, TokenEnd)){
+		Debug(__FILE__, __LINE__, "Token list not end with TokenEnd");
+	}
+	
+	if(1){
+		SymbolDump(ret, 0);
+	}
+	
+	return ret;
+}
+
 Symbol* ParseFile(char* filename){
-	return ParseModule(filename, GetModuleName(filename));
+	return parseModule(filename, GetModuleName(filename));
 }
