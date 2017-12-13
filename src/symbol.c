@@ -21,6 +21,16 @@ Symbol* SymbolAllocGVar(Dtype* dt, String* name){
 	return ret;
 }
 
+Symbol* SymbolAllocLVar(Dtype* dt, String* name){
+	Symbol* ret;
+
+	ret = SymbolAlloc(ST_LVariable);
+	ret->sName = name;
+	ret->lvarDtype = dt;
+
+	return ret;
+}
+
 Symbol* SymbolAllocFunc(Dtype* dt, String* name){
 	Symbol* ret;
 
@@ -74,17 +84,20 @@ void SymbolDump(Symbol* symbol, int indent){
 		}
 		break ;
 	    case ST_GVariable:
-		printf("%sVariable: %s\n", tmp, symbol->sName->data);
+		printf("%sGVariable: %s\n", tmp, symbol->sName->data);
 		break ;
+	    case ST_LVariable:
+		printf("%sLVariable: %s\n", tmp, symbol->sName->data);
+		break;
 	    case ST_Function:
 		printf("%sFunciton: %s\n", tmp, symbol->sName->data);
 		for(i=0; i< symbol->funcParam.item; i+=1){
 			SymbolDump(symbol->funcParam.data[i], indent+2);
 		}
-		break;
-	    case ST_FuncParam:
-		printf("%sParam: %s\n", tmp, symbol->sName->data);
-		break;
+		for(i=0; i< symbol->funcLocal.item; i+=1){
+			SymbolDump(symbol->funcLocal.data[i], indent+2);
+		}
+		break;   
 	}
 	return ;
 }

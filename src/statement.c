@@ -56,10 +56,6 @@ Statement* ParseExpressionStmt(ParseState* ps){
 	ParseFatal(ps, ";");
 }
 
-Statement* ParseInternalStmt(ParseState* ps){
-	return NULL;
-}
-
 Statement* ParseIfStmt(ParseState* ps){
 	CondElement* ce;
 	Statement* ret = _newStatement(Stmt_if);
@@ -76,7 +72,7 @@ Statement* ParseIfStmt(ParseState* ps){
 	exceptTokenDealError(ps, ')', ")");
 	exceptTokenDealError(ps, '{', "{");
 	while(!exceptToken(ps,'}')){
-		VectorPush(&ce->statement, ParseInternalStmt(ps));
+		//VectorPush(&ce->statement, ParseInternalStmt(ps, NULL));
 	}
 	VectorPush(&ret->ifCondElements, ce);
 
@@ -89,7 +85,7 @@ Statement* ParseIfStmt(ParseState* ps){
 	}
 	exceptTokenDealError(ps, '{', "{");
 	while(!exceptToken(ps, '}')){
-		VectorPush(&ret->elseStmt, ParseInternalStmt(ps));
+		//VectorPush(&ret->elseStmt, ParseInternalStmt(ps));
 	}
 	return ret;
 }
@@ -139,7 +135,17 @@ Statement* ParseForStmt(ParseState* ps){
 	exceptTokenDealError(ps, ')', ")");
 	exceptTokenDealError(ps, '{', "{");
 	while(!exceptToken(ps, '}')){
-		VectorPush(&ret->forStmt, ParseInternalStmt(ps));
+		//VectorPush(&ret->forStmt, ParseInternalStmt(ps));
 	}
 	return ret;
+}
+
+void ParseInternalStmt(ParseState* ps, Symbol* func){
+	Dtype* dt;
+	String* name;
+
+	dt = ParseDtype(ps);
+	if(dt){
+		ParseInternalDeclare(ps, dt, &func->funcLocal);
+	}
 }

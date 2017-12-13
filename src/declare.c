@@ -18,10 +18,8 @@ void parseFuncParam(ParseState* ps, Vector* scope){
 	name = ps->tokenList->sValue;
 	eatToken(ps);
 
-	param = SymbolAlloc(ST_FuncParam);
-	param->paramDtype = dt;
-	param->sName = name;
-
+	param = SymbolAllocLVar(dt, name);
+	
 	SymbolAppend(ps, scope, param);
 }
 
@@ -47,7 +45,7 @@ void parseFuncDeclare(ParseState* ps, Dtype* dt, String* name, Vector* scope){
 	} else{				// has function body
 		exceptTokenDealError(ps, '{', "{");
 		while(!exceptToken(ps, '}')){
-			eatToken(ps);
+			ParseInternalStmt(ps, symbol);
 		}
 		SymbolAppend(ps, scope, symbol);
 	}
@@ -82,4 +80,20 @@ void ParseExternalDeclare(ParseState* ps, Vector* scope){
 	} else{
 		parseVarDeclare(ps, dt, name, scope);
 	}
+}
+
+void ParseInternalDeclare(ParseState* ps, Dtype* dt, Vector* scope){
+	String* name;
+	Symbol* symbol;
+
+	if(ps->tokenList->tCode != TokenID){
+		ParseFatal(ps, "id");
+	}
+	name = ps->tokenList->sValue;
+	eatToken(ps);
+
+	exceptTokenDealError(ps, ';', ";");
+
+	symbol = SymbolAllocLVar(dt, name);
+	SymbolAppend(ps, scope, symbol);
 }

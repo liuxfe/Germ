@@ -17,9 +17,10 @@ typedef struct _symbol{
 	    struct{			// 函数
 	        Dtype*    funcRetType;
 	        Vector    funcParam;
+	        Vector    funcLocal;
 	    };
 	    struct{
-	    	Dtype*    paramDtype;
+	    	Dtype*    lvarDtype;
 	    };
 	};
 } Symbol;
@@ -30,11 +31,11 @@ enum {
 	ST_GVariable,
 	ST_LVariable,
 	ST_Function,
-	ST_FuncParam,
 };
 
 Symbol* SymbolAlloc(int);
 Symbol* SymbolAllocGVar(Dtype*, String*);
+Symbol* SymbolAllocLVar(Dtype*, String*);
 Symbol* SymbolAllocFunc(Dtype*, String*);
 void SymbolFree(Symbol*);
 void SymbolDump(Symbol*, int);

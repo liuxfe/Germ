@@ -4,5 +4,6 @@
 #define _ToHack_CL_DECLARE_H
 
 void ParseExternalDeclare(ParseState*, Vector*);
+void ParseInternalDeclare(ParseState*, Dtype*, Vector*);
 
 #endif
