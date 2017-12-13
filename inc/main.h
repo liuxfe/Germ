@@ -27,6 +27,7 @@ typedef char bool;
 #include "string.h"
 
 #include "input.h"
+#include "token.h"
 #include "scanner.h"
 #include "parser.h"
 

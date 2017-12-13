@@ -2,12 +2,6 @@
 
 #include "main.h"
 
-Token* _newToken(int tokencode){
-	Token* ret = Xmalloc(sizeof(Token), __FILE__, __LINE__);
-	ret->tCode = tokencode;
-	return ret;
-}
-
 typedef struct _scanState{
 	char* filename;
 	char* buf;
@@ -87,144 +81,144 @@ Token* _scanId(ScanState* ss){
 	switch(ss->cur - start){
 	    case 2 :
 		if(Xstrncmp(start,"if",2)){
-			return _newToken(TKw_if);
+			return TokenAlloc(TKw_if);
 		}
 		if(Xstrncmp(start,"as",2)){
-			return _newToken(TKw_as);
+			return TokenAlloc(TKw_as);
 		}
 	    case 3 :
 		if(Xstrncmp(start,"int",3)){
-			return _newToken(TKw_int);
+			return TokenAlloc(TKw_int);
 		}
 		if(Xstrncmp(start,"for",3)){
-			return _newToken(TKw_for);
+			return TokenAlloc(TKw_for);
 		}
 	    case 4 :
 		if(Xstrncmp(start,"int8",4)){
-			return _newToken(TKw_int8);
+			return TokenAlloc(TKw_int8);
 		}
 		if(Xstrncmp(start,"uint",4)){
-			return _newToken(TKw_uint);
+			return TokenAlloc(TKw_uint);
 		}
 		if(Xstrncmp(start,"bool",4)){
-			return _newToken(TKw_bool);
+			return TokenAlloc(TKw_bool);
 		}
 		if(Xstrncmp(start,"char",4)){
-			return _newToken(TKw_char);
+			return TokenAlloc(TKw_char);
 		}
 		if(Xstrncmp(start,"void",4)){
-			return _newToken(TKw_void);
+			return TokenAlloc(TKw_void);
 		}
 		if(Xstrncmp(start,"func",4)){
-			return _newToken(TKw_func);
+			return TokenAlloc(TKw_func);
 		}
 		if(Xstrncmp(start,"elif",4)){
-			return _newToken(TKw_elif);
+			return TokenAlloc(TKw_elif);
 		}
 		if(Xstrncmp(start,"else",4)){
-			return _newToken(TKw_else);
+			return TokenAlloc(TKw_else);
 		}
 		if(Xstrncmp(start,"case",4)){
-			return _newToken(TKw_case);
+			return TokenAlloc(TKw_case);
 		}
 		if(Xstrncmp(start,"goto",4)){
-			return _newToken(TKw_goto);
+			return TokenAlloc(TKw_goto);
 		}
 		if(Xstrncmp(start,"true",4)){
-			ret = _newToken(TokenBool);
+			ret = TokenAlloc(TokenBool);
 			ret->iValue = 1;
 			return ret;
 		}
 		if(Xstrncmp(start,"NULL",4)){
-			return _newToken(TokenNULL);
+			return TokenAlloc(TokenNULL);
 		}
 	    case 5 :
 		if(Xstrncmp(start,"int16",5)){
-			return _newToken(TKw_int16);
+			return TokenAlloc(TKw_int16);
 		}
 		if(Xstrncmp(start,"int32",5)){
-			return _newToken(TKw_int32);
+			return TokenAlloc(TKw_int32);
 		}
 		if(Xstrncmp(start,"int64",5)){
-			return _newToken(TKw_int64);
+			return TokenAlloc(TKw_int64);
 		}
 		if(Xstrncmp(start,"uint8",5)){
-			return _newToken(TKw_uint8);
+			return TokenAlloc(TKw_uint8);
 		}
 		if(Xstrncmp(start,"float",5)){
-			return _newToken(TKw_float);
+			return TokenAlloc(TKw_float);
 		}
 		if(Xstrncmp(start,"union",5)){
-			return _newToken(TKw_union);
+			return TokenAlloc(TKw_union);
 		}
 		if(Xstrncmp(start,"while",5)){
-			return _newToken(TKw_while);
+			return TokenAlloc(TKw_while);
 		}
 		if(Xstrncmp(start,"break",5)){
-			return _newToken(TKw_break);
+			return TokenAlloc(TKw_break);
 		}
 		if(Xstrncmp(start,"throw",5)){
-			return _newToken(TKw_throw);
+			return TokenAlloc(TKw_throw);
 		}
 		if(Xstrncmp(start,"const",5)){
-			return _newToken(TKw_const);
+			return TokenAlloc(TKw_const);
 		}
 		if(Xstrncmp(start,"false",5)){
-			ret = _newToken(TokenBool);
+			ret = TokenAlloc(TokenBool);
 			ret->iValue = 0;
 			return ret;
 		}
 	    case 6 :
 		if(Xstrncmp(start,"import",6)){
-			return _newToken(TKw_import);
+			return TokenAlloc(TKw_import);
 		}
 		if(Xstrncmp(start,"uint16",6)){
-			return _newToken(TKw_uint16);
+			return TokenAlloc(TKw_uint16);
 		}
 		if(Xstrncmp(start,"uint32",6)){
-			return _newToken(TKw_uint32);
+			return TokenAlloc(TKw_uint32);
 		}
 		if(Xstrncmp(start,"uint64",6)){
-			return _newToken(TKw_uint64);
+			return TokenAlloc(TKw_uint64);
 		}
 		if(Xstrncmp(start,"struct",6)){
-			return _newToken(TKw_struct);
+			return TokenAlloc(TKw_struct);
 		}
 		if(Xstrncmp(start,"switch",6)){
-			return _newToken(TKw_switch);
+			return TokenAlloc(TKw_switch);
 		}
 		if(Xstrncmp(start,"return",6)){
-			return _newToken(TKw_return);
+			return TokenAlloc(TKw_return);
 		}
 	    case 7 :
 		if(Xstrncmp(start,"package",7)){
-			return _newToken(TKw_package);
+			return TokenAlloc(TKw_package);
 		}
 		if(Xstrncmp(start,"float32",7)){
-			return _newToken(TKw_float32);
+			return TokenAlloc(TKw_float32);
 		}
 		if(Xstrncmp(start,"float64",7)){
-			return _newToken(TKw_float64);
+			return TokenAlloc(TKw_float64);
 		}
 		if(Xstrncmp(start,"typedef",7)){
-			return _newToken(TKw_typedef);
+			return TokenAlloc(TKw_typedef);
 		}
 		if(Xstrncmp(start,"default",7)){
-			return _newToken(TKw_default);
+			return TokenAlloc(TKw_default);
 		}
 	    case 8 :
 		if(Xstrncmp(start,"continue",8)){
-			return _newToken(TKw_continue);
+			return TokenAlloc(TKw_continue);
 		}
 	}
 
-	ret = _newToken(TokenID);
+	ret = TokenAlloc(TokenID);
 	ret->sValue= StoreString(start, ss->cur - start);
 	return ret;
 }
 
 Token* _scanNumberLiteral(ScanState* ss){
-	Token* ret = _newToken(TokenInteger);
+	Token* ret = TokenAlloc(TokenInteger);
 	ret->iValue=0;
 
 	while( *ss->cur >='0' && *ss->cur <= '9'){
@@ -235,7 +229,7 @@ Token* _scanNumberLiteral(ScanState* ss){
 }
 
 Token* _scanCharLiteral(ScanState* ss){
-	Token* ret =_newToken(TokenChar);
+	Token* ret =TokenAlloc(TokenChar);
 
 	ss->cur++; // skip begin char(')
 	if(_exceptChar(ss, '\'')){
@@ -268,7 +262,7 @@ Token* _scanCharLiteral(ScanState* ss){
 Token* _scanStringLiteral(ScanState* ss){
 	char* start;
 	char* tail;
-	Token* ret= _newToken(TokenString);
+	Token* ret= TokenAlloc(TokenString);
 
 	ss->cur++; // skip begin char(")
 	tail = start = ss->cur;
@@ -308,42 +302,42 @@ Token* _lexical(ScanState* ss){
 		goto repeat;
 	    case '{' : case '}' : case '[' : case ']' : case '(' : case ')' :
 	    case ';' : case ':' : case ',' :
-		return _newToken(*ss->cur++);
+		return TokenAlloc(*ss->cur++);
 	    case '.' :
 		ss->cur++;
 		if(_exceptChar(ss, '.')){
 			if(_exceptChar(ss, '.')){
-				return _newToken(Token3dot);
+				return TokenAlloc(Token3dot);
 			}
 			Error(ss->filename, ss->line, "illegal character ..");
-			return _newToken(TOp_dot);
+			return TokenAlloc(TOp_dot);
 		}
-		return _newToken(TOp_dot);
+		return TokenAlloc(TOp_dot);
 	    case '+' :
 		ss->cur++;
 		if(_exceptChar(ss, '=')){
-			return _newToken(TOp_addAssign);
+			return TokenAlloc(TOp_addAssign);
 		}
-		return _newToken(TOp_add);
+		return TokenAlloc(TOp_add);
 	    case '-' :
 		ss->cur++;
 		if(_exceptChar(ss, '=')){
-			return _newToken(TOp_subAssign);
+			return TokenAlloc(TOp_subAssign);
 		}
 		if(_exceptChar(ss, '>')){
-			return _newToken(TOp_ra);
+			return TokenAlloc(TOp_ra);
 		}
-		return _newToken(TOp_sub);
+		return TokenAlloc(TOp_sub);
 	    case '*' :
 		ss->cur++;
 		if(_exceptChar(ss, '=')){
-			return _newToken(TOp_mulAssign);
+			return TokenAlloc(TOp_mulAssign);
 		}
-		return _newToken(TOp_star);
+		return TokenAlloc(TOp_star);
 	    case '/' :
 		ss->cur++;
 		if(_exceptChar(ss, '=')){
-			return _newToken(TOp_divAssign);
+			return TokenAlloc(TOp_divAssign);
 		}
 		if(_exceptChar(ss, '/')){  // skip line comment.
 			while(*ss->cur && *ss->cur != '\n'){
@@ -365,79 +359,79 @@ Token* _lexical(ScanState* ss){
 			ss->cur += 2;
 			goto repeat;
 		}
-		return _newToken(TOp_div);
+		return TokenAlloc(TOp_div);
 	    case '%' :
 		ss->cur++;
 		if(_exceptChar(ss, '=')){
-			return _newToken(TOp_remAssign);
+			return TokenAlloc(TOp_remAssign);
 		}
-		return _newToken(TOp_rem);
+		return TokenAlloc(TOp_rem);
 	    case '!' :
 		ss->cur++;
 		if(_exceptChar(ss, '=')){
-			return _newToken(TOp_notEq);
+			return TokenAlloc(TOp_notEq);
 		}
-		return _newToken(TOp_not);
+		return TokenAlloc(TOp_not);
 	    case '&' :
 		ss->cur++;
 		if(_exceptChar(ss, '=')){
-			return _newToken(TOp_andAssign);
+			return TokenAlloc(TOp_andAssign);
 		}
 		if(_exceptChar(ss, '&')){
-			return _newToken(TOp_andAnd);
+			return TokenAlloc(TOp_andAnd);
 		}
-		return _newToken(TOp_and);
+		return TokenAlloc(TOp_and);
 	    case '=' :
 		ss->cur++;
 		if(_exceptChar(ss, '=')){
-			return _newToken(TOp_eq);
+			return TokenAlloc(TOp_eq);
 		}
-		return _newToken(TOp_assign);
+		return TokenAlloc(TOp_assign);
 	    case '|' :
 		ss->cur++;
 		if(_exceptChar(ss, '=')){
-			return _newToken(TOp_orAssign);
+			return TokenAlloc(TOp_orAssign);
 		}
 		if(_exceptChar(ss, '|')){
-			return _newToken(TOp_orOr);
+			return TokenAlloc(TOp_orOr);
 		}
-		return _newToken(TOp_or);
+		return TokenAlloc(TOp_or);
 	    case '~' :
 		ss->cur++;
 		if(_exceptChar(ss, '=')){
-			return _newToken(TOp_negAssign);
+			return TokenAlloc(TOp_negAssign);
 		}
-		return _newToken(TOp_neg);
+		return TokenAlloc(TOp_neg);
 	    case '>' :
 		ss->cur++;
 		if(_exceptChar(ss, '=')){
-			return _newToken(TOp_ge);
+			return TokenAlloc(TOp_ge);
 		}
 		if(_exceptChar(ss, '>')){
 			if(_exceptChar(ss, '=')){
-				return _newToken(TOp_shrAssign);
+				return TokenAlloc(TOp_shrAssign);
 			}
-			return _newToken(TOp_shr);
+			return TokenAlloc(TOp_shr);
 		}
-		return _newToken(TOp_gt);
+		return TokenAlloc(TOp_gt);
 	    case '<' :
 		ss->cur++;
 		if(_exceptChar(ss, '=')){
-			return _newToken(TOp_le);
+			return TokenAlloc(TOp_le);
 		}
 		if(_exceptChar(ss, '<')){
 			if(_exceptChar(ss, '=')){
-				return _newToken(TOp_shlAssign);
+				return TokenAlloc(TOp_shlAssign);
 			}
-			return _newToken(TOp_shl);
+			return TokenAlloc(TOp_shl);
 		}
-		return _newToken(TOp_lt);
+		return TokenAlloc(TOp_lt);
 	    case '\'':
 		return _scanCharLiteral(ss);
 	    case '"' :
 		return _scanStringLiteral(ss);
 	    case '\0':
-		return _newToken(TokenEnd);
+		return TokenAlloc(TokenEnd);
 	    default:
 		Error(ss->filename, ss->line, "illegal character \\%d(%c)",*ss->cur, *ss->cur);
 		ss->cur++;
@@ -475,7 +469,7 @@ void _dumpTokenList(Token* tokenlist){
 
 Token* ScanFile(char* filename){
 	ScanState ss;
-	Token* tokenHead = _newToken(TokenStart);
+	Token* tokenHead = TokenAlloc(TokenStart);
 	Token* tokenTail = tokenHead;
 
 	ss.filename = filename;
