@@ -37,6 +37,7 @@ Statement* ParseImportStmt(ParseState* ps){
 		ParseFatal(ps, ";");
 	}
 	ParseFatal(ps, "id");
+	return NULL; //[-Wreturn-type]
 }
 
 // 所以的检查都由调用函数处理。
@@ -54,6 +55,7 @@ Statement* ParseExpressionStmt(ParseState* ps){
 		return ret;
 	}
 	ParseFatal(ps, ";");
+	return NULL; //[-Wreturn-type]
 }
 
 Statement* ParseIfStmt(ParseState* ps){
@@ -110,6 +112,7 @@ Statement* ParseSwitchStmt(ParseState* ps){
 		ce->expression = ParseExpression(ps);
 		exceptTokenDealError(ps, ':', ":");
 	}
+	return NULL; //[-Wreturn-type]
 }
 
 Statement* ParseForStmt(ParseState* ps){
@@ -142,10 +145,14 @@ Statement* ParseForStmt(ParseState* ps){
 
 void ParseInternalStmt(ParseState* ps, Symbol* func){
 	Dtype* dt;
-	String* name;
+	//String* name;
 
 	dt = ParseDtype(ps);
 	if(dt){
 		ParseInternalDeclare(ps, dt, &func->funcLocal);
+		return ;
 	}
+
+	
+	eatToken(ps);
 }

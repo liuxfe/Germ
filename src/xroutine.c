@@ -101,4 +101,5 @@ int   Xhex2num(char ch){
 	if(ch >= 'a' && ch <='f'){
 		return ch - 'a' + 10;
 	}
+	return 0; // [-Wreturn-type]
 }
