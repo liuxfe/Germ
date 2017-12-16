@@ -74,10 +74,6 @@ void  Xstrncpy(char* dst, char* src, int len){
 	*dst='\0';
 }
 
-bool  Xisoct(char ch){
-	return (ch >= '0' && ch <='7');
-}
-
 bool  Xishex(char ch){
 	if(ch >= '0' && ch <='9'){
 		return true;

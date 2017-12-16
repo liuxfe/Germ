@@ -152,7 +152,6 @@ void ParseInternalStmt(ParseState* ps, Symbol* func){
 		ParseInternalDeclare(ps, dt, &func->funcLocal);
 		return ;
 	}
-
 	
 	eatToken(ps);
 }

@@ -1,15 +1,24 @@
 # Copyright (c) 2017 Tohack<tohack@foxmail.com>. All Rights Reserved.
 
-.c.o:
-	cc -I./inc -Wall -fno-builtin -c -o $@  $<
+CFLAGS =-I./inc -Wall -fno-builtin
 
-OBJS =	src/error.o src/xroutine.o src/vector.o src/string.o \
-	src/input.o src/scanner.o  src/parser.o src/declare.o \
-	src/expression.o src/statement.o src/main.o src/token.o \
-	src/symbol.o src/dtype.o
+OBJS   =src/error.o \
+	src/xroutine.o \
+	src/vector.o \
+	src/string.o \
+	src/input.o \
+	src/token.o \
+	src/scanner.o \
+	src/parser.o \
+	src/dtype.o \
+	src/symbol.o \
+	src/declare.o \
+	src/expression.o \
+	src/statement.o \
+	src/main.o
 
 germ: $(OBJS)
-	cc -o germ $(OBJS)
+	$(CC) -o germ $(OBJS)
 
 test: germ
 	./germ test/step1.gm

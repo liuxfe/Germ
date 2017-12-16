@@ -50,15 +50,6 @@ String* StoreString(char* s, int len){
 	return str;
 }
 
-int __lable_id = 0;
-String* CreateLabelString(){
-	String* ret = Xmalloc(sizeof(String) + 6 + 1, __FILE__, __LINE__);
-	ret->len = 6;
-	ret->ref = 1;
-	sprintf(ret->data, ".LC%03d", ++__lable_id);
-	return ret;
-}
-
 String* GetModuleName(char* fullname){
 	char* end;
 	char* start;
@@ -77,19 +68,4 @@ String* GetModuleName(char* fullname){
 		Error(__FILE__,__LINE__,"GetModuleName: (%s) cannt get module name", fullname);
 	}
 	return StoreString(start, end - start);
-}
-
-void dumpStringBucket(){
-	int i;
-	String* s;
-	printf("--------------StringBuctket -------------------");
-	for(i=0; i<HASHITEM;i++){
-		printf("\n--------hash:%d--------\n",i);
-		s = _StringBucket[i];
-		while(s){
-			printf("%s\t", s->data);
-			s = s->next;
-		}
-	}
-	printf("--------------------------------------------------\n");
 }

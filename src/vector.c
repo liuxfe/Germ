@@ -26,7 +26,3 @@ void* VectorLastItem(Vector* vec){
 	}
 	return vec->data[vec->item-1];
 }
-
-void deleteVector(Vector* vec){
-	Xfree(vec->data, __FILE__, __LINE__);
-}

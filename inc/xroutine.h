@@ -11,7 +11,6 @@ void  Xmemcpy(void*, void*, int);
 int   Xstrlen(char*);
 bool  Xstrncmp(char*, char*, int);
 void  Xstrncpy(char*, char*, int);
-bool  Xisoct(char);
 bool  Xishex(char);
 int   Xhex2num(char);
 

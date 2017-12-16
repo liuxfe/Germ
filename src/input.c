@@ -8,7 +8,7 @@ typedef struct _buffer{
 	char*   data;
 } buffer;
 
-void insertCharToBuffer(buffer* buf, char ch){
+void _insertCharToBuffer(buffer* buf, char ch){
 	const int FB_GROWSIZE = 1024;
 	char* tmp;
 
@@ -31,9 +31,9 @@ char* LoadFile(char* filename){
 	FILE* file = Xfopen(filename, "r", __FILE__, __LINE__);
 
 	for(ch=fgetc(file); ch != EOF; ch=fgetc(file)){
-		insertCharToBuffer(&buf,(char)ch);
+		_insertCharToBuffer(&buf,(char)ch);
 	}
-	insertCharToBuffer(&buf,'\0');
+	_insertCharToBuffer(&buf,'\0');
 
 	Xfclose(file, __FILE__, __LINE__);
 

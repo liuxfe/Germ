@@ -2,7 +2,7 @@
 
 #include "main.h"
 
-void parseFuncParam(ParseState* ps, Vector* scope){
+void _parseFuncParam(ParseState* ps, Vector* scope){
 	Dtype* dt;
 	String* name;
 	Symbol* param;
@@ -23,7 +23,7 @@ void parseFuncParam(ParseState* ps, Vector* scope){
 	SymbolAppend(ps, scope, param);
 }
 
-void parseFuncDeclare(ParseState* ps, Dtype* dt, String* name, Vector* scope){
+void _parseFuncDeclare(ParseState* ps, Dtype* dt, String* name, Vector* scope){
 	Symbol* symbol;
 
 	symbol = SymbolAllocFunc(dt, name);
@@ -33,7 +33,7 @@ void parseFuncDeclare(ParseState* ps, Dtype* dt, String* name, Vector* scope){
 	}
 
     param_repeat:
-	parseFuncParam(ps, &symbol->funcParam);
+	_parseFuncParam(ps, &symbol->funcParam);
 	if(exceptToken(ps, ',')){
 		goto param_repeat;
 	}
@@ -51,7 +51,7 @@ void parseFuncDeclare(ParseState* ps, Dtype* dt, String* name, Vector* scope){
 	}
 }
 
-void parseVarDeclare(ParseState* ps, Dtype* dt, String* name, Vector* scope){
+void _parseVarDeclare(ParseState* ps, Dtype* dt, String* name, Vector* scope){
 	Symbol* symbol;
 	
 	exceptTokenDealError(ps, ';', ";");
@@ -76,9 +76,9 @@ void ParseExternalDeclare(ParseState* ps, Vector* scope){
 	eatToken(ps);
 
 	if(exceptToken(ps,'(')){
-		parseFuncDeclare(ps, dt, name, scope);	
+		_parseFuncDeclare(ps, dt, name, scope);
 	} else{
-		parseVarDeclare(ps, dt, name, scope);
+		_parseVarDeclare(ps, dt, name, scope);
 	}
 }
 
