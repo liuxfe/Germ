@@ -6,6 +6,8 @@ int t1;
 
 int t3(int a, int b){
   int f;
+  int g;
+  int hl;
 
   a;
 

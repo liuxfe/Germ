@@ -5,7 +5,7 @@
 void eatToken(ParseState* ps){
 	Token* t = ps->tokenList;
 	ps->tokenList = ps->tokenList->tNext;
-	if(1){
+	if(0){
 		if(t->tCode == TokenID){
 			printf("eat:%s\n",t->sValue->data);
 		}else{
@@ -89,9 +89,11 @@ void _parsePackage(ParseState* ps, Vector* vector){
 
 /*  <Module>:= <Package> <ExternalDeclare>{0,n}  */
 Symbol* _parseModule(char* filename, String* name){
-	ParseState ps = {};
+	int i;
+	Symbol* s;
 	Symbol* ret = SymbolAlloc(ST_Module);
 	ret->sName = name;
+	ParseState ps = {};
 
 	ps.filename = filename;
 	ps.tokenList = ScanFile(filename);
@@ -110,6 +112,14 @@ Symbol* _parseModule(char* filename, String* name){
 
 	exceptToken(&ps, TokenEnd);
 	
+	for(i=0; i<ret->modSymbols.item; i+=1){
+		s = ret->modSymbols.data[i];
+		if(s->sType == ST_Function && s->funcTokens){
+			ps.tokenList = s->funcTokens;
+			ParseInternalStmt(&ps, s);
+		}
+	}
+
 	if(1){
 		SymbolDump(ret, 0);
 	}

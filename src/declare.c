@@ -24,9 +24,9 @@ void _parseFuncParam(ParseState* ps, Vector* scope){
 }
 
 void _parseFuncDeclare(ParseState* ps, Dtype* dt, String* name, Vector* scope){
-	Symbol* symbol;
-
-	symbol = SymbolAllocFunc(dt, name);
+	int lparens;
+	Token* token;
+	Symbol* symbol = SymbolAllocFunc(dt, name);
 
 	if(exceptToken(ps, ')')){
 		goto param_over;
@@ -40,15 +40,26 @@ void _parseFuncDeclare(ParseState* ps, Dtype* dt, String* name, Vector* scope){
 	exceptTokenDealError(ps, ')', ")");
 
    param_over:
-	if(exceptToken(ps, ';')){	// no function body
-		SymbolAppend(ps, scope, symbol);
-	} else{				// has function body
+	if(!exceptToken(ps, ';')){	 // no function body
 		exceptTokenDealError(ps, '{', "{");
-		while(!exceptToken(ps, '}')){
-			ParseInternalStmt(ps, symbol);
+		if(!exceptToken(ps, '}')){ // not empty function
+			lparens = 1;
+			symbol->funcTokens = ps->tokenList;
+			token = ps->tokenList;
+			while(lparens){
+				token = token->tNext;
+				if(token->tCode =='{'){
+					lparens += 1;
+				}
+				if(token->tCode =='}'){
+					lparens -= 1;
+				}
+			}
+			ps->tokenList = token->tNext;
+			token->tNext = TokenAlloc(TokenEnd);
 		}
-		SymbolAppend(ps, scope, symbol);
 	}
+	SymbolAppend(ps, scope, symbol);
 }
 
 void _parseVarDeclare(ParseState* ps, Dtype* dt, String* name, Vector* scope){

@@ -111,15 +111,25 @@ Statement* ParseForStmt(ParseState* ps){
 	return ret;
 }
 
+
 void ParseInternalStmt(ParseState* ps, Symbol* func){
 	Dtype* dt;
 	//String* name;
 
+    repeat:
+        if(exceptToken(ps,'}')){
+        	if(!exceptToken(ps, TokenEnd)){
+        		Debug(__FILE__, __LINE__, "Not have TokenEnd at function token list");
+        	}
+        	return ;
+        }
+
 	dt = ParseDtype(ps);
 	if(dt){
 		ParseInternalDeclare(ps, dt, &func->funcLocal);
-		return ;
+	} else{
+		eatToken(ps);
 	}
+	goto repeat;
 	
-	eatToken(ps);
 }
