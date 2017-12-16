@@ -16,6 +16,7 @@ typedef struct _symbol{
 	    };
 	    struct{			// 函数
 	        Dtype*    funcRetType;
+	        Token*    funcTokens;
 	        Vector    funcParam;
 	        Vector    funcLocal;
 	    };

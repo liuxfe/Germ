@@ -8,41 +8,9 @@ Statement* _newStatement(int type){
 	return ret;
 }
 
-Statement* ParseImportStmt(ParseState* ps){
-	Statement* ret = _newStatement(Stmt_import);
-
-	exceptToken(ps, TKw_import);
-    repeat:
-	if(ps->tokenList->tCode == TokenID) {
-		VectorPush(&ret->impVector, ps->tokenList->sValue);
-		eatToken(ps);
-		if(exceptToken(ps, TOp_dot)){
-			goto repeat;
-		}
-		if(exceptToken(ps, TKw_as)){
-			if(ps->tokenList->tCode == TokenID){
-				ret->impAlias = ps->tokenList->sValue;
-				eatToken(ps);
-				if(exceptToken(ps, ';')){
-					return ret;
-				}
-				ParseFatal(ps, ";");
-			}
-			ParseFatal(ps, "id");
-		}
-		if(exceptToken(ps, ';')){
-			ret->impAlias = VectorLastItem(&ret->impVector);
-			return ret;
-		}
-		ParseFatal(ps, ";");
-	}
-	ParseFatal(ps, "id");
-	return NULL; //[-Wreturn-type]
-}
-
 // 所以的检查都由调用函数处理。
 Statement* ParseLabelStmt(ParseState* ps, String* label){
-	Statement* ret = _newStatement(Stmt_declare);
+	Statement* ret = _newStatement(Stmt_lable);
 	ret->labelString = label;
 	eatToken(ps);
 	return ret;

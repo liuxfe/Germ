@@ -35,7 +35,41 @@ void exceptTokenDealError(ParseState* ps, int tcode, char* s){
 	ParseFatal(ps, s);
 }
 
-void parsePackage(ParseState* ps, Vector* vector){
+void _parseImport(ParseState* ps){
+	Vector  imp;
+	String* alias;
+	//Symbol* ret = SymbolAlloc(ST_Module);
+
+	exceptToken(ps, TKw_import);
+    repeat:
+	if(ps->tokenList->tCode == TokenID) {
+		VectorPush(&imp, ps->tokenList->sValue);
+		eatToken(ps);
+		if(exceptToken(ps, TOp_dot)){
+			goto repeat;
+		}
+		if(exceptToken(ps, TKw_as)){
+			if(ps->tokenList->tCode == TokenID){
+				alias = ps->tokenList->sValue;
+				eatToken(ps);
+				if(exceptToken(ps, ';')){
+					return ;// ret;
+				}
+				ParseFatal(ps, ";");
+			}
+			ParseFatal(ps, "id");
+		}
+		if(exceptToken(ps, ';')){
+			alias = VectorLastItem(&imp);
+			return ;//ret;
+		}
+		ParseFatal(ps, ";");
+	}
+	ParseFatal(ps, "id");
+	return ; //NULL; //[-Wreturn-type]
+}
+
+void _parsePackage(ParseState* ps, Vector* vector){
 	exceptTokenDealError(ps, TKw_package, "package");
     repeat:
 	if(ps->tokenList->tCode == TokenID) {
@@ -54,7 +88,7 @@ void parsePackage(ParseState* ps, Vector* vector){
 }
 
 /*  <Module>:= <Package> <ExternalDeclare>{0,n}  */
-Symbol* parseModule(char* filename, String* name){
+Symbol* _parseModule(char* filename, String* name){
 	ParseState ps = {};
 	Symbol* ret = SymbolAlloc(ST_Module);
 	ret->sName = name;
@@ -62,11 +96,9 @@ Symbol* parseModule(char* filename, String* name){
 	ps.filename = filename;
 	ps.tokenList = ScanFile(filename);
 
-	if(!exceptToken(&ps, TokenStart)){
-		Debug(__FILE__, __LINE__, "Token list not start with TokenStart");
-	}
+	exceptToken(&ps, TokenStart);
 
-	parsePackage(&ps, &ret->modPackage);
+	_parsePackage(&ps, &ret->modPackage);
 
 	//while(ps.tokenList->tCode == TKw_import){
 	//	pushToVector(&imports, ParseImportStmt(&ps));
@@ -76,17 +108,15 @@ Symbol* parseModule(char* filename, String* name){
 		ParseExternalDeclare(&ps, &ret->modSymbols);
 	}
 
-	if(!exceptToken(&ps, TokenEnd)){
-		Debug(__FILE__, __LINE__, "Token list not end with TokenEnd");
-	}
+	exceptToken(&ps, TokenEnd);
 	
 	if(1){
 		SymbolDump(ret, 0);
 	}
-	
+
 	return ret;
 }
 
 Symbol* ParseFile(char* filename){
-	return parseModule(filename, GetModuleName(filename));
+	return _parseModule(filename, GetModuleName(filename));
 }

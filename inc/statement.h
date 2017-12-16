@@ -7,12 +7,6 @@ typedef struct _statement Statement;
 struct _statement{
 	uint                stmtType;
 	union{
-	    struct{			// ImportStmt
-	        Vector      impVector;
-	        String*     impAlias;
-	        Symbol*     impSymbol;
-	    };
-	    Symbol*         declSymbol;	// DeclStmt
 	    String*         labelString;// LabelStmt/GotoStmt
 	    Expression*     expression;	// ExprsssionStmt/ReturnStmt/ThrowStmt
 	    struct{			// ifStmt
@@ -50,9 +44,6 @@ typedef struct _condElement{
 
 /* values of stmtType */
 enum{
-	Stmt_package,
-	Stmt_import,
-	Stmt_declare,
 	Stmt_lable,
 	Stmt_expression,
 	Stmt_if,
