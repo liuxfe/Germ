@@ -111,7 +111,6 @@ Statement* ParseForStmt(ParseState* ps){
 	return ret;
 }
 
-
 void ParseInternalStmt(ParseState* ps, Symbol* func){
 	Dtype* dt;
 	//String* name;

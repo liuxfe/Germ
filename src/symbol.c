@@ -60,6 +60,10 @@ void SymbolAppend(ParseState* ps, Vector* scope, Symbol* symbol){
 	VectorPush(scope, symbol);
 }
 
+void SymbolLookup(String* name, Vector* scope1, Vector* scope2, Vector* scope3){
+	return NULL;
+}
+
 void SymbolDump(Symbol* symbol, int indent){
 	String* str;
 	char tmp[80];

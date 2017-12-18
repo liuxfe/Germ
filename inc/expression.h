@@ -5,13 +5,13 @@
 
 typedef struct _expression Expression;
 struct _expression{
-	int8                exprType;
-	int8                isConst;
-	int16               operate;
+	int                 exprType;
+	int                 isConst;
+	int                 operate;
 	union{
 	    uint            iValue;	// 整数/字符/布尔常量
 	    double          fValue;	// 浮点常量
-	    Symbol*         sValue;	// 字符串常量/变量
+	    String*         sValue;     // 字符串常量/变量
 	    Expression*     operand;	// 一元运算操作数
 	    struct{			// 二元运算操作数
 	        Expression* left;
@@ -23,6 +23,7 @@ struct _expression{
 
 /* values of exprType */
 enum {
+	Expr_Null,
 	Expr_Integer,
 	Expr_Char,
 	Expr_Bool,
