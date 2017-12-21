@@ -5,6 +5,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
+#include <assert.h>
 
 typedef   signed char   int8;
 typedef unsigned char  uint8;
