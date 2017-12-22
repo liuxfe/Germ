@@ -4,22 +4,22 @@
 
 const int POINTER_SIZE = 8;
 
-Dtype IntType     = {DTT_Basic, 8, NULL, {BTypeId_int    }};
 Dtype Int8Type    = {DTT_Basic, 1, NULL, {BTypeId_int8   }};
 Dtype Int16Type   = {DTT_Basic, 2, NULL, {BTypeId_int16  }};
 Dtype Int32Type   = {DTT_Basic, 4, NULL, {BTypeId_int32  }};
 Dtype Int64Type   = {DTT_Basic, 8, NULL, {BTypeId_int64  }};
-Dtype UintType    = {DTT_Basic, 8, NULL, {BTypeId_uint   }};
+Dtype IntType     = {DTT_Basic, 8, NULL, {BTypeId_int    }};
 Dtype Uint8Type   = {DTT_Basic, 1, NULL, {BTypeId_uint8  }};
 Dtype Uint16Type  = {DTT_Basic, 2, NULL, {BTypeId_uint16 }};
 Dtype Uint32Type  = {DTT_Basic, 4, NULL, {BTypeId_uint32 }};
 Dtype Uint64Type  = {DTT_Basic, 8, NULL, {BTypeId_uint64 }};
-Dtype FloatType   = {DTT_Basic, 8, NULL, {BTypeId_float  }};
+Dtype UintType    = {DTT_Basic, 8, NULL, {BTypeId_uint   }};
+Dtype UptrType    = {DTT_Basic, 8, NULL, {BTypeId_uptr   }};
 Dtype Float32Type = {DTT_Basic, 4, NULL, {BTypeId_float32}};
-Dtype Float64Type = {DTT_Basic, 4, NULL, {BTypeId_float64}};
+Dtype Float64Type = {DTT_Basic, 8, NULL, {BTypeId_float64}};
+Dtype FloatType   = {DTT_Basic, 8, NULL, {BTypeId_float  }};
 Dtype BoolType    = {DTT_Basic, 1, NULL, {BTypeId_bool   }};
 Dtype CharType    = {DTT_Basic, 4, NULL, {BTypeId_char   }};
-Dtype VoidType    = {DTT_Basic, 0, NULL, {BTypeId_void   }};
 
 Dtype* ParseDtype(ParseState* ps){
 //	Dtype* ret;
@@ -46,7 +46,6 @@ Dtype* ParseDtype(ParseState* ps){
 	    case TKw_float64 :	bdt = &Float64Type; break;
 	    case TKw_bool :	bdt = &BoolType; break;
 	    case TKw_char :	bdt = &CharType; break;
-	    case TKw_void :	bdt = &VoidType; break;
 	    case TokenID :
 	    default:
 		return bdt = NULL;

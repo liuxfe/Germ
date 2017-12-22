@@ -5,7 +5,7 @@
 
 typedef struct _statement Statement;
 struct _statement{
-	uint                stmtType;
+	int                stmtType;
 	union{
 	    String*         labelString;// LabelStmt/GotoStmt
 	    Expression*     expression;	// ExprsssionStmt/ReturnStmt/ThrowStmt

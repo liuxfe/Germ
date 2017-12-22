@@ -8,7 +8,7 @@ typedef struct _token{
 	int            tLine;
 	int            tCode;
 	union{
-	    uint       iValue;
+	    int        iValue;
 	    double     fValue;
 	    String*    sValue;
 	};

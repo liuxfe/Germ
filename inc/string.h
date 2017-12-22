@@ -6,9 +6,9 @@
 typedef struct _string String;
 struct _string{
 	String* next;
-	uint	hash;
-	uint	ref;
-	uint	len;
+	int	hash;
+	int	ref;
+	int	len;
 	char	data[0];
 };
 

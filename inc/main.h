@@ -9,16 +9,21 @@
 #include <assert.h>
 
 typedef   signed char   int8;
-typedef unsigned char  uint8;
 typedef   signed short  int16;
-typedef unsigned short uint16;
 typedef   signed int    int32;
-typedef unsigned int   uint32;
 typedef   signed long   int64;
+typedef   signed long   INT;
+typedef unsigned char  uint8;
+typedef unsigned short uint16;
+typedef unsigned int   uint32;
 typedef unsigned long  uint64;
-typedef unsigned int   uint;
-
-typedef char bool;
+typedef unsigned long  UINT;
+typedef void*          uptr;
+typedef float          float32;
+typedef double         float64;
+typedef double         FLOAT;
+typedef char           bool;
+typedef   signed int   CHAR;
 
 #define true  1
 #define false 0

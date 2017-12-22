@@ -7,11 +7,11 @@
 
 typedef struct _dtype Dtype;
 struct _dtype{
-	uint             dtType;
-	uint             dtBytes;
+	int             dtType;
+	int             dtBytes;
 	Dtype*           dtBtype;
 	union{
-	    uint         btypeId;	// BasicType
+	    int         btypeId;	// BasicType
 	    struct{			// PointerType/ArrayType/PointerArrayType
 	        int      pointLevel;
 	        int      arrayDimCnt;
@@ -39,22 +39,22 @@ enum {
 
 /* values of btypeId */
 enum {
-	BTypeId_int,
 	BTypeId_int8,
 	BTypeId_int16,
 	BTypeId_int32,
 	BTypeId_int64,
-	BTypeId_uint,
+	BTypeId_int,
 	BTypeId_uint8,
 	BTypeId_uint16,
 	BTypeId_uint32,
 	BTypeId_uint64,
-	BTypeId_float,
+	BTypeId_uint,
+	BTypeId_uptr,
 	BTypeId_float32,
 	BTypeId_float64,
+	BTypeId_float,
 	BTypeId_bool,
 	BTypeId_char,
-	BTypeId_void,
 };
 
 Dtype* ParseDtype(ParseState*);
