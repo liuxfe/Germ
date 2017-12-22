@@ -17,23 +17,23 @@ void TokenFree(Token* token){
 
 void TokenDump(Token* token){
 	printf("(Line:%d)\t", token->tLine);
-	if(token->tCode >= TKw_package && token->tCode <= TKw_const){
+	if(token->tCode >= Token_package && token->tCode <= Token_const){
 		printf("KeyWord:%d\n", token->tCode);
 		return;
 	}
-	if(token->tCode == TokenID){
+	if(token->tCode == Token_ID){
 		printf("Id:%s\n", token->sValue->data);
 		return;
 	}
-	if(token->tCode == TokenChar){
+	if(token->tCode == Token_Char){
 		printf("Char:%d(%c)\n", token->iValue,token->iValue);
 		return;
 	}
-	if(token->tCode == TokenString){
+	if(token->tCode == Token_String){
 		printf("String:%s\n", token->sValue->data);
 		return;
 	}
-	if(token->tCode == TokenInteger){
+	if(token->tCode == Token_Integer){
 		printf("Number:%d\n", token->iValue);
 		return;
 	}

@@ -30,7 +30,7 @@ Statement* ParseIfStmt(ParseState* ps){
 	CondElement* ce;
 	Statement* ret = _newStatement(Stmt_if);
 
-	if(!exceptToken(ps, TKw_if)){
+	if(!exceptToken(ps, Token_if)){
 		Debug(__FILE__, __LINE__, "not have if");
 		exit(-1);
 	}
@@ -46,11 +46,11 @@ Statement* ParseIfStmt(ParseState* ps){
 	}
 	VectorPush(&ret->ifCondElements, ce);
 
-	if(exceptToken(ps, TKw_elif)){
+	if(exceptToken(ps, Token_elif)){
 		goto repeat;
 	}
 
-	if(!exceptToken(ps, TKw_else)){
+	if(!exceptToken(ps, Token_else)){
 		return ret;
 	}
 	exceptTokenDealError(ps, '{', "{");
@@ -65,7 +65,7 @@ Statement* ParseSwitchStmt(ParseState* ps){
 	CondElement* ce;
 	Statement* ret = _newStatement(Stmt_switch);
 
-	if(!exceptToken(ps, TKw_if)){
+	if(!exceptToken(ps, Token_if)){
 		Debug(__FILE__, __LINE__, "not have if");
 		exit(-1);
 	}
@@ -76,7 +76,7 @@ Statement* ParseSwitchStmt(ParseState* ps){
 	exceptTokenDealError(ps, '{', "{");
 	while(!exceptToken(ps,'}')){
 		ce = Xmalloc(sizeof(CondElement), __FILE__, __LINE__);
-		exceptTokenDealError(ps, TKw_case, "case");
+		exceptTokenDealError(ps, Token_case, "case");
 		ce->expression = ParseExpression(ps);
 		exceptTokenDealError(ps, ':', ":");
 	}
@@ -86,7 +86,7 @@ Statement* ParseSwitchStmt(ParseState* ps){
 Statement* ParseForStmt(ParseState* ps){
 	Statement* ret = _newStatement(Stmt_for);
 
-	if(!exceptToken(ps, TKw_if)){
+	if(!exceptToken(ps, Token_if)){
 		Debug(__FILE__, __LINE__, "not have if");
 		exit(-1);
 	}
@@ -116,12 +116,12 @@ void ParseInternalStmt(ParseState* ps, Symbol* func){
 	//String* name;
 
     repeat:
-        if(exceptToken(ps,'}')){
-        	if(!exceptToken(ps, TokenEnd)){
-        		Debug(__FILE__, __LINE__, "Not have TokenEnd at function token list");
-        	}
-        	return ;
-        }
+	if(exceptToken(ps,'}')){
+		if(!exceptToken(ps, Token_EOF)){
+			Debug(__FILE__, __LINE__, "Not have TokenEnd at function token list");
+		}
+		return ;
+	}
 
 	dt = ParseDtype(ps);
 	if(dt){
@@ -130,5 +130,4 @@ void ParseInternalStmt(ParseState* ps, Symbol* func){
 		eatToken(ps);
 	}
 	goto repeat;
-	
 }

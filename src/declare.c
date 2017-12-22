@@ -12,7 +12,7 @@ void _parseFuncParam(ParseState* ps, Vector* scope){
 		ParseFatal(ps, "type");
 	}
 
-	if(ps->tokenList->tCode != TokenID){
+	if(ps->tokenList->tCode != Token_ID){
 		ParseFatal(ps, "id");
 	}
 	name = ps->tokenList->sValue;
@@ -56,7 +56,7 @@ void _parseFuncDeclare(ParseState* ps, Dtype* dt, String* name, Vector* scope){
 				}
 			}
 			ps->tokenList = token->tNext;
-			token->tNext = TokenAlloc(TokenEnd);
+			token->tNext = TokenAlloc(Token_EOF);
 		}
 	}
 	SymbolAppend(ps, scope, symbol);
@@ -80,7 +80,7 @@ void ParseExternalDeclare(ParseState* ps, Vector* scope){
 		ParseFatal(ps, "type");
 	}
 
-	if(ps->tokenList->tCode != TokenID){
+	if(ps->tokenList->tCode != Token_ID){
 		ParseFatal(ps, "id");
 	}
 	name = ps->tokenList->sValue;
@@ -97,7 +97,7 @@ void ParseInternalDeclare(ParseState* ps, Dtype* dt, Vector* scope){
 	String* name;
 	Symbol* symbol;
 
-	if(ps->tokenList->tCode != TokenID){
+	if(ps->tokenList->tCode != Token_ID){
 		ParseFatal(ps, "id");
 	}
 	name = ps->tokenList->sValue;

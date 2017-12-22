@@ -16,30 +16,30 @@ Expression* parseExprLeafNode(ParseState* ps){
 	Token* t = ps->tokenList;
 
 	switch(t->tCode){
-	    case TokenNULL:
+	    case Token_NULL:
 	    	ret = ExpressionAlloc(Expr_Null);
 	    	break;
-	    case TokenInteger:
+	    case Token_Integer:
 	        ret = ExpressionAlloc(Expr_Integer);
 	        ret->iValue = t->iValue;
 	        break;
-	    case TokenChar:
+	    case Token_Char:
 	        ret = ExpressionAlloc(Expr_Char);
 	        ret->iValue = t->iValue;
 	        break;
-	    case TokenBool:
+	    case Token_Bool:
 	        ret = ExpressionAlloc(Expr_Bool);
 	        ret->iValue = t->iValue;
 	        break;
-	    case TokenFloat:
+	    case Token_Float:
 	        ret = ExpressionAlloc(Expr_Float);
 	        ret->iValue = t->fValue;
 	        break;
-	    case TokenString:
+	    case Token_String:
 	        ret = ExpressionAlloc(Expr_String);
 	        ret->sValue = t->sValue;
 	        break;
-	    case TokenID:
+	    case Token_ID:
 	    	ret = ExpressionAlloc(Expr_String);
 	        ret->sValue = t->sValue;
 	        break;

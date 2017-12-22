@@ -16,92 +16,89 @@ typedef struct _token{
 
 /* values of token tCode. */
 enum {
-	TokenStart = 257,
-	TokenEnd,
-	TokenID,		// 标识符
-	TokenNULL,		// NULL常量
-	TokenInteger,		// 整数常量
-	TokenChar,		// 字符常量
-	TokenBool,		// 布尔常量
-	TokenFloat,		// 浮点常量
-	TokenString,		// 字符串常量
-	Token3dot,		// ...
-	TKw_package,
-	TKw_import,
-	TKw_as,
-	TKw_int,
-	TKw_int8,
-	TKw_int16,
-	TKw_int32,
-	TKw_int64,
-	TKw_uint,
-	TKw_uint8,
-	TKw_uint16,
-	TKw_uint32,
-	TKw_uint64,
-	TKw_float,
-	TKw_float32,
-	TKw_float64,
-	TKw_bool,
-	TKw_char,
-	TKw_void,
-	TKw_func,
-	TKw_typedef,
-	TKw_struct,
-	TKw_union,
-	TKw_if,
-	TKw_elif,
-	TKw_else,
-	TKw_switch,
-	TKw_case,
-	TKw_default,
-	TKw_for,
-	TKw_while,
-	TKw_continue,
-	TKw_break,
-	TKw_throw,
-	TKw_return,
-	TKw_goto,
-	TKw_const,
-	TRw_true,		// bool常量
-	TRw_false,		// bool常量
-	TRw_NULL,		// NULL常量
-	//TRw___FILE__,		// __FILE__ 字符串常量
-	//TRw___LINE__,		// __LINE__ 整数常量
-	//TRw___DATA__,		// __DATE__ 字符串常量
-	//TRw___TIME__,		// __TIME__ 整数常量
-	TOp_add,		// +
-	TOp_sub,		// -
-	TOp_div,		// /
-	TOp_rem,		// %
-	TOp_assign,		// =
-	TOp_addAssign,		// +=
-	TOp_subAssign,		// -=
-	TOp_mulAssign,		// *=
-	TOp_divAssign,		// /=
-	TOp_remAssign,		// %=
-	TOp_andAssign,		// &=
-	TOp_and,		// &
-	TOp_not,		// !
-	TOp_notEq,		// !=
-	TOp_eq,			// ==
-	TOp_andAnd,		// &&
-	TOp_or,			// |
-	TOp_orOr,		// ||
-	TOp_orAssign,		// |=
-	TOp_neg,		// ~
-	TOp_negAssign,		// ~=
-	TOp_gt,			// >
-	TOp_ge,			// >=
-	TOp_shr,		// >>
-	TOp_shrAssign,		// >>=
-	TOp_ra,			// ->
-	TOp_lt,			// <
-	TOp_le,			// <=
-	TOp_shl,		// <<
-	TOp_shlAssign,		// <<=
-	TOp_star,		// *
-	TOp_dot,		// .
+	Token_Start = 257,
+	Token_EOF,
+	Token_Integer,		// 整数常量
+	Token_Float,		// 浮点常量
+	Token_Bool,		// 布尔常量
+	Token_Char,		// 字符常量
+	Token_String,		// 字符串常量
+	Token_NULL,		// NULL常量
+	Token_ID,		// 标识符
+	Token_package,
+	Token_import,
+	Token_as,
+	Token_using,
+	Token_int8,
+	Token_int16,
+	Token_int32,
+	Token_int64,
+	Token_uint8,
+	Token_uint16,
+	Token_uint32,
+	Token_uint64,
+	Token_int,
+	Token_uint,
+	Token_uptr,
+	Token_float32,
+	Token_float64,
+	Token_float,
+	Token_bool,
+	Token_char,
+	Token_void,
+	Token_func,
+	Token_typedef,
+	Token_struct,
+	Token_union,
+	Token_if,
+	Token_elif,
+	Token_else,
+	Token_switch,
+	Token_case,
+	Token_default,
+	Token_for,
+	Token_while,
+	Token_continue,
+	Token_break,
+	Token_throw,
+	Token_return,
+	Token_goto,
+	Token_const,
+	Token_true,		// bool常量(true)
+	Token_false,		// bool常量(false)
+	Token_add,		// +
+	Token_sub,		// -
+	Token_div,		// /
+	Token_rem,		// %
+	Token_assign,		// =
+	Token_addAssign,	// +=
+	Token_subAssign,	// -=
+	Token_mulAssign,	// *=
+	Token_divAssign,	// /=
+	Token_remAssign,	// %=
+	Token_andAssign,	// &=
+	Token_and,		// &
+	Token_not,		// !
+	Token_notEq,		// !=
+	Token_eq,		// ==
+	Token_andAnd,		// &&
+	Token_or,		// |
+	Token_orOr,		// ||
+	Token_orAssign,		// |=
+	Token_neg,		// ~
+	Token_negAssign,	// ~=
+	Token_gt,		// >
+	Token_ge,		// >=
+	Token_shr,		// >>
+	Token_shrAssign,	// >>=
+	Token_ra,		// ->
+	Token_lt,		// <
+	Token_le,		// <=
+	Token_shl,		// <<
+	Token_shlAssign,	// <<=
+	Token_star,		// *
+	Token_dot,		// .
+	Token_3dot,		// ...
 };
 
 Token* TokenAlloc(int);

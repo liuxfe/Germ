@@ -6,7 +6,7 @@ void eatToken(ParseState* ps){
 	Token* t = ps->tokenList;
 	ps->tokenList = ps->tokenList->tNext;
 	if(0){
-		if(t->tCode == TokenID){
+		if(t->tCode == Token_ID){
 			printf("eat:%s\n",t->sValue->data);
 		}else{
 			printf("eat:%d\n",t->tCode);
@@ -40,16 +40,16 @@ void _parseImport(ParseState* ps){
 	String* alias;
 	//Symbol* ret = SymbolAlloc(ST_Module);
 
-	exceptToken(ps, TKw_import);
+	exceptToken(ps, Token_import);
     repeat:
-	if(ps->tokenList->tCode == TokenID) {
+	if(ps->tokenList->tCode == Token_ID) {
 		VectorPush(&imp, ps->tokenList->sValue);
 		eatToken(ps);
-		if(exceptToken(ps, TOp_dot)){
+		if(exceptToken(ps, Token_dot)){
 			goto repeat;
 		}
-		if(exceptToken(ps, TKw_as)){
-			if(ps->tokenList->tCode == TokenID){
+		if(exceptToken(ps, Token_as)){
+			if(ps->tokenList->tCode == Token_ID){
 				alias = ps->tokenList->sValue;
 				eatToken(ps);
 				if(exceptToken(ps, ';')){
@@ -70,12 +70,12 @@ void _parseImport(ParseState* ps){
 }
 
 void _parsePackage(ParseState* ps, Vector* vector){
-	exceptTokenDealError(ps, TKw_package, "package");
+	exceptTokenDealError(ps, Token_package, "package");
     repeat:
-	if(ps->tokenList->tCode == TokenID) {
+	if(ps->tokenList->tCode == Token_ID) {
 		VectorPush(vector, ps->tokenList->sValue);
 		eatToken(ps);
-		if(exceptToken(ps, TOp_dot)){
+		if(exceptToken(ps, Token_dot)){
 			goto repeat;
 		}
 		if(exceptToken(ps, ';')){
@@ -98,19 +98,19 @@ Symbol* _parseModule(char* filename, String* name){
 	ps.filename = filename;
 	ps.tokenList = ScanFile(filename);
 
-	exceptToken(&ps, TokenStart);
+	exceptToken(&ps, Token_Start);
 
 	_parsePackage(&ps, &ret->modPackage);
 
-	//while(ps.tokenList->tCode == TKw_import){
+	//while(ps.tokenList->tCode == Token_import){
 	//	pushToVector(&imports, ParseImportStmt(&ps));
 	//}
 
-	while(ps.tokenList->tCode != TokenEnd){
+	while(ps.tokenList->tCode != Token_EOF){
 		ParseExternalDeclare(&ps, &ret->modSymbols);
 	}
 
-	exceptToken(&ps, TokenEnd);
+	exceptToken(&ps, Token_EOF);
 	
 	for(i=0; i<ret->modSymbols.item; i+=1){
 		s = ret->modSymbols.data[i];

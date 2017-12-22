@@ -32,21 +32,21 @@ Dtype* ParseDtype(ParseState* ps){
 	int sum;
 */
 	switch(ps->tokenList->tCode){
-	    case TKw_int :	bdt = &IntType; break;
-	    case TKw_int8 : 	bdt = &Int8Type; break;
-	    case TKw_int16 :	bdt = &Int16Type; break;
-	    case TKw_int32 :	bdt = &Int32Type; break;
-	    case TKw_int64 :	bdt = &Int64Type; break;
-	    case TKw_uint :	bdt = &UintType; break;
-	    case TKw_uint16 :	bdt = &Uint16Type; break;
-	    case TKw_uint32 :	bdt = &Uint32Type; break;
-	    case TKw_uint64 :	bdt = &Uint64Type; break;
-	    case TKw_float :	bdt = &FloatType; break;
-	    case TKw_float32 :	bdt = &Float32Type; break;
-	    case TKw_float64 :	bdt = &Float64Type; break;
-	    case TKw_bool :	bdt = &BoolType; break;
-	    case TKw_char :	bdt = &CharType; break;
-	    case TokenID :
+	    case Token_int :	bdt = &IntType; break;
+	    case Token_int8 : 	bdt = &Int8Type; break;
+	    case Token_int16 :	bdt = &Int16Type; break;
+	    case Token_int32 :	bdt = &Int32Type; break;
+	    case Token_int64 :	bdt = &Int64Type; break;
+	    case Token_uint :	bdt = &UintType; break;
+	    case Token_uint16 :	bdt = &Uint16Type; break;
+	    case Token_uint32 :	bdt = &Uint32Type; break;
+	    case Token_uint64 :	bdt = &Uint64Type; break;
+	    case Token_float :	bdt = &FloatType; break;
+	    case Token_float32 :bdt = &Float32Type; break;
+	    case Token_float64 :bdt = &Float64Type; break;
+	    case Token_bool :	bdt = &BoolType; break;
+	    case Token_char :	bdt = &CharType; break;
+	    case Token_ID :
 	    default:
 		return bdt = NULL;
 	}
