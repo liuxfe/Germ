@@ -57,12 +57,11 @@ void parsePackage(ParseState* ps, Vector* vector){
 
 /*  <Module>:= <Package> <ExternalDeclare>{0,n}  */
 Symbol* ParseModule(char* filename, String* name){
-	Symbol* ret = SymbolAlloc(ST_Module);
-	ret->sName = name;
-
 	ParseState ps = {};
 	ps.filename = filename;
 	ps.tokenList = ScanFile(filename);
+
+	Symbol* ret = SymbolAlloc(ST_Module, name);
 
 	parsePackage(&ps, &ret->modPackage);
 

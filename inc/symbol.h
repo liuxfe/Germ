@@ -37,7 +37,7 @@ enum {
 	ST_Function,
 };
 
-Symbol* SymbolAlloc(int);
+Symbol* SymbolAlloc(int, String*);
 Symbol* SymbolAllocVariable(String*, Dtype*, int);
 Symbol* SymbolAllocFunction(String*, Dtype*);
 void SymbolFree(Symbol*);

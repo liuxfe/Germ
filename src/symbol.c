@@ -2,11 +2,12 @@
 
 #include "main.h"
 
-Symbol* SymbolAlloc(int type){
+Symbol* SymbolAlloc(int type, String* name){
 	Symbol* ret;
 
 	ret = Xmalloc(sizeof(Symbol), __FILE__, __LINE__);
 	ret->sType = type;
+	ret->sName = name;
 
 	return ret;
 }
@@ -14,8 +15,7 @@ Symbol* SymbolAlloc(int type){
 Symbol* SymbolAllocVariable(String* name, Dtype* dt, int subtype){
 	Symbol* ret;
 
-	ret = SymbolAlloc(subtype);
-	ret->sName = name;
+	ret = SymbolAlloc(subtype, name);
 	ret->varDtype = dt;
 
 	return ret;
@@ -24,8 +24,7 @@ Symbol* SymbolAllocVariable(String* name, Dtype* dt, int subtype){
 Symbol* SymbolAllocFunction(String* name, Dtype* dt){
 	Symbol* ret;
 
-	ret = SymbolAlloc(ST_Function);
-	ret->sName = name;
+	ret = SymbolAlloc(ST_Function, name);
 	ret->funcRetType = dt;
 
 	return ret;
