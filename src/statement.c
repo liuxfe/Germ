@@ -19,7 +19,7 @@ Statement* ParseLabelStmt(ParseState* ps, String* label){
 Statement* ParseExpressionStmt(ParseState* ps){
 	Statement* ret = _newStatement(Stmt_expression);
 	ret->expression = ParseExpression(ps);
-	if(exceptToken(ps, ';')){
+	if(ParseExceptToken(ps, ';')){
 		return ret;
 	}
 	ParseFatal(ps, ";");
@@ -30,7 +30,7 @@ Statement* ParseIfStmt(ParseState* ps){
 	CondElement* ce;
 	Statement* ret = _newStatement(Stmt_if);
 
-	if(!exceptToken(ps, Token_if)){
+	if(!ParseExceptToken(ps, Token_if)){
 		Debug(__FILE__, __LINE__, "not have if");
 		exit(-1);
 	}
@@ -41,20 +41,20 @@ Statement* ParseIfStmt(ParseState* ps){
 	ce->expression = ParseExpression(ps);
 	ParseMatchToken(ps, ')');
 	ParseMatchToken(ps, '{');
-	while(!exceptToken(ps,'}')){
+	while(!ParseExceptToken(ps,'}')){
 		//VectorPush(&ce->statement, ParseInternalStmt(ps, NULL));
 	}
 	VectorPush(&ret->ifCondElements, ce);
 
-	if(exceptToken(ps, Token_elif)){
+	if(ParseExceptToken(ps, Token_elif)){
 		goto repeat;
 	}
 
-	if(!exceptToken(ps, Token_else)){
+	if(!ParseExceptToken(ps, Token_else)){
 		return ret;
 	}
 	ParseMatchToken(ps, '{');
-	while(!exceptToken(ps, '}')){
+	while(!ParseExceptToken(ps, '}')){
 		//VectorPush(&ret->elseStmt, ParseInternalStmt(ps));
 	}
 	return ret;
@@ -65,21 +65,21 @@ Statement* ParseForStmt(ParseState* ps){
 
 	ParseMatchToken(ps, Token_if);
 	ParseMatchToken(ps, '(');
-	if(!exceptToken(ps, ';')){
+	if(!ParseExceptToken(ps, ';')){
 		ret->forExpr1 = ParseExpression(ps);
 		ParseMatchToken(ps, ';');
 	}
-	if(!exceptToken(ps, ';')){
+	if(!ParseExceptToken(ps, ';')){
 		ret->forExpr2 = ParseExpression(ps);
 		ParseMatchToken(ps, ';');
 	}
-	if(!exceptToken(ps, ';')){
+	if(!ParseExceptToken(ps, ';')){
 		ret->forExpr3 = ParseExpression(ps);
 		ParseMatchToken(ps, ';');
 	}
 	ParseMatchToken(ps, ')');
 	ParseMatchToken(ps, '{');
-	while(!exceptToken(ps, '}')){
+	while(!ParseExceptToken(ps, '}')){
 		//VectorPush(&ret->forStmt, ParseInternalStmt(ps));
 	}
 	return ret;

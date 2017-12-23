@@ -11,10 +11,9 @@ typedef struct _parseState{
 } ParseState;
 
 void eatToken(ParseState*);
-bool exceptToken(ParseState*, int);
 void ParseFatal(ParseState*, char*);
-//void exceptTokenDealError(ParseState*, int, char*);
 void ParseMatchToken(ParseState*, int);
+bool ParseExceptToken(ParseState*, int);
 String* ParseExceptTokenTD(ParseState*);
 
 #include "dtype.h"

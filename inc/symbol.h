@@ -30,8 +30,6 @@ typedef struct _symbol{
 /* values of sType*/
 enum {
 	ST_Module,
-	ST_GVariable,
-	ST_LVariable,
 	ST_GlobalVar,
 	ST_ParamVar,
 	ST_LocalVar,

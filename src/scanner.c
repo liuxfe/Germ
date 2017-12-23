@@ -450,6 +450,10 @@ Token* ScanFile(char* filename){
 		tokenTail->tLine = ss.line;
 	}
 
+	tokenTail = tokenHead;
+	tokenHead = tokenHead->tNext;
+	TokenFree(tokenTail);
+
 	if(0){
 		printf("\n Token Dump in file: %s\n",filename);
 		for(tokenTail=tokenHead; tokenTail; tokenTail=tokenTail->tNext){

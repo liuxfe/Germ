@@ -77,12 +77,6 @@ void SymbolDump(Symbol* symbol, int indent){
 			SymbolDump(symbol->modSymbols.data[i], indent+2);
 		}
 		break ;
-	    case ST_GVariable:
-		printf("%sGVariable: %s\n", tmp, symbol->sName->data);
-		break ;
-	    case ST_LVariable:
-		printf("%sLVariable: %s\n", tmp, symbol->sName->data);
-		break;
 	    case ST_GlobalVar:
 		printf("%sVariable: %s\n", tmp, symbol->sName->data);
 		break ;

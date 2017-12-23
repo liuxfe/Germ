@@ -15,6 +15,12 @@ void eatToken(ParseState* ps){
 	TokenFree(t);
 }
 
+void ParseFatal(ParseState* ps, char* s){
+	Fatal(ps->filename, ps->tokenList->tLine,
+		"ParseFatal Except %s got(%d)\n",
+		s, ps->tokenList->tCode);
+}
+
 void ParseMatchToken(ParseState* ps, int tcode){
 	if(ps->tokenList && ps->tokenList->tCode == tcode){
 		eatToken(ps);
@@ -24,6 +30,14 @@ void ParseMatchToken(ParseState* ps, int tcode){
 		"ParseMatch Except %s got(%s)\n", 
 		TokentoString(tcode), 
 		TokentoString(ps->tokenList->tCode));
+}
+
+bool ParseExceptToken(ParseState* ps, int tcode){
+	if(ps->tokenList && ps->tokenList->tCode == tcode){
+		eatToken(ps);
+		return true;
+	}
+	return false;
 }
 
 String* ParseExceptTokenTD(ParseState* ps){
@@ -36,17 +50,4 @@ String* ParseExceptTokenTD(ParseState* ps){
 	ret = ps->tokenList->sValue;
 	eatToken(ps);
 	return ret;
-}
-
-bool exceptToken(ParseState* ps, int tcode){
-	if(ps->tokenList && ps->tokenList->tCode == tcode){
-		eatToken(ps);
-		return true;
-	}
-	return false;
-}
-
-void ParseFatal(ParseState* ps, char* s){
-	Fatal(ps->filename, ps->tokenList->tLine, 
-		"Parse Except %s got(%d)\n", s, ps->tokenList->tCode);
 }

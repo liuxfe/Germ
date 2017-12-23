@@ -19,18 +19,18 @@ void _parseFuncParam(ParseState* ps, Vector* scope){
 Symbol* parseFunctionDeclare(ParseState* ps, Dtype* dt, String* name){
 	Symbol* symbol = SymbolAllocFunction(name, dt);
 
-	if(!exceptToken(ps, Token_rparen)){
+	if(!ParseExceptToken(ps, Token_rparen)){
 	    repeat:
 		_parseFuncParam(ps, &symbol->funcParam);
-		if(exceptToken(ps, Token_comma)){
+		if(ParseExceptToken(ps, Token_comma)){
 			goto repeat;
 		}
 		ParseMatchToken(ps, Token_rparen);
 	}
 
-	if(!exceptToken(ps, Token_semicon)){	 // no function body
+	if(!ParseExceptToken(ps, Token_semicon)){	 // no function body
 		ParseMatchToken(ps, Token_lbrace);
-		while(!exceptToken(ps, Token_rbrace)){ // not empty function
+		while(!ParseExceptToken(ps, Token_rbrace)){ // not empty function
 			ParseInternalStmt(ps, symbol);
 		}
 	}
@@ -55,7 +55,7 @@ Symbol* ParseExternalDeclare(ParseState* ps){
 
 	name = ParseExceptTokenTD(ps);
 
-	if(exceptToken(ps, Token_lparen)){
+	if(ParseExceptToken(ps, Token_lparen)){
 		return parseFunctionDeclare(ps, dt, name);
 	} else{
 		return parseVariableDeclare(ps, dt, name);
