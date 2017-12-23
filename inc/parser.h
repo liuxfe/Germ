@@ -13,7 +13,8 @@ typedef struct _parseState{
 void eatToken(ParseState*);
 bool exceptToken(ParseState*, int);
 void ParseFatal(ParseState*, char*);
-void exceptTokenDealError(ParseState*, int, char*);
+//void exceptTokenDealError(ParseState*, int, char*);
+void ParseMatchToken(ParseState*, int);
 
 #include "dtype.h"
 #include "symbol.h"

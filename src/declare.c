@@ -28,30 +28,30 @@ void _parseFuncDeclare(ParseState* ps, Dtype* dt, String* name, Vector* scope){
 	Token* token;
 	Symbol* symbol = SymbolAllocFunc(dt, name);
 
-	if(exceptToken(ps, ')')){
+	if(exceptToken(ps, Token_rparen)){
 		goto param_over;
 	}
 
     param_repeat:
 	_parseFuncParam(ps, &symbol->funcParam);
-	if(exceptToken(ps, ',')){
+	if(exceptToken(ps, Token_comma)){
 		goto param_repeat;
 	}
-	exceptTokenDealError(ps, ')', ")");
+	ParseMatchToken(ps, Token_rparen);
 
    param_over:
-	if(!exceptToken(ps, ';')){	 // no function body
-		exceptTokenDealError(ps, '{', "{");
-		if(!exceptToken(ps, '}')){ // not empty function
+	if(!exceptToken(ps, Token_semicon)){	 // no function body
+		ParseMatchToken(ps, Token_lbrace);
+		if(!exceptToken(ps, Token_rbrace)){ // not empty function
 			lparens = 1;
 			symbol->funcTokens = ps->tokenList;
 			token = ps->tokenList;
 			while(lparens){
 				token = token->tNext;
-				if(token->tCode =='{'){
+				if(token->tCode ==Token_lbrace){
 					lparens += 1;
 				}
-				if(token->tCode =='}'){
+				if(token->tCode ==Token_rbrace){
 					lparens -= 1;
 				}
 			}
@@ -64,8 +64,8 @@ void _parseFuncDeclare(ParseState* ps, Dtype* dt, String* name, Vector* scope){
 
 void _parseVarDeclare(ParseState* ps, Dtype* dt, String* name, Vector* scope){
 	Symbol* symbol;
-	
-	exceptTokenDealError(ps, ';', ";");
+
+	ParseMatchToken(ps, Token_semicon);
 
 	symbol = SymbolAllocGVar(dt, name);
 	SymbolAppend(ps, scope, symbol);
@@ -86,7 +86,7 @@ void ParseExternalDeclare(ParseState* ps, Vector* scope){
 	name = ps->tokenList->sValue;
 	eatToken(ps);
 
-	if(exceptToken(ps,'(')){
+	if(exceptToken(ps, Token_lparen)){
 		_parseFuncDeclare(ps, dt, name, scope);
 	} else{
 		_parseVarDeclare(ps, dt, name, scope);
@@ -103,7 +103,7 @@ void ParseInternalDeclare(ParseState* ps, Dtype* dt, Vector* scope){
 	name = ps->tokenList->sValue;
 	eatToken(ps);
 
-	exceptTokenDealError(ps, ';', ";");
+	ParseMatchToken(ps, Token_semicon);
 
 	symbol = SymbolAllocLVar(dt, name);
 	SymbolAppend(ps, scope, symbol);

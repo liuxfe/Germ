@@ -1,11 +1,12 @@
 /* Copyright (c) 2017 Tohack<tohack@foxmail.com>. All Rights Reserved. */
 
-#include "main.h"
 #include <assert.h>
+#include "main.h"
+#include "module.h"
 
 int doComplie(char* file){
-	ParseFile(file);
-
+	Symbol* s = ParseModule(file, GetModuleName(file));
+	SymbolDump(s, 0);
 	return 0;
 }
 

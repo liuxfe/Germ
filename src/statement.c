@@ -37,10 +37,10 @@ Statement* ParseIfStmt(ParseState* ps){
 
     repeat:
 	ce = Xmalloc(sizeof(CondElement), __FILE__, __LINE__);
-	exceptTokenDealError(ps, '(', "(");
+	ParseMatchToken(ps, '(');
 	ce->expression = ParseExpression(ps);
-	exceptTokenDealError(ps, ')', ")");
-	exceptTokenDealError(ps, '{', "{");
+	ParseMatchToken(ps, ')');
+	ParseMatchToken(ps, '{');
 	while(!exceptToken(ps,'}')){
 		//VectorPush(&ce->statement, ParseInternalStmt(ps, NULL));
 	}
@@ -53,58 +53,32 @@ Statement* ParseIfStmt(ParseState* ps){
 	if(!exceptToken(ps, Token_else)){
 		return ret;
 	}
-	exceptTokenDealError(ps, '{', "{");
+	ParseMatchToken(ps, '{');
 	while(!exceptToken(ps, '}')){
 		//VectorPush(&ret->elseStmt, ParseInternalStmt(ps));
 	}
 	return ret;
 }
 
-// 未完全实现
-Statement* ParseSwitchStmt(ParseState* ps){
-	CondElement* ce;
-	Statement* ret = _newStatement(Stmt_switch);
-
-	if(!exceptToken(ps, Token_if)){
-		Debug(__FILE__, __LINE__, "not have if");
-		exit(-1);
-	}
-
-	exceptTokenDealError(ps, '(', "(");
-	ret->switchExpr = ParseExpression(ps);
-	exceptTokenDealError(ps, ')', ")");
-	exceptTokenDealError(ps, '{', "{");
-	while(!exceptToken(ps,'}')){
-		ce = Xmalloc(sizeof(CondElement), __FILE__, __LINE__);
-		exceptTokenDealError(ps, Token_case, "case");
-		ce->expression = ParseExpression(ps);
-		exceptTokenDealError(ps, ':', ":");
-	}
-	return NULL; //[-Wreturn-type]
-}
-
 Statement* ParseForStmt(ParseState* ps){
 	Statement* ret = _newStatement(Stmt_for);
 
-	if(!exceptToken(ps, Token_if)){
-		Debug(__FILE__, __LINE__, "not have if");
-		exit(-1);
-	}
-	exceptTokenDealError(ps, '(', "(");
+	ParseMatchToken(ps, Token_if);
+	ParseMatchToken(ps, '(');
 	if(!exceptToken(ps, ';')){
 		ret->forExpr1 = ParseExpression(ps);
-		exceptTokenDealError(ps, ';', ";");
+		ParseMatchToken(ps, ';');
 	}
 	if(!exceptToken(ps, ';')){
 		ret->forExpr2 = ParseExpression(ps);
-		exceptTokenDealError(ps, ';', ";");
+		ParseMatchToken(ps, ';');
 	}
 	if(!exceptToken(ps, ';')){
 		ret->forExpr3 = ParseExpression(ps);
-		exceptTokenDealError(ps, ';', ";");
+		ParseMatchToken(ps, ';');
 	}
-	exceptTokenDealError(ps, ')', ")");
-	exceptTokenDealError(ps, '{', "{");
+	ParseMatchToken(ps, ')');
+	ParseMatchToken(ps, '{');
 	while(!exceptToken(ps, '}')){
 		//VectorPush(&ret->forStmt, ParseInternalStmt(ps));
 	}
@@ -116,7 +90,7 @@ void ParseInternalStmt(ParseState* ps, Symbol* func){
 	//String* name;
 
     repeat:
-	if(exceptToken(ps,'}')){
+	if(exceptToken(ps,Token_rbrace)){
 		if(!exceptToken(ps, Token_EOF)){
 			Debug(__FILE__, __LINE__, "Not have TokenEnd at function token list");
 		}

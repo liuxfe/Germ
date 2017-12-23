@@ -16,6 +16,7 @@ OBJS   =src/error.o \
 	src/declare.o \
 	src/expression.o \
 	src/statement.o \
+	src/module.o \
 	src/main.o
 
 germ: $(OBJS)
@@ -40,49 +41,44 @@ depend:
 
 ###depends
 src/declare.o: src/declare.c inc/main.h inc/error.h inc/xroutine.h \
- inc/vector.h inc/string.h inc/input.h inc/token.h inc/scanner.h \
- inc/parser.h inc/dtype.h inc/symbol.h inc/declare.h inc/expression.h \
- inc/statement.h
+ inc/vector.h inc/string.h inc/token.h inc/parser.h inc/dtype.h \
+ inc/symbol.h inc/declare.h inc/expression.h inc/statement.h
 src/dtype.o: src/dtype.c inc/main.h inc/error.h inc/xroutine.h inc/vector.h \
- inc/string.h inc/input.h inc/token.h inc/scanner.h inc/parser.h \
- inc/dtype.h inc/symbol.h inc/declare.h inc/expression.h inc/statement.h
+ inc/string.h inc/token.h inc/parser.h inc/dtype.h inc/symbol.h \
+ inc/declare.h inc/expression.h inc/statement.h
 src/error.o: src/error.c inc/main.h inc/error.h inc/xroutine.h inc/vector.h \
- inc/string.h inc/input.h inc/token.h inc/scanner.h inc/parser.h \
- inc/dtype.h inc/symbol.h inc/declare.h inc/expression.h inc/statement.h
+ inc/string.h inc/token.h inc/parser.h inc/dtype.h inc/symbol.h \
+ inc/declare.h inc/expression.h inc/statement.h
 src/expression.o: src/expression.c inc/main.h inc/error.h inc/xroutine.h \
- inc/vector.h inc/string.h inc/input.h inc/token.h inc/scanner.h \
- inc/parser.h inc/dtype.h inc/symbol.h inc/declare.h inc/expression.h \
- inc/statement.h
+ inc/vector.h inc/string.h inc/token.h inc/parser.h inc/dtype.h \
+ inc/symbol.h inc/declare.h inc/expression.h inc/statement.h
 src/input.o: src/input.c inc/main.h inc/error.h inc/xroutine.h inc/vector.h \
- inc/string.h inc/input.h inc/token.h inc/scanner.h inc/parser.h \
- inc/dtype.h inc/symbol.h inc/declare.h inc/expression.h inc/statement.h
+ inc/string.h inc/token.h inc/parser.h inc/dtype.h inc/symbol.h \
+ inc/declare.h inc/expression.h inc/statement.h
 src/main.o: src/main.c inc/main.h inc/error.h inc/xroutine.h inc/vector.h \
- inc/string.h inc/input.h inc/token.h inc/scanner.h inc/parser.h \
- inc/dtype.h inc/symbol.h inc/declare.h inc/expression.h inc/statement.h
+ inc/string.h inc/token.h inc/parser.h inc/dtype.h inc/symbol.h \
+ inc/declare.h inc/expression.h inc/statement.h
 src/parser.o: src/parser.c inc/main.h inc/error.h inc/xroutine.h inc/vector.h \
- inc/string.h inc/input.h inc/token.h inc/scanner.h inc/parser.h \
- inc/dtype.h inc/symbol.h inc/declare.h inc/expression.h inc/statement.h
+ inc/string.h inc/token.h inc/parser.h inc/dtype.h inc/symbol.h \
+ inc/declare.h inc/expression.h inc/statement.h inc/scanner.h
 src/scanner.o: src/scanner.c inc/main.h inc/error.h inc/xroutine.h \
- inc/vector.h inc/string.h inc/input.h inc/token.h inc/scanner.h \
- inc/parser.h inc/dtype.h inc/symbol.h inc/declare.h inc/expression.h \
- inc/statement.h
+ inc/vector.h inc/string.h inc/token.h inc/parser.h inc/dtype.h \
+ inc/symbol.h inc/declare.h inc/expression.h inc/statement.h inc/input.h
 src/statement.o: src/statement.c inc/main.h inc/error.h inc/xroutine.h \
- inc/vector.h inc/string.h inc/input.h inc/token.h inc/scanner.h \
- inc/parser.h inc/dtype.h inc/symbol.h inc/declare.h inc/expression.h \
- inc/statement.h
+ inc/vector.h inc/string.h inc/token.h inc/parser.h inc/dtype.h \
+ inc/symbol.h inc/declare.h inc/expression.h inc/statement.h
 src/string.o: src/string.c inc/main.h inc/error.h inc/xroutine.h inc/vector.h \
- inc/string.h inc/input.h inc/token.h inc/scanner.h inc/parser.h \
- inc/dtype.h inc/symbol.h inc/declare.h inc/expression.h inc/statement.h
+ inc/string.h inc/token.h inc/parser.h inc/dtype.h inc/symbol.h \
+ inc/declare.h inc/expression.h inc/statement.h
 src/symbol.o: src/symbol.c inc/main.h inc/error.h inc/xroutine.h inc/vector.h \
- inc/string.h inc/input.h inc/token.h inc/scanner.h inc/parser.h \
- inc/dtype.h inc/symbol.h inc/declare.h inc/expression.h inc/statement.h
+ inc/string.h inc/token.h inc/parser.h inc/dtype.h inc/symbol.h \
+ inc/declare.h inc/expression.h inc/statement.h
 src/token.o: src/token.c inc/main.h inc/error.h inc/xroutine.h inc/vector.h \
- inc/string.h inc/input.h inc/token.h inc/scanner.h inc/parser.h \
- inc/dtype.h inc/symbol.h inc/declare.h inc/expression.h inc/statement.h
+ inc/string.h inc/token.h inc/parser.h inc/dtype.h inc/symbol.h \
+ inc/declare.h inc/expression.h inc/statement.h
 src/vector.o: src/vector.c inc/main.h inc/error.h inc/xroutine.h inc/vector.h \
- inc/string.h inc/input.h inc/token.h inc/scanner.h inc/parser.h \
- inc/dtype.h inc/symbol.h inc/declare.h inc/expression.h inc/statement.h
+ inc/string.h inc/token.h inc/parser.h inc/dtype.h inc/symbol.h \
+ inc/declare.h inc/expression.h inc/statement.h
 src/xroutine.o: src/xroutine.c inc/main.h inc/error.h inc/xroutine.h \
- inc/vector.h inc/string.h inc/input.h inc/token.h inc/scanner.h \
- inc/parser.h inc/dtype.h inc/symbol.h inc/declare.h inc/expression.h \
- inc/statement.h
+ inc/vector.h inc/string.h inc/token.h inc/parser.h inc/dtype.h \
+ inc/symbol.h inc/declare.h inc/expression.h inc/statement.h

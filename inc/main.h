@@ -33,9 +33,7 @@ typedef   signed int   CHAR;
 #include "vector.h"
 #include "string.h"
 
-#include "input.h"
 #include "token.h"
-#include "scanner.h"
 #include "parser.h"
 
 #endif

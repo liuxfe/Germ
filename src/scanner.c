@@ -1,6 +1,7 @@
 /* Copyright (c) 2017 Tohack<tohack@foxmail.com>. All Rights Reserved. */
 
 #include "main.h"
+#include "input.h"
 
 typedef struct _scanState{
 	char* filename;
@@ -287,11 +288,16 @@ Token* _scanLexical(scanState* ss){
 	    case '\n':
 		ss->line++;
 	    case ' ' : case '\t' : case '\r' :
-		ss->cur++;
-		goto repeat;
-	    case '{' : case '}' : case '[' : case ']' : case '(' : case ')' :
-	    case ';' : case ':' : case ',' :
-		return TokenAlloc(*ss->cur++);
+		ss->cur++; goto repeat;
+	    case '{' : ss->cur++; return TokenAlloc(Token_lbrace);
+	    case '}' : ss->cur++; return TokenAlloc(Token_rbrace);
+	    case '[' : ss->cur++; return TokenAlloc(Token_lbracket);
+	    case ']' : ss->cur++; return TokenAlloc(Token_rbracket);
+	    case '(' : ss->cur++; return TokenAlloc(Token_lparen);
+	    case ')' : ss->cur++; return TokenAlloc(Token_rparen);
+	    case ';' : ss->cur++; return TokenAlloc(Token_semicon);
+	    case ':' : ss->cur++; return TokenAlloc(Token_colon);
+	    case ',' : ss->cur++; return TokenAlloc(Token_comma);
 	    case '.' :
 		ss->cur++;
 		if(_exceptChar(ss, '.')){

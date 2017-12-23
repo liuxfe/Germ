@@ -66,6 +66,17 @@ enum {
 	Token_const,
 	Token_true,		// bool常量(true)
 	Token_false,		// bool常量(false)
+	Token_lbrace,		// {
+	Token_rbrace,		// }
+	Token_lbracket,		// [
+	Token_rbracket,		// ]
+	Token_lparen,		// (
+	Token_rparen,		// )
+	Token_semicon,		// ;
+	Token_colon,		// :
+	Token_comma,		// ,
+	Token_dot,		// .
+	Token_star,		// *
 	Token_add,		// +
 	Token_sub,		// -
 	Token_div,		// /
@@ -96,13 +107,12 @@ enum {
 	Token_le,		// <=
 	Token_shl,		// <<
 	Token_shlAssign,	// <<=
-	Token_star,		// *
-	Token_dot,		// .
 	Token_3dot,		// ...
 };
 
 Token* TokenAlloc(int);
 void TokenFree(Token*);
 void TokenDump(Token*);
+char* TokentoString(int);
 
 #endif
