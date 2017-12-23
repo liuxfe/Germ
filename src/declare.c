@@ -16,38 +16,35 @@ void _parseFuncParam(ParseState* ps, Vector* scope){
 	SymbolAppend(ps, scope, param);
 }
 
-void _parseFuncDeclare(ParseState* ps, Dtype* dt, String* name, Vector* scope){
+Symbol* parseFunctionDeclare(ParseState* ps, Dtype* dt, String* name){
 	Symbol* symbol = SymbolAllocFunction(name, dt);
 
-	if(exceptToken(ps, Token_rparen)){
-		goto param_over;
+	if(!exceptToken(ps, Token_rparen)){
+	    repeat:
+		_parseFuncParam(ps, &symbol->funcParam);
+		if(exceptToken(ps, Token_comma)){
+			goto repeat;
+		}
+		ParseMatchToken(ps, Token_rparen);
 	}
 
-    param_repeat:
-	_parseFuncParam(ps, &symbol->funcParam);
-	if(exceptToken(ps, Token_comma)){
-		goto param_repeat;
-	}
-	ParseMatchToken(ps, Token_rparen);
-
-   param_over:
 	if(!exceptToken(ps, Token_semicon)){	 // no function body
 		ParseMatchToken(ps, Token_lbrace);
 		while(!exceptToken(ps, Token_rbrace)){ // not empty function
 			ParseInternalStmt(ps, symbol);
 		}
 	}
-	SymbolAppend(ps, scope, symbol);
+
+	return symbol;
 }
 
-void _parseVarDeclare(ParseState* ps, Dtype* dt, String* name, Vector* scope){
+Symbol* parseVariableDeclare(ParseState* ps, Dtype* dt, String* name){
 	ParseMatchToken(ps, Token_semicon);
 
-	Symbol* symbol = SymbolAllocVariable(name, dt, ST_GlobalVar);
-	SymbolAppend(ps, scope, symbol);
+	return SymbolAllocVariable(name, dt, ST_GlobalVar);
 }
 
-void ParseExternalDeclare(ParseState* ps, Vector* scope){
+Symbol* ParseExternalDeclare(ParseState* ps){
 	Dtype* dt;
 	String* name;
 
@@ -59,9 +56,9 @@ void ParseExternalDeclare(ParseState* ps, Vector* scope){
 	name = ParseExceptTokenTD(ps);
 
 	if(exceptToken(ps, Token_lparen)){
-		_parseFuncDeclare(ps, dt, name, scope);
+		return parseFunctionDeclare(ps, dt, name);
 	} else{
-		_parseVarDeclare(ps, dt, name, scope);
+		return parseVariableDeclare(ps, dt, name);
 	}
 }
 

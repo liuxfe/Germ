@@ -5,8 +5,9 @@
 
 typedef struct _statement Statement;
 struct _statement{
-	int                stmtType;
+	int                 stmtType;
 	union{
+	    Symbol*         declSymbol; // DeclareStmt
 	    String*         labelString;// LabelStmt/GotoStmt
 	    Expression*     expression;	// ExprsssionStmt/ReturnStmt/ThrowStmt
 	    struct{			// ifStmt
@@ -44,6 +45,7 @@ typedef struct _condElement{
 
 /* values of stmtType */
 enum{
+	Stmt_declare,
 	Stmt_lable,
 	Stmt_expression,
 	Stmt_if,
@@ -61,5 +63,6 @@ Statement* ParseImportStmt(ParseState*);
 Statement* ParseLabelStmt(ParseState*, String*);
 Statement* ParseExpressionStmt(ParseState*);
 void ParseInternalStmt(ParseState*, Symbol*);
+void ParseExternalStmt(ParseState*, Symbol*);
 
 #endif

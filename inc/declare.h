@@ -3,7 +3,7 @@
 #ifndef _ToHack_CL_DECLARE_H
 #define _ToHack_CL_DECLARE_H
 
-void ParseExternalDeclare(ParseState*, Vector*);
+Symbol* ParseExternalDeclare(ParseState*);
 void ParseInternalDeclare(ParseState*, Dtype*, Vector*);
 
 #endif

@@ -70,7 +70,7 @@ Symbol* ParseModule(char* filename, String* name){
 	//	pushToVector(&imports, ParseImportStmt(&ps));
 	//}
 	while(ps.tokenList->tCode != Token_EOF){
-		ParseExternalDeclare(&ps, &ret->modSymbols);
+		ParseExternalStmt(&ps, ret);
 	}
 	ParseMatchToken(&ps, Token_EOF);
 

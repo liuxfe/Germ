@@ -99,3 +99,15 @@ void ParseInternalStmt(ParseState* ps, Symbol* func){
 		eatToken(ps);
 	}
 }
+
+void ParseExternalStmt(ParseState* ps, Symbol* module){
+	Statement* stmt = _newStatement(Stmt_declare);
+	Symbol* decl = ParseExternalDeclare(ps);
+
+	stmt->declSymbol = decl;
+	VectorPush(&module->modStmts, stmt);
+
+	if(decl->sType == ST_Function ){
+		VectorPush(&module->modSymbols, decl);
+	}
+}
