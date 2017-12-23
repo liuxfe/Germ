@@ -15,6 +15,7 @@ bool exceptToken(ParseState*, int);
 void ParseFatal(ParseState*, char*);
 //void exceptTokenDealError(ParseState*, int, char*);
 void ParseMatchToken(ParseState*, int);
+String* ParseExceptTokenTD(ParseState*);
 
 #include "dtype.h"
 #include "symbol.h"

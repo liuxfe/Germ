@@ -4,7 +4,6 @@
 
 void _parseFuncParam(ParseState* ps, Vector* scope){
 	Dtype* dt;
-	String* name;
 	Symbol* param;
 
 	dt = ParseDtype(ps);
@@ -12,21 +11,13 @@ void _parseFuncParam(ParseState* ps, Vector* scope){
 		ParseFatal(ps, "type");
 	}
 
-	if(ps->tokenList->tCode != Token_ID){
-		ParseFatal(ps, "id");
-	}
-	name = ps->tokenList->sValue;
-	eatToken(ps);
+	param = SymbolAllocVariable(ParseExceptTokenTD(ps), dt, ST_ParamVar);
 
-	param = SymbolAllocLVar(dt, name);
-	
 	SymbolAppend(ps, scope, param);
 }
 
 void _parseFuncDeclare(ParseState* ps, Dtype* dt, String* name, Vector* scope){
-	int lparens;
-	Token* token;
-	Symbol* symbol = SymbolAllocFunc(dt, name);
+	Symbol* symbol = SymbolAllocFunction(name, dt);
 
 	if(exceptToken(ps, Token_rparen)){
 		goto param_over;
@@ -42,32 +33,17 @@ void _parseFuncDeclare(ParseState* ps, Dtype* dt, String* name, Vector* scope){
    param_over:
 	if(!exceptToken(ps, Token_semicon)){	 // no function body
 		ParseMatchToken(ps, Token_lbrace);
-		if(!exceptToken(ps, Token_rbrace)){ // not empty function
-			lparens = 1;
-			symbol->funcTokens = ps->tokenList;
-			token = ps->tokenList;
-			while(lparens){
-				token = token->tNext;
-				if(token->tCode ==Token_lbrace){
-					lparens += 1;
-				}
-				if(token->tCode ==Token_rbrace){
-					lparens -= 1;
-				}
-			}
-			ps->tokenList = token->tNext;
-			token->tNext = TokenAlloc(Token_EOF);
+		while(!exceptToken(ps, Token_rbrace)){ // not empty function
+			ParseInternalStmt(ps, symbol);
 		}
 	}
 	SymbolAppend(ps, scope, symbol);
 }
 
 void _parseVarDeclare(ParseState* ps, Dtype* dt, String* name, Vector* scope){
-	Symbol* symbol;
-
 	ParseMatchToken(ps, Token_semicon);
 
-	symbol = SymbolAllocGVar(dt, name);
+	Symbol* symbol = SymbolAllocVariable(name, dt, ST_GlobalVar);
 	SymbolAppend(ps, scope, symbol);
 }
 
@@ -80,11 +56,7 @@ void ParseExternalDeclare(ParseState* ps, Vector* scope){
 		ParseFatal(ps, "type");
 	}
 
-	if(ps->tokenList->tCode != Token_ID){
-		ParseFatal(ps, "id");
-	}
-	name = ps->tokenList->sValue;
-	eatToken(ps);
+	name = ParseExceptTokenTD(ps);
 
 	if(exceptToken(ps, Token_lparen)){
 		_parseFuncDeclare(ps, dt, name, scope);
@@ -97,14 +69,10 @@ void ParseInternalDeclare(ParseState* ps, Dtype* dt, Vector* scope){
 	String* name;
 	Symbol* symbol;
 
-	if(ps->tokenList->tCode != Token_ID){
-		ParseFatal(ps, "id");
-	}
-	name = ps->tokenList->sValue;
-	eatToken(ps);
+	name = ParseExceptTokenTD(ps);
 
 	ParseMatchToken(ps, Token_semicon);
 
-	symbol = SymbolAllocLVar(dt, name);
+	symbol = SymbolAllocVariable(name, dt, ST_LocalVar);
 	SymbolAppend(ps, scope, symbol);
 }

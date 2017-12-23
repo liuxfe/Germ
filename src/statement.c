@@ -89,13 +89,8 @@ void ParseInternalStmt(ParseState* ps, Symbol* func){
 	Dtype* dt;
 	//String* name;
 
-    repeat:
-	if(exceptToken(ps,Token_rbrace)){
-		if(!exceptToken(ps, Token_EOF)){
-			Debug(__FILE__, __LINE__, "Not have TokenEnd at function token list");
-		}
-		return ;
-	}
+	eatToken(ps);
+	return;
 
 	dt = ParseDtype(ps);
 	if(dt){
@@ -103,5 +98,4 @@ void ParseInternalStmt(ParseState* ps, Symbol* func){
 	} else{
 		eatToken(ps);
 	}
-	goto repeat;
 }

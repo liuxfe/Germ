@@ -3,7 +3,7 @@
 #include "main.h"
 #include "scanner.h"
 
-void _parseImport(ParseState* ps){
+void parseImport(ParseState* ps){
 	Vector  imp;
 	String* alias;
 	//Symbol* ret = SymbolAlloc(ST_Module);
@@ -37,7 +37,7 @@ void _parseImport(ParseState* ps){
 	return ; //NULL; //[-Wreturn-type]
 }
 
-void _parsePackage(ParseState* ps, Vector* vector){
+void parsePackage(ParseState* ps, Vector* vector){
 	ParseMatchToken(ps, Token_package);
     repeat:
 	if(ps->tokenList->tCode == Token_ID) {
@@ -57,8 +57,6 @@ void _parsePackage(ParseState* ps, Vector* vector){
 
 /*  <Module>:= <Package> <ExternalDeclare>{0,n}  */
 Symbol* ParseModule(char* filename, String* name){
-	int i;
-	Symbol* s;
 	Symbol* ret = SymbolAlloc(ST_Module);
 	ret->sName = name;
 	ParseState ps = {};
@@ -67,26 +65,14 @@ Symbol* ParseModule(char* filename, String* name){
 	ps.tokenList = ScanFile(filename);
 
 	ParseMatchToken(&ps, Token_Start);
-
-	_parsePackage(&ps, &ret->modPackage);
-
+	parsePackage(&ps, &ret->modPackage);
 	//while(ps.tokenList->tCode == Token_import){
 	//	pushToVector(&imports, ParseImportStmt(&ps));
 	//}
-
 	while(ps.tokenList->tCode != Token_EOF){
 		ParseExternalDeclare(&ps, &ret->modSymbols);
 	}
-
 	ParseMatchToken(&ps, Token_EOF);
-
-	for(i=0; i<ret->modSymbols.item; i+=1){
-		s = ret->modSymbols.data[i];
-		if(s->sType == ST_Function && s->funcTokens){
-			ps.tokenList = s->funcTokens;
-			ParseInternalStmt(&ps, s);
-		}
-	}
 
 	return ret;
 }

@@ -10,6 +10,7 @@ typedef struct _symbol{
 	    struct{			// 模块
 	        Vector    modPackage;
 	        Vector    modSymbols;
+	        Vector    modStmts;
 	    };
 	    struct{			// 变量
 	        Dtype*    varDtype;
@@ -31,13 +32,16 @@ enum {
 	ST_Module,
 	ST_GVariable,
 	ST_LVariable,
+	ST_GlobalVar,
+	ST_ParamVar,
+	ST_LocalVar,
+	ST_FieldVar,
 	ST_Function,
 };
 
 Symbol* SymbolAlloc(int);
-Symbol* SymbolAllocGVar(Dtype*, String*);
-Symbol* SymbolAllocLVar(Dtype*, String*);
-Symbol* SymbolAllocFunc(Dtype*, String*);
+Symbol* SymbolAllocVariable(String*, Dtype*, int);
+Symbol* SymbolAllocFunction(String*, Dtype*);
 void SymbolFree(Symbol*);
 void SymbolDump(Symbol*, int);
 void SymbolAppend(ParseState*, Vector*, Symbol*);

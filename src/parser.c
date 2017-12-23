@@ -26,6 +26,18 @@ void ParseMatchToken(ParseState* ps, int tcode){
 		TokentoString(ps->tokenList->tCode));
 }
 
+String* ParseExceptTokenTD(ParseState* ps){
+	String* ret;
+
+	if(ps->tokenList && ps->tokenList->tCode != Token_ID){
+		Fatal(ps->filename, ps->tokenList->tLine, 
+			"Parse Except TokenID\n");
+	}
+	ret = ps->tokenList->sValue;
+	eatToken(ps);
+	return ret;
+}
+
 bool exceptToken(ParseState* ps, int tcode){
 	if(ps->tokenList && ps->tokenList->tCode == tcode){
 		eatToken(ps);
