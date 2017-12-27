@@ -7,7 +7,7 @@ Token* TokenAlloc(int code){
 
 	ret = Xmalloc(sizeof(Token), __FILE__, __LINE__);
 	ret->tCode = code;
-	
+
 	return ret;
 }
 
@@ -19,8 +19,6 @@ char* TokentoString(int tcode){
 	switch(tcode){
 		case Token_package: return "package";
 		case Token_import:  return "import";
-		case Token_as:      return "as";
-		case Token_using:   return "using";
 		case Token_int8:    return "int8";
 		case Token_int16:   return "int16";
 		case Token_lbrace:  return "{";
@@ -39,7 +37,7 @@ char* TokentoString(int tcode){
 
 void TokenDump(Token* token){
 	printf("(Line:%d)\t", token->tLine);
-	if(token->tCode >= Token_package && token->tCode <= Token_const){
+	if(token->tCode >= Token_package && token->tCode <= Token_return){
 		printf("KeyWord:%d\n", token->tCode);
 		return;
 	}

@@ -16,17 +16,6 @@ void parseImport(ParseState* ps){
 		if(ParseExceptToken(ps, Token_dot)){
 			goto repeat;
 		}
-		if(ParseExceptToken(ps, Token_as)){
-			if(ps->tokenList->tCode == Token_ID){
-				//alias = ps->tokenList->sValue;
-				eatToken(ps);
-				if(ParseExceptToken(ps, ';')){
-					return ;// ret;
-				}
-				ParseFatal(ps, ";");
-			}
-			ParseFatal(ps, "id");
-		}
 		if(ParseExceptToken(ps, ';')){
 			//alias = VectorLastItem(&imp);
 			return ;//ret;

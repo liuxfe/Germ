@@ -18,8 +18,6 @@ typedef struct _token{
 enum {
 	Token_package,
 	Token_import,
-	Token_as,
-	Token_using,
 	Token_int8,
 	Token_int16,
 	Token_int32,
@@ -36,7 +34,6 @@ enum {
 	Token_float,
 	Token_bool,
 	Token_char,
-	Token_void,
 	Token_func,
 	Token_typedef,
 	Token_struct,
@@ -51,10 +48,9 @@ enum {
 	Token_while,
 	Token_continue,
 	Token_break,
+	Token_goto,
 	Token_throw,
 	Token_return,
-	Token_goto,
-	Token_const,
 	Token_true,		// bool常量(true)
 	Token_false,		// bool常量(false)
 	Token_lbrace,		// {

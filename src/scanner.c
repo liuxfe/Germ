@@ -71,9 +71,6 @@ Token* _scanId(scanState* ss){
 		if(Xstrncmp(start,"if",2)){
 			return TokenAlloc(Token_if);
 		}
-		if(Xstrncmp(start,"as",2)){
-			return TokenAlloc(Token_as);
-		}
 	    case 3 :
 		if(Xstrncmp(start,"int",3)){
 			return TokenAlloc(Token_int);
@@ -93,9 +90,6 @@ Token* _scanId(scanState* ss){
 		}
 		if(Xstrncmp(start,"char",4)){
 			return TokenAlloc(Token_char);
-		}
-		if(Xstrncmp(start,"void",4)){
-			return TokenAlloc(Token_void);
 		}
 		if(Xstrncmp(start,"func",4)){
 			return TokenAlloc(Token_func);
@@ -147,9 +141,6 @@ Token* _scanId(scanState* ss){
 		}
 		if(Xstrncmp(start,"throw",5)){
 			return TokenAlloc(Token_throw);
-		}
-		if(Xstrncmp(start,"const",5)){
-			return TokenAlloc(Token_const);
 		}
 		if(Xstrncmp(start,"false",5)){
 			ret = TokenAlloc(Token_Bool);
