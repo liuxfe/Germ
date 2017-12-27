@@ -5,7 +5,7 @@
 
 void parseImport(ParseState* ps){
 	Vector  imp;
-	String* alias;
+	//String* alias;
 	//Symbol* ret = SymbolAlloc(ST_Module);
 
 	ParseMatchToken(ps, Token_import);
@@ -18,7 +18,7 @@ void parseImport(ParseState* ps){
 		}
 		if(ParseExceptToken(ps, Token_as)){
 			if(ps->tokenList->tCode == Token_ID){
-				alias = ps->tokenList->sValue;
+				//alias = ps->tokenList->sValue;
 				eatToken(ps);
 				if(ParseExceptToken(ps, ';')){
 					return ;// ret;
@@ -28,7 +28,7 @@ void parseImport(ParseState* ps){
 			ParseFatal(ps, "id");
 		}
 		if(ParseExceptToken(ps, ';')){
-			alias = VectorLastItem(&imp);
+			//alias = VectorLastItem(&imp);
 			return ;//ret;
 		}
 		ParseFatal(ps, ";");
