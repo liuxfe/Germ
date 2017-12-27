@@ -16,15 +16,6 @@ typedef struct _token{
 
 /* values of token tCode. */
 enum {
-	Token_Start,
-	Token_EOF,
-	Token_Integer,		// 整数常量
-	Token_Float,		// 浮点常量
-	Token_Bool,		// 布尔常量
-	Token_Char,		// 字符常量
-	Token_String,		// 字符串常量
-	Token_NULL,		// NULL常量
-	Token_ID,		// 标识符
 	Token_package,
 	Token_import,
 	Token_as,
@@ -108,6 +99,14 @@ enum {
 	Token_shl,		// <<
 	Token_shlAssign,	// <<=
 	Token_3dot,		// ...
+	Token_Integer,		// 整数常量
+	Token_Float,		// 浮点常量
+	Token_Bool,		// 布尔常量
+	Token_Char,		// 字符常量
+	Token_String,		// 字符串常量
+	Token_NULL,		// NULL常量
+	Token_ID,		// 标识符
+	Token_EOF,		// End Of File
 };
 
 Token* TokenAlloc(int);

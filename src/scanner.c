@@ -436,30 +436,29 @@ Token* _scanLexical(scanState* ss){
 
 Token* ScanFile(char* filename){
 	scanState ss;
-	Token* tokenHead = TokenAlloc(Token_Start);
-	Token* tokenTail = tokenHead;
+	Token tokenHead;
+	Token* tokenTail = &tokenHead;
 
 	ss.filename = filename;
 	ss.buf = LoadFile(filename);
 	ss.cur = ss.buf;
 	ss.line = 1;
 
-	while(tokenTail->tCode != Token_EOF){
+	while(true){
 		tokenTail->tNext = _scanLexical(&ss);
 		tokenTail = tokenTail->tNext;
 		tokenTail->tLine = ss.line;
+		if(tokenTail->tCode == Token_EOF){
+			break;
+		}
 	}
-
-	tokenTail = tokenHead;
-	tokenHead = tokenHead->tNext;
-	TokenFree(tokenTail);
 
 	if(0){
 		printf("\n Token Dump in file: %s\n",filename);
-		for(tokenTail=tokenHead; tokenTail; tokenTail=tokenTail->tNext){
+		for(tokenTail=tokenHead.tNext; tokenTail; tokenTail=tokenTail->tNext){
 			TokenDump(tokenTail);
 		}
 	}
 
-	return tokenHead;
+	return tokenHead.tNext;
 }
