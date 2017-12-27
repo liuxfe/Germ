@@ -25,7 +25,7 @@ Symbol* SymbolAllocFunction(String* name, Dtype* dt){
 	Symbol* ret;
 
 	ret = SymbolAlloc(ST_Function, name);
-	ret->funcRetType = dt;
+	ret->funcDtype = dt;
 
 	return ret;
 }

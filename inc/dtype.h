@@ -18,9 +18,8 @@ struct _dtype{
 	        int      arrayDimItem[MAX_ARRAY_DIM];
 	    };
 	    struct{			// FunctionType
-	        Dtype*   funcRetType;
-	        int      funcParamCnt;
-	        Vector   funcParamType;
+	        Dtype*   funcReturn;
+	        Vector   funcParam;
 	    };
 	    Vector       field;		// UserCompoundType
 	};

@@ -2,32 +2,60 @@
 
 #include "main.h"
 
-void _parseFuncParam(ParseState* ps, Vector* scope){
+void parseFunctionParam(ParseState* ps, Symbol* symbol){
 	Dtype* dt;
-	Symbol* param;
+	String* name;
 
 	dt = ParseDtype(ps);
 	if(!dt){
-		ParseFatal(ps, "type");
+		ParseFatal(ps, "param require type");
 	}
+	name = ParseExceptTokenTD(ps);
 
-	param = SymbolAllocVariable(ParseExceptTokenTD(ps), dt, ST_ParamVar);
-
-	SymbolAppend(ps, scope, param);
+	VectorPush(&symbol->funcDtype->funcParam, dt);
+	VectorPush(&symbol->funcParam, SymbolAllocVariable(name,dt,ST_ParamVar));
 }
 
-Symbol* parseFunctionDeclare(ParseState* ps, Dtype* dt, String* name){
-	Symbol* symbol = SymbolAllocFunction(name, dt);
+Symbol* parseFunctionDeclare(ParseState* ps){
+	Dtype* dt;
+	String* name;
+	Symbol* symbol;
 
-	if(!ParseExceptToken(ps, Token_rparen)){
-	    repeat:
-		_parseFuncParam(ps, &symbol->funcParam);
-		if(ParseExceptToken(ps, Token_comma)){
-			goto repeat;
-		}
-		ParseMatchToken(ps, Token_rparen);
+	ParseMatchToken(ps, Token_func);
+	name = ParseExceptTokenTD(ps);
+	dt =Xmalloc(sizeof(Dtype), __FILE__, __LINE__);
+	dt->dtType = DTT_Function;
+
+	symbol = SymbolAllocFunction(name, dt);
+
+	ParseMatchToken(ps, Token_lparen);
+
+	if(ParseExceptToken(ps, Token_rparen)){
+		goto after_param;
+	}
+	if(ParseExceptToken(ps, Token_ra)){
+		goto has_ra;
+	}
+    repeat:
+	parseFunctionParam(ps,symbol);
+	if(ParseExceptToken(ps, Token_comma)){
+		goto repeat;
+	}
+	if(ParseExceptToken(ps, Token_ra)){
+		goto has_ra;
+	}
+	if(ParseExceptToken(ps, Token_rparen)){
+		goto after_param;
 	}
 
+    has_ra:
+	dt->funcReturn = ParseDtype(ps);
+	if(!dt->funcReturn){
+		ParseFatal(ps, "require type");
+	}
+	ParseMatchToken(ps, Token_rparen);
+
+    after_param:
 	if(!ParseExceptToken(ps, Token_semicon)){	 // no function body
 		ParseMatchToken(ps, Token_lbrace);
 		while(!ParseExceptToken(ps, Token_rbrace)){ // not empty function
@@ -38,28 +66,22 @@ Symbol* parseFunctionDeclare(ParseState* ps, Dtype* dt, String* name){
 	return symbol;
 }
 
-Symbol* parseVariableDeclare(ParseState* ps, Dtype* dt, String* name){
-	ParseMatchToken(ps, Token_semicon);
-
-	return SymbolAllocVariable(name, dt, ST_GlobalVar);
-}
-
 Symbol* ParseExternalDeclare(ParseState* ps){
 	Dtype* dt;
 	String* name;
+
+	if(ps->tokenList->tCode == Token_func){
+		return parseFunctionDeclare(ps);
+	}
 
 	dt = ParseDtype(ps);
 	if(!dt){
 		ParseFatal(ps, "type");
 	}
-
 	name = ParseExceptTokenTD(ps);
+	ParseMatchToken(ps, Token_semicon);
 
-	if(ParseExceptToken(ps, Token_lparen)){
-		return parseFunctionDeclare(ps, dt, name);
-	} else{
-		return parseVariableDeclare(ps, dt, name);
-	}
+	return SymbolAllocVariable(name, dt, ST_GlobalVar);
 }
 
 void ParseInternalDeclare(ParseState* ps, Dtype* dt, Vector* scope){

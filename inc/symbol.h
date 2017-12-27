@@ -12,17 +12,13 @@ typedef struct _symbol{
 	        Vector    modSymbols;
 	        Vector    modStmts;
 	    };
-	    struct{			// 变量
+	    struct{			// 变量 
 	        Dtype*    varDtype;
 	    };
 	    struct{			// 函数
-	        Dtype*    funcRetType;
-	        Token*    funcTokens;
+	        Dtype*    funcDtype;
 	        Vector    funcParam;
 	        Vector    funcLocal;
-	    };
-	    struct{
-	    	Dtype*    lvarDtype;
 	    };
 	};
 } Symbol;
