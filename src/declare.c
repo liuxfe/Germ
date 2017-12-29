@@ -12,7 +12,7 @@ void parseFunctionParam(ParseState* ps, Symbol* symbol){
 	}
 	name = ParseExceptTokenTD(ps);
 
-	VectorPush(&symbol->funcDtype->funcParam, dt);
+	VectorPush(&symbol->funcDtype->dtFuncParam, dt);
 	VectorPush(&symbol->funcParam, SymbolAllocVariable(name,dt,ST_ParamVar));
 }
 
@@ -24,7 +24,7 @@ Symbol* parseFunctionDeclare(ParseState* ps){
 	ParseMatchToken(ps, Token_func);
 	name = ParseExceptTokenTD(ps);
 	dt =Xmalloc(sizeof(Dtype), __FILE__, __LINE__);
-	dt->dtType = DTT_Function;
+	dt->dtType = Dtype_function;
 
 	symbol = SymbolAllocFunction(name, dt);
 
@@ -49,8 +49,8 @@ Symbol* parseFunctionDeclare(ParseState* ps){
 	}
 
     has_ra:
-	dt->funcReturn = ParseDtype(ps);
-	if(!dt->funcReturn){
+	dt->dtFuncReturn = ParseDtype(ps);
+	if(!dt->dtFuncReturn){
 		ParseFatal(ps, "require type");
 	}
 	ParseMatchToken(ps, Token_rparen);

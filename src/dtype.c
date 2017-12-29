@@ -2,109 +2,72 @@
 
 #include "main.h"
 
-const int POINTER_SIZE = 8;
+Dtype* DtypeAlloc(int type, int bytes){
+	Dtype* ret;
 
-Dtype Int8Type    = {DTT_Basic, 1, NULL, {BTypeId_int8   }};
-Dtype Int16Type   = {DTT_Basic, 2, NULL, {BTypeId_int16  }};
-Dtype Int32Type   = {DTT_Basic, 4, NULL, {BTypeId_int32  }};
-Dtype Int64Type   = {DTT_Basic, 8, NULL, {BTypeId_int64  }};
-Dtype IntType     = {DTT_Basic, 8, NULL, {BTypeId_int    }};
-Dtype Uint8Type   = {DTT_Basic, 1, NULL, {BTypeId_uint8  }};
-Dtype Uint16Type  = {DTT_Basic, 2, NULL, {BTypeId_uint16 }};
-Dtype Uint32Type  = {DTT_Basic, 4, NULL, {BTypeId_uint32 }};
-Dtype Uint64Type  = {DTT_Basic, 8, NULL, {BTypeId_uint64 }};
-Dtype UintType    = {DTT_Basic, 8, NULL, {BTypeId_uint   }};
-Dtype UptrType    = {DTT_Basic, 8, NULL, {BTypeId_uptr   }};
-Dtype Float32Type = {DTT_Basic, 4, NULL, {BTypeId_float32}};
-Dtype Float64Type = {DTT_Basic, 8, NULL, {BTypeId_float64}};
-Dtype FloatType   = {DTT_Basic, 8, NULL, {BTypeId_float  }};
-Dtype BoolType    = {DTT_Basic, 1, NULL, {BTypeId_bool   }};
-Dtype CharType    = {DTT_Basic, 4, NULL, {BTypeId_char   }};
+	ret = Xmalloc(sizeof(Dtype), __FILE__, __LINE__);
+	ret->dtType = type;
+	ret->dtBytes = bytes;
+
+	return ret;
+}
 
 Dtype* ParseDtype(ParseState* ps){
-//	Dtype* ret;
 	Dtype* bdt;
-/*
-	int pointerLevel = 0;
-	int arrayDimCnt = 0;
-	int arrayDimEnt[MAX_ARRAY_DIM];
-	int i;
-	int sum;
-*/
+
 	switch(ps->tokenList->tCode){
-	    case Token_int :	bdt = &IntType; break;
-	    case Token_int8 : 	bdt = &Int8Type; break;
-	    case Token_int16 :	bdt = &Int16Type; break;
-	    case Token_int32 :	bdt = &Int32Type; break;
-	    case Token_int64 :	bdt = &Int64Type; break;
-	    case Token_uint :	bdt = &UintType; break;
-	    case Token_uint16 :	bdt = &Uint16Type; break;
-	    case Token_uint32 :	bdt = &Uint32Type; break;
-	    case Token_uint64 :	bdt = &Uint64Type; break;
-	    case Token_float :	bdt = &FloatType; break;
-	    case Token_float32 :bdt = &Float32Type; break;
-	    case Token_float64 :bdt = &Float64Type; break;
-	    case Token_bool :	bdt = &BoolType; break;
-	    case Token_char :	bdt = &CharType; break;
+	    case Token_int8 :
+		bdt = DtypeAlloc(Dtype_int8, 1);
+		break; 
+	    case Token_int16 :
+		bdt = DtypeAlloc(Dtype_int16, 2);
+		break;
+	    case Token_int32 :
+		bdt = DtypeAlloc(Dtype_int32, 4);
+		break;
+	    case Token_int64 :
+		bdt = DtypeAlloc(Dtype_int64, 8);
+		break;
+	    case Token_int :
+		bdt = DtypeAlloc(Dtype_int, 8);
+		break;
+	    case Token_uint8 :
+		bdt = DtypeAlloc(Dtype_uint8, 1);
+		break;
+	    case Token_uint16 :
+		bdt = DtypeAlloc(Dtype_uint16, 2);
+		break;
+	    case Token_uint32 :
+		bdt = DtypeAlloc(Dtype_uint32, 4);
+		break;
+	    case Token_uint64 :
+		bdt = DtypeAlloc(Dtype_uint64, 8);
+		break;
+	    case Token_uint :
+		bdt = DtypeAlloc(Dtype_uint, 8);
+		break;
+	    case Token_uptr :
+		bdt = DtypeAlloc(Dtype_uptr, 8);
+		break;
+	    case Token_float32 :
+		bdt = DtypeAlloc(Dtype_float32, 4);
+		break;
+	    case Token_float64 :
+		bdt = DtypeAlloc(Dtype_float64, 8);
+		break;
+	    case Token_float :
+		bdt = DtypeAlloc(Dtype_float, 8);
+		break;
+	    case Token_bool :
+		bdt = DtypeAlloc(Dtype_bool, 1);
+		break;
+	    case Token_char :
+		bdt = DtypeAlloc(Dtype_char, 4);
+		break;
 	    case Token_ID :
 	    default:
 		return bdt = NULL;
 	}
 	eatToken(ps);
 	return bdt;
-/*
-	while(exceptToken(ps,'*')){
-		pointerLevel += 1;
-	}
-	while(true){
-		if(!exceptToken(ps, '[')){
-			break;
-		}
-		if(ps->tokenList->tCode != TokenInteger){
-			ParseFatal(ps,"Integer");
-		}
-		arrayDimEnt[arrayDimCnt] = ps->tokenList->iValue;
-		arrayDimCnt += 1;
-		eatToken(ps);
-		exceptTokenDealError(ps, ']',"]");
-	}
-
-	if(pointerLevel && arrayDimCnt){
-		ret = _newDtype(DTT_PointerArray);
-		ret->pointLevel = pointerLevel;
-		ret->arrayDimCnt = arrayDimCnt;
-		sum=1;
-		for(i = 0; i<arrayDimCnt; i++){
-			ret->arrayDimItem[i]=arrayDimEnt[i];
-			sum *= arrayDimEnt[i];
-		}
-		ret->dtBytes = POINTER_SIZE * sum;
-		ret->dtBtype = bdt;
-		return ret;
-	}
-
-	if(arrayDimCnt){
-		if( bdt ==&VoidType ){
-			Fatal(ps->filename,ps->tokenList->tLine, "cant define array of void");
-		}
-		ret = _newDtype(DTT_PointerArray);
-		ret->arrayDimCnt = arrayDimCnt;
-		sum=1;
-		for(i = 0; i<arrayDimCnt; i++){
-			ret->arrayDimItem[i]=arrayDimEnt[i];
-			sum *= arrayDimEnt[i];
-		}
-		ret->dtBytes = POINTER_SIZE * sum;
-		ret->dtBtype = bdt;
-		return ret;
-	}
-
-	if(pointerLevel){
-		ret = _newDtype(DTT_Pointer);
-		ret->pointLevel = pointerLevel;
-		ret->dtBytes = POINTER_SIZE;
-		ret->dtBtype = bdt;
-		return ret;
-	}
-*/
 }
