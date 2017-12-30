@@ -30,8 +30,8 @@ typedef union _OHeader{
 	double   __align;
 } OHeader;
 
-void* Omalloc(int bytes){
-	OHeader* ret = Xmalloc(bytes, __FILE__, __LINE__);
+void* Omalloc(int bytes, char* __file, int __line){
+	OHeader* ret = Xmalloc(bytes + sizeof(OHeader), __FILE__, __LINE__);
 	ret->objRef = 1;
 	return ret+1;
 }

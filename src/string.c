@@ -35,15 +35,14 @@ String* StoreString(char* s, int len){
 			continue;
 		}
 		if(Xstrncmp(str->data, s, len)){
-			str->ref++;
+			OIncRef(str);
 			return str;
 		}
 	}
 
-	str = Xmalloc(sizeof(String) + len + 1, __FILE__, __LINE__);
+	str = Omalloc(sizeof(String) + len + 1, __FILE__, __LINE__);
 	Xstrncpy(str->data, s, len);
 	str->len = len;
-	str->ref = 1;
 	str->hash= hash;
 	str->next= _StringBucket[hash % HASHITEM];
 	_StringBucket[hash % HASHITEM] = str;

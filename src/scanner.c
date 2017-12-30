@@ -55,6 +55,43 @@ uint _escapeChar(scanState* ss){
 	}
 }
 
+void _scanSikpWhiteChars(scanState* ss){
+    repeat:
+	switch(*ss->cur){
+	    case '\n':
+		ss->line++;
+	    case ' ' :
+	    case '\t':
+	    case '\r':
+		ss->cur++;
+		goto repeat;
+	    case '/' :
+		if(_exceptChar(ss, '/')){
+			while(*ss->cur && *ss->cur != '\n'){
+				ss->cur++;
+			}
+			goto repeat;
+		}
+		if(_exceptChar(ss, '*')){
+			while(!(*ss->cur == '*' && *(ss->cur+1) == '/')){
+				ss->cur++;
+				if( *ss->cur == '\n'){
+					ss->line++;
+				}
+				if( *ss->cur == '\0'){
+					Error(ss->filename, ss->line,
+					      "multline comment not close");
+					goto repeat;
+				}
+			}
+			ss->cur += 2;
+			goto repeat;
+		}
+	    default:
+		return;
+	}
+}
+
 Token* _scanId(scanState* ss){
 	Token* ret;
 	char* start = ss->cur;
@@ -265,6 +302,8 @@ Token* _scanStringLiteral(scanState* ss){
 
 Token* _scanLexical(scanState* ss){
     repeat:
+	_scanSikpWhiteChars(ss);
+
 	if( (*ss->cur >= 'a' && *ss->cur <= 'z') ||
 	    (*ss->cur >= 'A' && *ss->cur <= 'Z') ||
 	     *ss->cur == '_' ){
@@ -276,10 +315,6 @@ Token* _scanLexical(scanState* ss){
 	}
 
 	switch(*ss->cur){
-	    case '\n':
-		ss->line++;
-	    case ' ' : case '\t' : case '\r' :
-		ss->cur++; goto repeat;
 	    case '{' : ss->cur++; return TokenAlloc(Token_lbrace);
 	    case '}' : ss->cur++; return TokenAlloc(Token_rbrace);
 	    case '[' : ss->cur++; return TokenAlloc(Token_lbracket);
@@ -324,26 +359,6 @@ Token* _scanLexical(scanState* ss){
 		ss->cur++;
 		if(_exceptChar(ss, '=')){
 			return TokenAlloc(Token_divAssign);
-		}
-		if(_exceptChar(ss, '/')){  // skip line comment.
-			while(*ss->cur && *ss->cur != '\n'){
-				ss->cur++;
-			}
-			goto repeat;
-		}
-		if(_exceptChar(ss, '*')){  // skip multline comment.
-			while(!(*ss->cur == '*' && *(ss->cur+1) == '/')){
-				ss->cur++;
-				if( *ss->cur == '\n'){
-					ss->line++;
-				}
-				if( *ss->cur == '\0'){
-					Error(ss->filename, ss->line, "Error: lexical multline comment not close");
-					goto repeat;
-				}
-			}
-			ss->cur += 2;
-			goto repeat;
 		}
 		return TokenAlloc(Token_div);
 	    case '%' :
