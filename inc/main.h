@@ -29,6 +29,7 @@ typedef   signed int   CHAR;
 #define false 0
 
 #include "error.h"
+#include "alloc.h"
 #include "xroutine.h"
 #include "vector.h"
 #include "string.h"

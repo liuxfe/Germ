@@ -39,6 +39,7 @@ enum {
 	Dtype_UserCompoundType,
 };
 
+Dtype* DtypeAlloc(int, int);
 Dtype* ParseDtype(ParseState*);
 
 #endif

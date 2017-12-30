@@ -5,8 +5,6 @@
 
 FILE* Xfopen(char*, char*, char*, int);
 void  Xfclose(FILE*, char*, int);
-void* Xmalloc(uint, char*, int);
-void  Xfree(void*, char*, int);
 void  Xmemcpy(void*, void*, int);
 int   Xstrlen(char*);
 bool  Xstrncmp(char*, char*, int);

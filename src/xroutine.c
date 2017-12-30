@@ -18,27 +18,6 @@ void  Xfclose(FILE* fp, char* __file, int __line){
 	fclose(fp);
 }
 
-void* Xmalloc(uint bytes, char* __file, int __line){
-	void* ret = malloc(bytes);
-	char* p = ret;
-
-	if( !ret ){
-		Fatal(__file, __line, "xmalloc: out of memory\n");
-	}
-	while(bytes--){
-		*p++ = 0;
-	}
-	return ret;
-}
-
-void  Xfree(void* p, char* __file, int __line){
-	if(!p){
-		Debug(__file, __line, "xfree: free NULL pointer\n");
-		return;
-	}
-	free(p);
-}
-
 void  Xmemcpy(void* s1, void* s2, int len){
 	char* p1 = s1;
 	char* p2 = s2;
