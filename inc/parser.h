@@ -8,6 +8,8 @@ typedef struct _parseState{
 	Token*   tokenList;
 	String*  continueLabel;
 	String*  breakLabel;
+	Vector   modScope;
+	Vector   funScope;
 } ParseState;
 
 void eatToken(ParseState*);
