@@ -22,3 +22,33 @@ void  Xfree(void* p, char* __file, int __line){
 	}
 	free(p);
 }
+
+typedef union _OHeader{
+	struct{
+	    int  objRef;
+	};
+	double   __align;
+} OHeader;
+
+void* Omalloc(int bytes){
+	OHeader* ret = Xmalloc(bytes, __FILE__, __LINE__);
+	ret->objRef = 1;
+	return ret+1;
+}
+
+void  OIncRef(void* p){
+	OHeader* o = p;
+
+	o++;
+	o->objRef++;
+}
+
+void  ODecRef(void* p){
+	OHeader* o =p;
+	o--;
+
+	o->objRef--;
+	if(o->objRef == 0){
+		free(o);
+	}
+}

@@ -5,5 +5,8 @@
 
 void* Xmalloc(int, char*, int);
 void  Xfree(void*, char*, int);
+void* Omalloc(int);
+void  OIncRef(void*);
+void  ODecRef(void*);
 
 #endif
